@@ -1,0 +1,29 @@
+[
+  {
+    "id": "1",
+    "icon": {
+      "type": "lucide",
+      "name": "github"
+    },
+    "text": "GitHub",
+    "link": "https://github.com/louisescher"
+  },
+  {
+    "id": "2",
+    "icon": {
+      "type": "lucide",
+      "name": "linkedin"
+    },
+    "text": "LinkedIn",
+    "link": "https://www.linkedin.com/in/louis-escher"
+  },
+  {
+    "id": "3",
+    "icon": {
+      "type": "simple-icons",
+      "name": "patreon"
+    },
+    "text": "Patreon",
+    "link": "https://patreon.com/louis_escher"
+  }
+]

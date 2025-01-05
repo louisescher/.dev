@@ -1,0 +1,96 @@
+---
+title: "What building a UI library has taught me"
+description: "Bulding a UI library for StudioCMS has me taught a lot of things about Astro, so I figured I'd share my newly gained knowledge!"
+image: "../assets/ui-lib.png"
+createdAt: 12-17-2024
+draft: false
+tags:
+  - experience
+---
+
+It's funny how things come to be sometimes. One day, you're browsing GitHub and the next day your writing a UI library for a project you discovered at 11pm on a Tuesday.
+
+Jokes aside (although that one really wasn't one), I've had a blast working on [StudioCMS](https://studiocms.dev) as a maintainer so far. For those who don't know, it's an Astro content management system that has been in development for a little over 9 months now. Back when I joined the community in September, I [proposed a new Dashboard](https://github.com/withstudiocms/studiocms/discussions/294) and made a design in Figma. However, when it came to implementing it, we were wondering how to best approach a complete redesign. That's when we got the idea:
+
+## Making an Astro-native UI library (from scratch)
+Yeah, throwing myself into a project I had basically no prior experience with wasn't my greatest idea, but my curiosity got the better of me. I have used a lot of different UI libraries since I started getting into web frameworks, such as [NextUI](https://nextui.org/), [shadcn/ui](https://ui.shadcn.com/), [Mantine](https://mantine.dev/), [CharmUI](https://charmui.com/), the list goes on. 
+However, besides making a button component and a custom select or two, I had no prior experience with creating a component-based UI library. Thing is, most of these components were made for fairly small projects too, so my main priority was always style. And I hadn't fully explored Astro's capabilities either, but more on that later. So how does an Astro UI library actually function?
+
+## In need of a plumber
+Well, the general structure is fairly self-explanatory. You've got a few `.astro` files which all include their own CSS and TypeScript, export them via the `package.json` file and off you go. Doesn't sound difficult, but even getting this correct took some effort. 
+
+Before Astro v5 released, there was a common issue where scripts imported into Astro components would "leak", meaning they'd get compiled into the document's `<head>`, sometimes on their own, sometimes along with other scripts. This produces "script leaks", where certain JavaScript code is executed while not even being imported into the relevant file. After 4 hours of debugging in what came to be known as the "Toaster Incident", we finally got the idea to turn on an experimental flag (`experimental.directRenderScript`) which fixed this behavior. 
+
+So that's 4 hours of my life wasted.
+
+![Mario from the Super Mario Bros. Movie looking at a faucet](https://media1.tenor.com/m/Ug-Rp3s7JJcAAAAd/the-super-mario-bros-movie-trailer.gif)
+
+It doesn't stop there, since even now there are some oddities with how Astro compiles CSS. One problem we've faced (and are still facing) is that Astro compiles CSS in a way where user-defined styles are included after the libraries styles in dev mode, but get included before the libraries' CSS files in built environments. And since Cascading Style Sheets are, well, **cascading**, this leads to all user styles being essentially overwritten. Our solution ended up being the `!important` syntax and inline styles, although you really can't call that a solution, more a fix. A bucket below a dripping pipe, if you will. Where is that plumber I called by the way?
+
+## People use a mouse to navigate websites... right?
+Here's a fun exercise: How many different ways are there to navigate a website? Here's a couple just off the top of my head:
+
+1. Mouse
+2. Keyboard
+3. Touch
+4. Screen readers
+5. A Nintendo Wiimote
+
+Okay fine, that last one is a bit of an exaggeration. But there's a lot of things to watch out for when creating a library that is meant to be used by everyone, everywhere and is meant to just work for any user. At the time of writing, we've just released [version 0.3.0, dubbed "The Accessibility Update"](https://studiocms.dev/blog/studiocms-ui-0-3-0). Even focusing just on keyboard compatibility warranted a whole new minor release, and you can see how much work it was when looking at the PR.
+
+From proper [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles) to keyboard interaction that has to be handled in JS because the components are using custom elements, that PR honestly had it all. It's insane to think that around 3,500 additions were needed just to add something as simple as keyboard compatibility, and we haven't even handled the titan that is screen-reader support.
+
+There's another part to writing a UI library. Yes, your "users" in the classic sense will be the people that navigate the website that ends up being built with it. However, if you want people to "use" your library, you're going to need a good experience not only for the visitors of a website, but also the developers who have to put up with whatever crazy ideas you come up with.
+
+## A pleasant developer experience
+It starts with small things. Proper types, an easy way to install the library and get started. But there's more to this. For example, how easy is it to change the color of a button? Can I change it's size? Are there different variants, can I turn it into a link? A lot of the time, the component you build will be used in multiple different ways, and it's important to make sure you provide a framework that's as open as possible.
+
+Something I put a lot of work into was the theme helper component. Sure, it would've probably been enough to just provide a toggle, explain what actually changes the theme, how the components react to it, and how to reproduce the effect. But that would be a horrible DX. You wouldn't want every dev to re-build their own theme system while you're keeping yours hidden away in a file that never ends up getting used. The theme helper however exposes the entire functionality of the toggle component and then some to everyone who wants to use it. You can toggle the theme, set it to a certain color. But you can also get the current theme. You can tell the helper to resolve the theme from "system" to the actual color so you don't have to do the extra guesswork. Then there's the more exotic feature: what if you could listen to theme changes? Say you have a Three.js canvas which changes it's background color based on the theme. Having to implement your own system for this would be incredibly tedious, so we provide you with an easy way to abstract all that complexity away into a singular callback.
+
+![Ralph from the Simpsons waving, saying "I'm helping"](https://media1.tenor.com/m/5WMD9NxHnCUAAAAd/ralph-wiggum-simpsons.gif)
+
+This scheme of providing "helpers" is something we do whenever there is a complex structure in the DOM. For example, you have a toaster. It should be easy to call it from anywhere in the DOM, from any component, from any script. The way we ended up implementing this was with custom events. Whenever you call the `toast` function, a custom "toast" event gets fired, which the `<Toaster />` component listens for and dispatches a toast once it receives a message this way.
+
+This is another thing I wasn't aware of, so I'm putting it here in case anyone comes across this post looking for some ways to improve their own library.
+
+### Extending the `HTMLAttributes` interface
+I feel like some context is needed here. In Astro, component props are defined via the Props type. So if you put `name: string` in your Props type, you can then get proper type completions on that prop and Astro will automatically pass it to the component. However, there might be cases where you want the developer to be able to pass classes, IDs, inline styles and other attributes. In that case, there is a nice way of allowing all valid HTML attributes for a certain element to be passed without much manual work.
+You can simply have the Props interface extend a type that's exported from Astro: 
+
+```ts
+interface Props extends HTMLAttributes<'div'> {}
+```
+
+The given example would allow you to pass all valid props of a `<div />` to this component, and also add your own if needed! It's a very useful helper for making components extensible and modifiable.
+### Wait, what the f*\*k is a "Polymorphic"
+Not even kidding, that was my reaction when Adam told me to use them. To give a brief explanation, Polymorphics allow for type-safe rendering of different HTML elements. Basically, instead of having an if-condition for either rendering a `<span>` or an `<a>` tag, you can simply pass the HTML tag to a component which will then render as whatever element you told it to. It's similar to Vue's `<component is="..." />` syntax if you're familiar with that. Here's how they work:
+
+```astro
+---
+type Props<As extends HTMLTag = 'button'> = Omit<Polymorphic<{ as: As }>, 'as'> & { 
+  // ... 
+}
+---
+
+<As
+  class="button"
+  {...props}
+>
+  {/* ... */}
+</As>
+```
+
+In this example, by default a button is rendered if no `as` prop is passed. If something else is passed, the element will render as exactly what you tell it to!
+
+Polymorphics are another great way to improve the DX of an Astro UI library, since they provide an incredible amount of flexibility to the developers using the library. For example, in StudioCMS UI, you can render a button or a card as a link!
+
+## To summarize...
+There's a bunch of things that you need to take into account when writing components. When I got started, I thought of a button and a card, and now I know what a proper UI library actually has to support. The topic of accessibility, for example, is something that rarely came up for me before starting this project. 
+Then there's stuff like the user experience, which I didn't even touch on in this article. Maybe I'll make a separate post for that.
+Last but not least, the developer experience, for which Astro might as well be the best supporting framework out there. There's so many cool things you can do to enable others to use your components in so many different ways, it's honestly incredible.
+
+It's been a fun journey so far, but to be honest it's just getting started. As I always say, there's no such thing as "finishing" a project in the world of software. You only ever get to a production-ready state.
+
+Thanks a lot for reading! Please do [check out the UI library](https://ui.studiocms.dev) and give it a try. Me and a lot of other people have given it a lot of love.
+
+Until next time!

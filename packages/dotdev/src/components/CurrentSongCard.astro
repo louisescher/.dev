@@ -1,0 +1,124 @@
+---
+import Card from './Card.astro';
+import ImageGlow from './ImageGlow.astro';
+
+interface NonPlaceholderProps {
+  isPlaceholder?: false;
+  data: {
+    song: string | null;
+    artists: string | null;
+    image: string | null;
+  };
+  listening: boolean;
+}
+
+interface PlaceholderProps {
+  isPlaceholder: true;
+  data: null;
+  listening: null;
+}
+
+type Props = NonPlaceholderProps | PlaceholderProps;
+
+const { data, listening, isPlaceholder } = Astro.props;
+---
+
+<Card>
+  <h3 class="no-mt">Vibing to</h3>
+  {
+    isPlaceholder ? (
+      <div class="listening-data">
+        <div class="cover-placeholder">
+          <span>?</span>
+        </div>
+        <div class="song-info">
+          <p class="song-title">Loading...</p>
+          <p class="song-artists">Loading...</p>
+        </div>
+        <div class="listening-info">
+          <div class="indicator" />
+          <span>
+            Loading...
+          </span>
+        </div>
+      </div>
+    ) : (
+      <div class="listening-data">
+        {data.image && <ImageGlow width={96} height={96} src={data.image} alt={`${data.song} by ${data.artists}`} />}
+        <div class="song-info">
+          <p class="song-title">{data.song}</p>
+          <p class="song-artists">{data.artists}</p>
+        </div>
+        <div class="listening-info">
+          <div class="indicator" class:list={{ listening: listening }} />
+          <span>
+            {listening ? 'currently listening' : `listened ${"x"} minutes ago`}
+          </span>
+        </div>
+      </div>
+    )
+  }
+</Card>
+<style is:global>
+  .listening-data {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cover-placeholder {
+    width: 96px;
+    height: 96px;
+    background-color: #202020;
+    box-shadow: 0 0 25px #202020;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 24px;
+    color: #fff;
+    font-family: 'Geist Mono', monospace;
+    font-weight: bold;
+  }
+
+  .song-info {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .song-info p {
+    margin: 0;
+  }
+
+  .song-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .listening-info {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: #c7c7c7;
+    font-size: .925rem;
+  }
+
+  .indicator {
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+    min-height: 8px;
+    background-color: #c7c7c7;
+    position: relative;
+    top: 1px;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #c7c7c7;
+  }
+
+  .indicator.listening {
+    background-color: #8c5cf5;
+    box-shadow: 0 0 12px #8c5cf5;
+  }
+</style>

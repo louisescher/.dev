@@ -1,0 +1,19 @@
+{
+  "name": "root",
+  "private": false,
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": "20.11.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "pnpm --filter dotdev build",
+    "start": "turbo run start",
+    "lint": "biome check .",
+    "docker:build": "docker build -t louisescher-dotdev .",
+    "docker:start": "docker run -p 4321:4321 louisescher-dotdev"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3"
+  }
+}

@@ -1,0 +1,28 @@
+---
+import Card from './Card.astro';
+
+interface Props {
+  online: boolean;
+}
+
+const { online } = Astro.props;
+---
+
+<Card>
+  <h3 class="no-mt">Status</h3>
+  <p class="status-span" class:list={{ online: online }}>{online ? 'Online' : 'Offline'}</p>
+</Card>
+<style>
+  .status-span {
+    font-weight: bold;
+    font-size: 2em;
+    margin: 0;
+    color: #c7c7c7;
+    text-shadow: 0 0 16px #c7c7c7;
+  }
+
+  .status-span.online {
+    color: #8c5cf5;
+    text-shadow: 0 0 16px #8c5cf5;
+  }
+</style>

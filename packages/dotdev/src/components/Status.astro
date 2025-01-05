@@ -1,0 +1,19 @@
+---
+import { db as initDB, statusTable } from 'shared';
+import { eq } from 'shared/drizzle';
+import OnlineStatusCard from './OnlineStatusCard.astro';
+import CurrentSongCard from './CurrentSongCard.astro';
+
+const db = initDB(import.meta.env.TURSO_DATABASE_URL, import.meta.env.TURSO_AUTH_TOKEN);
+const data = await db.select().from(statusTable).where(eq(statusTable.id, 'status'));
+---
+
+<OnlineStatusCard online={data[0].online} />
+<CurrentSongCard
+  data={{
+    song: data[0].song,
+    artists: data[0].artists,
+    image: data[0].image
+  }}
+  listening={data[0].listening}
+/>

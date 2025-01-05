@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "icon": {
+      "type": "lucide",
+      "name": "cake"
+    },
+    "text": "18 years old"
+  },
+  {
+    "id": "2",
+    "icon": {
+      "type": "lucide",
+      "name": "earth"
+    },
+    "text": "Lives in Germany"
+  },
+  {
+    "id": "3",
+    "icon": {
+      "type": "lucide",
+      "name": "brain-circuit"
+    },
+    "text": "5,5 years of experience"
+  }
+]
