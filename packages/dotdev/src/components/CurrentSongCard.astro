@@ -1,6 +1,7 @@
 ---
 import Card from './Card.astro';
 import ImageGlow from './ImageGlow.astro';
+import hdate from 'human-date';
 
 interface NonPlaceholderProps {
   isPlaceholder?: false;
@@ -9,6 +10,7 @@ interface NonPlaceholderProps {
     artists: string | null;
     image: string | null;
   };
+  timestamp: number;
   listening: boolean;
 }
 
@@ -16,11 +18,12 @@ interface PlaceholderProps {
   isPlaceholder: true;
   data: null;
   listening: null;
+  timestamp: null;
 }
 
 type Props = NonPlaceholderProps | PlaceholderProps;
 
-const { data, listening, isPlaceholder } = Astro.props;
+const { data, listening, isPlaceholder, timestamp } = Astro.props;
 ---
 
 <Card>
@@ -44,15 +47,19 @@ const { data, listening, isPlaceholder } = Astro.props;
       </div>
     ) : (
       <div class="listening-data">
-        {data.image && <ImageGlow width={96} height={96} src={data.image} alt={`${data.song} by ${data.artists}`} />}
+        {data.image && <ImageGlow data-song-image width={96} height={96} src={data.image} alt={`${data.song} by ${data.artists}`} />}
         <div class="song-info">
           <p class="song-title">{data.song}</p>
           <p class="song-artists">{data.artists}</p>
         </div>
         <div class="listening-info">
           <div class="indicator" class:list={{ listening: listening }} />
-          <span>
-            {listening ? 'currently listening' : `listened ${"x"} minutes ago`}
+          <span data-listening-status>
+            {
+              listening 
+                ? 'currently listening' 
+                : `listened ${hdate.relativeTime(new Date(timestamp)).includes('seconds') ? 'just now' : hdate.relativeTime(new Date(timestamp))}`
+            }
           </span>
         </div>
       </div>

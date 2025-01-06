@@ -1,6 +1,6 @@
 ---
-import { db as initDB, statusTable } from 'shared';
-import { eq } from 'shared/drizzle';
+import { db as initDB, statusTable } from '../db';
+import { eq } from 'drizzle-orm';
 import OnlineStatusCard from './OnlineStatusCard.astro';
 import CurrentSongCard from './CurrentSongCard.astro';
 
@@ -16,4 +16,62 @@ const data = await db.select().from(statusTable).where(eq(statusTable.id, 'statu
     image: data[0].image
   }}
   listening={data[0].listening}
+  timestamp={data[0].timestamp}
 />
+<script>
+  import hdate from 'human-date';
+
+  type StatusData = {
+    song: string;
+    artists: string;
+    image: string;
+    listening: boolean;
+    timestamp: number;
+    online: boolean;
+  };
+
+  setInterval(async () => {
+    const images = document.querySelectorAll<HTMLImageElement>('[data-song-image]');
+    const songTitle = document.querySelector<HTMLSpanElement>('.song-title');
+    const songArtists = document.querySelector<HTMLSpanElement>('.song-artists');
+    const listeningStatus = document.querySelector<HTMLSpanElement>('[data-listening-status]');
+    const indicator = document.querySelector<HTMLDivElement>('.indicator');
+    const status = document.querySelector<HTMLDivElement>('.status-span');
+
+    if (!songTitle || !songArtists || !listeningStatus || !indicator || !status) {
+      return;
+    }
+
+    try {
+      const newData = await fetch('/api/status');
+      const data = await newData.json() as StatusData;
+
+      for (const image of images) {
+        image.src = data.image;
+        image.alt = `${data.song} by ${data.artists}`;
+      }
+      
+      songTitle.textContent = data.song;
+      songArtists.textContent = data.artists;
+      listeningStatus.textContent = data.listening 
+        ? 'currently listening'
+        : `listened ${hdate.relativeTime(new Date(data.timestamp)).includes('seconds') ? 'just now' : hdate.relativeTime(new Date(data.timestamp))}`;
+
+      if (data.listening) {
+        indicator.classList.add('listening');
+      } else {
+        indicator.classList.remove('listening');
+      }
+
+      if (data.online) {
+        status.textContent = 'Online';
+        status.classList.add('online');
+      } else {
+        status.textContent = 'Offline';
+        status.classList.remove('online');
+      }
+    } catch(e) {
+      console.error('Failed to fetch now playing data:', e);
+    }
+  }, 10000);
+</script>

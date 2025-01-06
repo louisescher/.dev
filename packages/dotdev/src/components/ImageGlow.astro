@@ -16,6 +16,7 @@ const height = props.height;
     width={width ? ((typeof width === 'number' ? width : Number.parseInt(width)) / 4) : undefined} 
     height={height ? ((typeof height === 'number' ? height : Number.parseInt(height)) / 4) : undefined}
     {...props}
+    alt={''}
     class='glow'
     class:list={[props.class]}
     quality={75}

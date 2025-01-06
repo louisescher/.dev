@@ -1,5 +1,5 @@
 import { drizzle } from 'drizzle-orm/libsql';
-import { statusTable } from './db/schema';
+import { statusTable } from './schema';
 
 const db = (url: string, token: string) => {
   return drizzle({ 

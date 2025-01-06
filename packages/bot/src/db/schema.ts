@@ -6,6 +6,6 @@ export const statusTable = sqliteTable('status', {
   online: int({ mode: 'boolean' }).default(false).notNull(),
   artists: text(),
   image: text(),
-  timestamp: int({ mode: 'timestamp' }).default(new Date()).notNull(),
+  timestamp: int().default(Date.now()).notNull(),
   listening: int({ mode: 'boolean' }).default(false).notNull()
 });

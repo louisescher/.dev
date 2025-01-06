@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { Client, Events, GatewayIntentBits } from 'discord.js';
-import { db, statusTable } from 'shared';
+import { db, statusTable } from './db';
 import { deepStrictEqual } from 'assert';
 
 const TOKEN = process.env.TOKEN!;
@@ -51,6 +51,7 @@ async function updateStatus(newStatus: Status) {
       artists: newStatus.listening.artists,
       image: newStatus.listening.albumCover || null,
       listening: true,
+      timestamp: Date.now()
     };
   }
 

@@ -13,7 +13,6 @@
   "devDependencies": {
     "@types/node": "^22.10.5",
     "drizzle-kit": "^0.30.1",
-    "shared": "workspace:*",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   },

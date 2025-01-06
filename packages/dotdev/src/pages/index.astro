@@ -14,8 +14,6 @@ import { getEntry } from 'astro:content';
 import { render } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
 import Status from '../components/Status.astro';
-import OnlineStatusCard from '../components/OnlineStatusCard.astro';
-import CurrentSongCard from '../components/CurrentSongCard.astro';
 
 const [posts, projects, about, workExperience, quickInfo, socials] = await Promise.all([
 	getCollection('posts', (post) => post.data.draft !== true),
@@ -62,15 +60,6 @@ const { Content: About } = await render(about!);
 			</ul>
 		</Card>
 		<Status />
-			{/*<div slot="fallback" class="placeholder-container">
-				<OnlineStatusCard online={false} />
-				<CurrentSongCard
-					isPlaceholder
-					data={null}
-					listening={null}
-				/>
-			</div>
-		</Status> */}
 	</div>
 	<div class="layout-grid-right" slot="right">
 		<Card>
