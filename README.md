@@ -1,4 +1,4 @@
-# louisescher/dotdev
+# louisescher/.dev
 
 This is the monorepo which holds the code and all surrounding tools that make up my personal website, [louisescher.dev](https://louisescher.dev).
 

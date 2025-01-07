@@ -100,6 +100,13 @@ export const optionsSchema = z.object({
        * The language to use for the comments.
        */
       lang: z.string(),
+      /**
+       * Where the comments input should be placed. Default is `bottom`.
+       */
+      commentsInput: z.union([
+        z.literal('bottom'),
+        z.literal('top'),
+      ]).optional(),
     }).refine((data) => {
       if (data.mapping === 'specific' || data.mapping === 'number') {
         return !!data.term;

@@ -105,7 +105,7 @@ const { Content, headings } = await render(post);
             data-strict={giscus.strict === true ? "1" : "0"}
             data-reactions-enabled={giscus.reactionsEnabled === true ? "1" : "0"}
             data-emit-metadata={giscus.emitMetadata === true ? "1" : "0"}
-            data-input-position="bottom"
+            data-input-position={giscus.commentsInput}
             data-theme={giscus.theme || "https://spectre.louisescher.dev/styles/giscus"}
             data-lang={giscus.lang}
             data-loading="lazy"

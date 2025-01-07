@@ -65,6 +65,10 @@ interface GiscusOptions {
    * The language to use.
    */
   lang: string;
+  /**
+   * Where the comments input should be placed. Default is `below`.
+   */
+  commentsInput: 'bottom' | 'top';
 }
 
 declare module 'spectre:globals' {
