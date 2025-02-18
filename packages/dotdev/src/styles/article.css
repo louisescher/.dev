@@ -25,10 +25,11 @@ p:has(img) {
   margin-bottom: 1rem;
 }
 
-p img {
+article img {
   max-width: 100%;
   height: auto;
   border: 1px solid #353535;
+  background-color: #0b0b0b;
 }
 
 .toc-card {
