@@ -212,3 +212,12 @@ table tbody tr {
 table tbody tr td {
   padding: .5rem 1.5rem .5rem 0;
 }
+
+.footnotes li p {
+  word-wrap: break-word;
+}
+
+.footnotes ol {
+  padding-left: 1.5rem;
+  line-height: 1.2;
+}
