@@ -35,15 +35,15 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 
 		<link rel="canonical" href={Astro.site} />
 
-		<meta name="og:title" content={title} />
-		{description && <meta name="og:description" content={description} />}
-		<meta name="og:image" content={image?.src || '/img/og.png'} />
-		<meta name="og:url" content={Astro.site} />
-		{!article && <meta name="og:type" content="website" />}
-		<meta name="og:locale" content="en" />
+		<meta property="og:title" content={title} />
+		{description && <meta property="og:description" content={description} />}
+		<meta property="og:image" content={image?.src || '/img/og.png'} />
+		<meta property="og:url" content={Astro.site} />
+		{!article && <meta property="og:type" content="website" />}
+		<meta property="og:locale" content="en" />
 
 		{article && (
-			<meta name="og:type" content="article" />
+			<meta property="og:type" content="article" />
 			<meta property="article:published_time" content={article.createdAt.toISOString()} />
 			<meta name="author" content={name} />
 		)}

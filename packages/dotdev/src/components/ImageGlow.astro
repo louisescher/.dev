@@ -19,14 +19,14 @@ const height = props.height;
     alt={''}
     class='glow'
     class:list={[props.class]}
-    quality={75}
+    quality={10}
   />
 </div>
 <style is:global>
   .glow-image {
     position: relative;
-    width: var(--width);
-    height: var(--height);
+    width: min(100%, var(--width));
+    height: auto;
   }
 
   .glow-image img {
