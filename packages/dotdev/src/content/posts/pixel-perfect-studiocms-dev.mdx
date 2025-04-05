@@ -2,8 +2,8 @@
 title: "Pixel Perfect: studiocms.dev"
 description: "A look at my design and thought process for the StudioCMS landing page."
 image: "../assets/pixel-perfect-studiocms.dev/pixel-perfect-studiocms-dev.png"
-createdAt: 02-28-2025
-draft: true
+createdAt: 04-05-2025
+draft: false
 tags:
   - experience
   - pixel-perfect
@@ -14,17 +14,19 @@ import { Image } from 'astro:assets';
 
 Hey all!
 
-Welcome to **Pixel Perfect**, a series of blog posts where I dive into the design process behind websites I have created. No matter if it's a SaaS-level landing page or a personal portfolio, there's a story behind each of them, so let's dive into it!
+Welcome to **Pixel Perfect**, a series of blog posts where I dive into the design process and implementation behind websites I have created. No matter if it's a SaaS-level landing page or a personal portfolio, there's a story behind each of them, so let's dive into it!
 
-Today, we're taking a look at [studiocms.dev](https://studiocms.dev), the home of StudioCMS, an Astro-native CMS of which I am a core maintainer and the team's lead designer. We recently revamped the CMS's dashboard to look more modern, and created a UI library as part of that ([about which I wrote a blogpost!](/blog/building-a-ui-lib)). It became apparent fairly quickly that we would not be able to keep the current homepage, as it had aged rather poorly and no longer reflected our brand design, along with other issues. I've created a [backup on the WayBackMachine](https://webcf.waybackmachine.org/web/20250118060937/https://studiocms.dev/), so you can look at the old version if you want to.
+Today, we're taking a look at [studiocms.dev](https://studiocms.dev), the home of StudioCMS, an Astro-native CMS of which I am a core maintainer and the team's lead designer. We recently revamped the CMS's dashboard to look more modern, and created a UI library as part of that ([about which I wrote another blogpost!](/blog/building-a-ui-lib)). It became apparent fairly quickly that we would not be able to keep the current homepage, as it had aged rather poorly and no longer reflected our brand design, along with other issues. I've created a [backup on the WayBackMachine](https://webcf.waybackmachine.org/web/20250118060937/https://studiocms.dev/), so you can look at the old version if you want to.
 
-## Initial Ideas
+## Sketching and Scheming
 
-Whenever I am asked to create a concept for a new site, I start taking little notes about things that come to mind. Usually, I let my mind wander when I'm bored or sleepy, so that's when I get most of my ideas. I have both a little notebook for physical note-taking and I also use [Obsidian](https://obsidian.md) to write down my thoughts. Once I feel I have enough ideas to start working on something, I usually draw up a sketch. For StudioCMS, we use an orbit-like design in the background of all marketing materials, so I wanted to feature them on the homepage in some way. Here's an image where you can see them in the background:
+### Initial Ideas
+
+Whenever I am asked to create a concept for a new site, I start taking little notes about things that come to mind. Usually, I let my mind wander when I'm bored or sleepy, since that's when I get most of my ideas. I have a little notebook for physical note-taking and also use [Obsidian](https://obsidian.md) to write down my thoughts. Once I feel like I have enough ideas to start working on something, I usually draw up a sketch (either on paper or on my iPad). For StudioCMS, we use an orbit-like design in the background of all marketing materials, so I wanted to feature them on the homepage in some way. Here's an image where you can see them in the background of some of our marketing materials:
 
 <Image alt="StudioCMS v0.4 - The Customization Update" inferSize src={STUDIOCMS_UI_IMAGE} quality={100} lazy />
 
-I also always create what I call a "set piece" for each homepage, something that looks cool and catches the user's eye. In most cases, it's a slightly animated background effect. Pleasant to look at but not too distracting. In some cases, it can also be a small animation that is featured as actual page content and conveys information. For this project, since I thought of the rings as orbits, I decided that stars rotating around on them might be a cool idea. Since we're an Astro-native CMS, we obviously want to create some association between us and Astro, and since all of their material is space-themed, we decided to go with something similar as well.
+I also always create what I call a "set piece" for each homepage's hero section, something that looks cool and catches the user's eye. In most cases, it's a slightly animated background effect. Pleasant to look at but not too distracting. In some cases, it can also be a small animation that is featured as actual page content and conveys information. For this project, since I thought of the rings as orbits, I decided that stars rotating around on them might be a cool idea. Since we're an Astro-native CMS, we obviously want to create some association between us and Astro, and since all of their material is space-themed, we decided to go with something similar as well.
 
 If you're interested, here's the initial list of things I wanted to implement:
 
@@ -54,75 +56,569 @@ If you're interested, here's the initial list of things I wanted to implement:
 
 Most of the time this list will get trimmed down during the design process, but it's always nice to have a starting point.
 
-## All Pens in one Pot
+### All Pens in one Pot
 
-Back in web engineering class, you prof might've told you to pen down your ideas on a piece of paper. At least, that's what mine did two weeks ago. To be completely honest with you, while scribbling down initial ideas is fine, you're going to want to step up your game with a tool like [Figma](https://figma.com) or [Penpot](https://penpot.app), an open-source alternative. They are amazing tools when it comes to prototyping your ideas on a proper canvas, with colors, proper styling and so forth. I recommend the latter, as Penpot is self-hostable, is open source and doesn't cost a penny. It may not be as good as Figma yet, but I'm sure it will get there.
+Back in web engineering class, you professor might've told you to pen down your ideas on a piece of paper. At least, that's what mine did two weeks ago. To be completely honest with you, while scribbling down initial ideas is fine, you're going to want to step up your game with a tool like [Figma](https://figma.com) or [Penpot](https://penpot.app), an open-source alternative. They are amazing tools when it comes to prototyping your ideas on a proper canvas, with colors, proper styling and so forth. I recommend the latter, as Penpot is self-hostable, is open source and doesn't cost a penny. It may not be as good as Figma yet, but I'm sure it will get there.
 
-## The *Hero* of the Story
+### The *Hero* of the Story
 
 The set piece is obviously a great start, but if we only had that, the initial thing you'd see on the site would be quite boring.
 
 As you can see on the list above, another thing that came to mind was an `npm` command CTA (call to action). For those who don't know, CTAs are interactive elements on a webpage, usually buttons. Their goal is to get users to click on them, usually to sign up for something or try something out. Since StudioCMS has a command-line interface to create projects, a natural choice for one of the two CTAs was a little code snippet that told you how to get started with a new project quickly. From experience, whenever I (as a developer) am on a page, I want to quickly try something out instead of having to read endless guides and documentation, and I know a lot of other developers also feel this way.
 
-The second CTA needed to be something for "non-technical" people. We market our CMS towards developers **and** marketers, so the best solution was to have a CTA for them as well. The difficulty in deciding what to link to was that we were not sure what a marketing person was looking for in a CTA. After a lot of debating, we decided we would feature an on-page live demo where people could try out the CMS without any coding experience, so that's what we put as the second CTA. 
+The second CTA needed to be something for "non-technical" people. We market our CMS towards developers **and** marketers / content creators, so the best solution was to have a CTA for them as well. The difficulty in deciding what to link to was that we were not sure what a marketing person was looking for in a CTA. After a lot of debating, we decided we would feature an on-page live demo where people could try out the CMS without any coding experience, so that's what we put as the second CTA.
 
 Every page also needs a headline that conveys the meaning of the product you're trying to quote-on-quote "sell". While StudioCMS is an open-source project, we still want people to use it, so it's often quite helpful to think about your landing page as if you were selling a product. A common misconception about your headline is that it should feature the name of the product. However, since that will most likely also be shown in the navbar, you would end up with duplicate content, which isn't nice to look at. Besides, most people visiting your website and will have read the URL or the site title beforehand. In this case, I chose to go for something that incorporated our tag line, "**Astro-native**", and ended up with "The Astro-native CMS for all your needs."
 
 The sub-header below the tagline is just as important as the headline. This is where you convey information that you could not fit into the initial "pitch" for your product, it can help explain what exactly the user is looking at. Outright stating what your product is is usually the best thing to put here.
 
-## A Smooooooooth Transition
+### A Smooooooooth Transition
 
-One of the things I find most difficult about the design process is the transition between hero section and the start of the other sections on the page. I'll admit, this is a flaw I usually introduce myself by having a set piece background, so I need some way of cutting it off without the user noticing. Here, I went for a fade effect into the normal background color to fade out the stars and orbits. Additionally, I added a video above the transition to make it less noticeable. Having a video in or right below your hero section is a nice way of keeping the user on your page. Our brain is trained to look at moving objects, so stuff like a video will keep the user on your page for longer. The real challenge is to make the video informative enough to keep developers engaged while also showing off features in a way that everyone understands. 
+One of the things I find most difficult about the design process is the transition between hero section and the start of the other sections on the page. I'll admit, this is a flaw I usually introduce myself by having a set piece background, so I need some way of cutting it off without the user noticing. Here, I went for a fade effect into the normal background color to fade out the stars and orbits. Additionally, I added a video above the transition to make it less noticeable. Having a video in or right below your hero section is a nice way of keeping the user on your page. Our brain is trained to look at moving objects, so stuff like a video will keep the user on your page for longer. The real challenge is to make the video informative enough to keep developers engaged while also showing off features in a way that everyone understands.
 
-At the time of writing, we have not finished the video yet, so you be the judge of how well we did.
+### Divide and Conquer
 
-## Divide and Conquer
-
-Right below the transition is where the real flow of information starts. If the user gets to here, you've basically already convinced them to take a better look at your product. Now, the job is to keep their eyes trained on the content and convey useful information quickly. In the case of this website, we immediately start off with a grid targeting our main demographics: Marketers, Developers, Enterprises and Agencies. The secondary goal is to convert them to page interactions, so each of the cards in the grid targets a specific type of user and tries to get the to click on the associated CTA to learn more. As mentioned, the user is most likely already interested in the product, so our goal is to give them information that is helpful to them. Since we cannot fit all of that information onto the landing page, we need to divide up the user groups into their own sub-pages.
+Right below the transition is where the real flow of information starts. If the user gets to here, you've basically already convinced them to take a better look at your product. Now, the job is to keep their eyes trained on the content and convey useful information quickly. In the case of this website, we immediately start off with a grid targeting our main demographics: marketers / content creators, developers, enterprises and agencies. The secondary goal is to convert them to page interactions, so each of the cards in the grid targets a specific type of user and tries to get the to click on the associated CTA to learn more. As mentioned, the user is most likely already interested in the product, so our goal is to give them information that is helpful to them. Since we cannot fit all of that information onto the landing page, we need to divide up the user groups into their own sub-pages.
 
 If we fail with the initial bit of information and the first CTAs targeting the user, we can assume that they need more information, so we'll continue to show them more detailed information about the product.
 
-## Target Practice
+### Target Practice
 
-When designing a website, it is always helpful to know who you are targeting with it's content. You should get to know the demographics you're trying to cater towards. For StudioCMS, as mentioned before, it's marketers and developers. However, most of the time we will likely have either developers or experienced marketing directors on our page. I'd say we've done well enough to convert the classic tech bros with our dank hero section, and most marketers should've gotten caught at the previous grid, so now we're basically down to people who really want to know what StudioCMS is all about. It's now down to conveying technical details in a way that both (experienced) marketers and developers understand.
+When designing a website, it is always helpful to know who you are targeting with it's content. You should get to know the demographics you're trying to cater towards. For StudioCMS, as mentioned before, it's marketers / content creators and developers. However, most of the time we will likely have either developers or experienced marketing directors on our page. I'd say we've done well enough to convert the classic tech bros with our dank hero section, and most marketers should've gotten caught at the previous grid, so now we're basically down to people who really want to know what StudioCMS is all about. It's now down to conveying technical details in a way that both (experienced) content creators and developers understand.
 
 We start off by providing information about how StudioCMS can be deployed. This is usually critical information for developer teams, but if your marketing lead has been instructed to look for a CMS, they probably know what platforms to look for, so we put buzzwords in the headings here to quickly convey information.
 
-StudioCMS is compatible with both normal server environments and serverless solutions, which is a pretty important detail. The key term here is *serverless*. It acts as both a keyword for humans looking to gain information about how to host StudioCMS, and for search engines who are looking for details on StudioCMS that users are searching for. Below the subheading, we show off some brand icons that people might recognize, just to give them an idea of what it's possible to use with StudioCMS.
+StudioCMS is compatible with both normal server environments and serverless solutions, which is a pretty important detail. The key term here is *serverless*. It acts as both a keyword for humans looking to gain information about how to host StudioCMS, and for search engines who are looking for details on StudioCMS that users are searching for. Below the subheading, we show off some brand icons that people might recognize, just to give them an idea of what StudioCMS can be used with.
 
-## One-Two Combo
-
-At this point, we're pretty confident we've provided strong points to users about why they should use our CMS. After the one-two-punch of supporting the most common hosting providers and both types of front-end, we now want to knock them out completely, metaphorically speaking. A good website is like an essay or a newspaper article, you're trying to tell a story and prove that you're right by providing valid examples and reasoning. When talking with the team, we agreed that the biggest strong suit besides the headful-headless combination was StudioCMS's plugin system, so our final big feature featured on the homepage will be exactly that. 
-
-We put another interactive example here to grab the users attention again, as we want to make sure we don't lose their attention while they're scrolling down the page. A combination of video and moving text is pretty effective at this, although I really doubt it would knock out a boxer. Maybe that heading was a little misplaced, but I sure hope our interactive demo wasn't.
-
-## Peer Pressure
-
-We've now gone through the most important features, so all that's left is to pressure the user into actually using StudioCMS. The best way of doing that is to show statistics and social proof, and that's exactly what we do. 
-
-We first do what I like to call a "hard-cut" by providing a full-width element with a different background color. This is meant to be a subtle nod to the user, saying "You've reached the end of this type of content". Within that banner, we start transitioning from technical details to social proof by showing off download stats, the number of Discord members and GitHub stars we've gathered.
-
-Next is the actual social proof section, where community members have written messages to show off their opinion on why StudioCMS is great. It's a common technique to show off other people using and liking your product, and it's what services like Trustpilot are built on. Essentially, they're a way to peer pressure users into using your product! If everyone else already uses it, why aren't you already?
-
-## The A-B-C of StudioCMS
+### The A-B-C of StudioCMS
 
 The next section is a clever little trick we've first employed on the [landing page of StudioCMS UI](https://ui.studiocms.dev). We call it the A-B-C of StudioCMS: three reasons why this library being a part of our ecosystem is a good thing. The short version: people like seeing that something integrates well with other things, it makes them worry less about if their existing setup will break when introducing your product into their workflow.
 
-## Catching Crawlers
+### Catching Crawlers
 
 No, we're not going to look for grasshoppers and centipedes. The next section links over to our most recent blog article, as a way of telling web crawlers about the most recent thing happening in the ecosystem. This is less so for humans and more for machines, but maybe some people are interested in what's happening in the ecosystem. Either way, it can't hurt having a direct link to the most recent articles here.
 
-## One Final Dance
+### One Final Dance
 
-At this point, the user has scrolled down the entire page and has basically reached the very end. It's now or never, if we don't get them to click on one of our CTAs now, we might lose them forever, so we put a card with some cool animations at the bottom to catch their attention, combined with a heading encouraging them to get started with StudioCMS. We also use the same CTAs from the start of the page to offer them a little callback to the start of the page, reminding them of the long way they've taken to get here.
+At this point, the user has scrolled down the entire page and has basically reached the very end. It's now or never, if we don't get them to click on one of our CTAs now, we might lose them forever, so we put a card with some cool animations at the bottom to catch their attention, combined with a heading encouraging them to get started with StudioCMS. We also use the same CTA from the start of the page to offer them a little callback to the start of the page, reminding them of the long way they've taken to get here.
 
 Last but not least, we mention explicitly that StudioCMS is free, open source software and show off our sponsors, pretty much the last guard against the end of the user's journey, the footer. Maybe they'll recognize a brand here which makes them think that if the brand trusts us, they can too.
 
-If the user reaches the footer, they get one last surprise: our mascot, Apollo, following their mouse with his eyes. If they've managed to get down here without clicking a single CTA, we want to create a lasting impression, and an animation that follows your cursor is certainly a way of doing that.
+If the user reaches the footer, they get one last surprise: our mascot, Apollo, popping up to greet them. If they've managed to get down here without clicking a single CTA, we want to create a lasting impression, and an animation like that is certainly a way of doing that.
+
+### The Other Stuff
+
+A website (at least most of the time) consists of more than just one page. We're still missing a few other pages, and it'd probably be best if we had some level of coherence between them. An easy way to achieve this (besides the navbar and the footer) is to have a consistent page header design that doesn't change between pages. In this case, I got inspired by [Skip2](https://skip2.net)'s page header design. Featuring a rounded design with a nice glow and both the page title and description on top of that, it makes for a visually pleasing element that isn't too distracting and still creates that coherence we're looking for. So let's grab that. After all, good artists copy, great artists steal, and since we're the best, we'll take it and improve it to fit our own design while being able to learn something new!
+
+## What do you mean I need to code it now?
+
+After sitting in Penpot for multiple hours, pondering the best design choices and interesting elements for our users, I was very happy with the end result. What I was not happy with is having to code the site. I am of course kidding, but it's always a little discouraging to start from 0 on a new project like this. Don't worry, that's what we made the design for in the first place.
+
+### You Spin me Right Round
+
+The only real "challenging" part of our homepage was the set piece, as there is a *little* math involved. No reason to be scared and run away though, we can make this interesting.
+
+Creating a header animation as this *can* be done with normal HTML elements, but you'll be struggling with performance if you try this for anything a little more extreme. We'll use the [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) instead, which allows us to draw hardware-accelerated graphics right in the browser using the `<canvas>` element.
+
+We'll start of by adding the canvas element as well as a wrapper in a new component:
+
+```astro title="HeroAnimation.astro"
+<div class="hero-anim-container">
+	<canvas id="anim-canvas" />
+</div>
+```
+
+We'll also do some basic styling to make sure the background looks nice on the eventual page:
+
+```astro title="HeroAnimation.astro"
+<!-- ... -->
+<style>
+	.hero-anim-container {
+		/* Position the container absolutely and center it */
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		/* Make sure it stays behind all other content */
+		z-index: -1;
+		/* Set the width to the same as the screen and the height to 1.5x the viewport */
+		width: 100vw;
+		height: 150vh;
+		max-height: 150vh;
+		/* Center the canvas inside of the wrapper and hide all overflow */
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		overflow: hidden;
+		/* Make sure users can't accidentally click on the canvas */
+		pointer-events: none;
+		user-select: none;
+		/* Use a mask image with a linear gradient to have the orbits fade out the further down you go */
+		mask-image: linear-gradient(to bottom, hsl(var(--background-base)) 50%, hsla(var(--background-base) / 0.8) 60%, hsla(var(--background-base) / 0) 80%);
+	}
+
+	#anim-canvas {
+		width: max(100vw, 1440px);
+	}
+</style>
+```
+
+The `mask-image` property is doing the heavy lifting here. By using it, we can ensure that the further down you get, the less visible the orbits become. If you want to read more about how these work, check out Chris Coyier's post "[Clipping and Masking in CSS](https://css-tricks.com/clipping-masking-css/)"!
+
+Now we get into the real stuff. We'll start off by adding a script to the page with a class inside of it to set up the canvas and manage it's lifecycle:
+
+```astro title="HeroAnimation.astro"
+<!-- ... -->
+<script>
+	interface Star {
+		radius: number;
+		pos: {
+			x: number;
+			y: number;
+		};
+		speed: number;
+	}
+
+	class HeroAnimation {
+		// The size of our canvases
+		protected readonly CANVAS_SIZE: number = 2000;
+
+		// The radius of a star
+		protected readonly STAR_RADIUS: number = 3;
+
+		// The star instance is 6x6, the 16px act as padding for the shadow / blur / glow effect
+		protected readonly STAR_INSTANCE_CANVAS_SIZE: number = (this.STAR_RADIUS * 2) + 16;
+
+		// The context, width and height of our main canvas
+		private ctx: CanvasRenderingContext2D;
+		private width: number;
+		private height: number;
+
+		// Two extra canvases (for performance reasons, we'll get into this later)
+		private starInstanceCanvas: HTMLCanvasElement = document.createElement('canvas');
+		private orbitImageCanvas: HTMLCanvasElement = document.createElement('canvas');
+
+		// An array to hold our star data
+		private stars: Star[][] = [];
+
+		// Whether or not the user prefers reduced motion
+		private isUsingReducedMotion: boolean;
+
+		/**
+		 * Animation for the hero section
+		 * @param canvas - The canvas the animation should be drawn on.
+		 * @param isUsingReducedMotion - Whether or not the user prefers reduced motion.
+		 */
+		constructor(canvas: HTMLCanvasElement, isUsingReducedMotion: boolean) {
+			this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+			this.isUsingReducedMotion = isUsingReducedMotion;
+
+			// Set the width and height for all canvases
+			this.width = canvas.width = this.orbitImageCanvas.width = this.CANVAS_SIZE;
+			this.height = canvas.height = this.orbitImageCanvas.height = this.CANVAS_SIZE;
+
+			// Set the width and height for the starInstanceCanvas separately
+			this.starInstanceCanvas.width = this.STAR_INSTANCE_CANVAS_SIZE;
+			this.starInstanceCanvas.height = this.STAR_INSTANCE_CANVAS_SIZE;
+		}
+	}
+</script>
+```
+
+```ts
+class HeroAnimation {
+}
+```
+
+Refer to the comments in the code block for what we actually do here. The important parts are that we create multiple canvases, I'll get into the reason for this later. Everything else is just set-up. So let's get drawing! We'll start by creating a function to draw the orbits that the stars will rotate around, the various circle diameters, and a variable to track whether we've set up the circles or not:
+
+```ts
+class HeroAnimation {
+	protected readonly CIRCLE_DIAMETERS: number[] = [800, 1400, 2000];
+
+	// This will be important later
+	this.instancingEnabled: boolean = false;
+
+	/**
+	 * Draws the circles for each given diameter.
+	 */
+	private drawCircles = () => {
+		if (!this.instancingEnabled) {
+			for (const diameter of this.CIRCLE_DIAMETERS) {
+				this.drawCircle(diameter);
+			}
+		}
+
+		this.ctx.drawImage(this.orbitImageCanvas, 0, 0);
+	};
+
+	/**
+	 * Draws a circle in the center of the canvas based on a given diameter.
+	 * @param diameter - The diameter for the circle.
+	 */
+	private drawCircle = (diameter: number) => {
+		const radius = diameter / 2;
+		const centerX = Math.floor(this.width / 2);
+		const centerY = Math.floor(this.height / 2);
+
+		const ctx = this.orbitImageCanvas.getContext('2d');
+
+		if (!ctx) return;
+
+		ctx.strokeStyle = '#353535';
+		ctx.lineWidth = 1;
+		ctx.beginPath();
+		ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+		ctx.stroke();
+	};
+}
+```
+
+As you can see, we draw a circle for each diameter in our `CIRCLE_DIAMETERS` array. You might be asking yourself why we do so on a different canvas than our main one, and the reason is quite simple - it's a performance improvement! If you've ever heard of "GPU Instancing", it's quite similar to that, the idea being that we only calculate and draw the circles once and then re-use that image every time we move a star and have to update our main canvas. That is also what you can see in the `drawCircles` function - instead of drawing the circles to our main canvas, we draw the `orbitImageCanvas` to our main canvas as if it was an image.
+
+Next, we'll draw our stars, or rather, our star. We're going to use the same approach as with the orbits here to squeeze every last bit of performance out of animation, meaning we draw one star, once, and then re-use that image every time we re-draw that star. Here's how we'll do that:
+
+```ts
+class HeroAnimation {
+	// The hex code for our stars and their shadows
+	protected readonly STAR_COLOR: string = '#9072d3';
+
+	private drawStarInstance = () => {
+		const ctx = this.starInstanceCanvas.getContext('2d');
+
+		if (!ctx) return;
+
+		const instanceCanvasCenter = this.STAR_INSTANCE_CANVAS_SIZE / 2;
+
+		ctx.fillStyle = this.STAR_COLOR;
+		ctx.shadowBlur = 8;
+		ctx.shadowColor = this.STAR_COLOR;
+		ctx.beginPath();
+		ctx.arc(instanceCanvasCenter, instanceCanvasCenter, this.STAR_RADIUS, 0, 2 * Math.PI);
+		ctx.fill();
+	}
+}
+```
+
+First, get our `starInstanceCanvas`, then get the center of that by dividing it's size by two. Then we change the fill style, enable shadow drawing, and then draw the circle that is the actual star!
+
+After that, we'll make sure the circles don't get re-drawn again. We will then generate some stars and start animating them! All of that will happen inside of an `init` function:
+
+```ts
+class HeroAnimation {
+	/**
+	 * Initializes the contents of the canvas.
+	 */
+	private init = () => {
+		this.drawCircles();
+		this.drawStarInstance();
+		this.instancingEnabled = true;
+		
+		// Generate circles for each orbit
+		for (let i = 0; i < this.CIRCLE_DIAMETERS.length; i++) {
+			this.stars.push([]);
+			// Generate an arbitrary amount of stars for each orbit
+			this.generateStars(i, this.CIRCLE_DIAMETERS[i] / 200);
+		}
+
+		// Start animating the stars
+		this.animateStars();
+	};
+}
+```
+
+Generating the stars isn't too difficult. We just create a new array with the given length, generate a random position on that orbit, then give that star a random speed and we're good to go:
+
+```ts
+class HeroAnimation {
+	/**
+	 * Generates a random position on a circle and returns the coordinates.
+	 * @param orbitIndex - The orbit to generate the stars on
+	 */
+	private generatePositionOnCircle = (orbitIndex: number) => {
+		// We need a random circle first, get one from the available diameters
+		const circleDiameter = this.CIRCLE_DIAMETERS[orbitIndex];
+
+		const radius = circleDiameter / 2;
+		const centerX = Math.floor(this.width / 2);
+		const centerY = Math.floor(this.height / 2);
+
+		// The angle and the radius determine the position - multiplying a value between 0 and 1 with 2 PI 
+		// will give us an angle between 0 and 360 degrees
+		const angle = Math.random() * Math.PI * 2;
+
+		// The coordinate is then based on the sine or cosine multiplied by the radius. We add the center of 
+		// the canvas to shift the point to the correct position.
+		return {
+			x: centerX + Math.sin(angle) * radius,
+			y: centerY + Math.cos(angle) * radius,
+		};
+	}
+
+	/**
+	 * Generates a number of stars all located on a specific orbit.
+	 * @param orbit - The orbit to place the stars on
+	 * @param num - The number of stars to generate
+	 */
+	private generateStars = (orbit: number, num: number) => {
+		const stars: Star[] = Array.from({ length: num }, () => {
+			const { x, y } = this.generatePositionOnCircle(orbit);
+
+			// Radius and speed are artificial values that can be tweaked later
+			return {
+				radius: this.STAR_RADIUS,
+				pos: {
+					x: x,
+					y: y,
+				},
+				speed: Math.random() * 0.002 / 2,
+			}
+		});
+
+		// Draw all the stars right away 
+		for (const star of stars) {
+			this.drawStar(star);
+		}
+
+		// Assign the stars to the correct orbit array.
+		this.stars[orbit] = stars;
+	};
+}
+```
+
+Once the array of stars has been generated, we draw each of those stars at their given position using the canvas we previously used for our instancing:
+
+```ts
+class HeroAnimation {		
+	/**
+	 * Draws a star based on it's position.
+	 * @param star - The star to draw.
+	 */
+	private drawStar = (star: Star) => {
+		const { x, y } = star.pos;
+
+		const starImageOffset = this.STAR_INSTANCE_CANVAS_SIZE / 2;
+		this.ctx.drawImage(
+			this.starInstanceCanvas,
+			x - starImageOffset,
+			y - starImageOffset
+		);
+	};
+}
+```
+
+Animating the stars is as easy as clearing the canvas (which is a necessary step for our GPU, otherwise we will just draw over the existing data), drawing the circles again (which now happens with our instanced version), recalculating the position of each star based on it's speed and then drawing that star at it's new position:
+
+```ts
+class HeroAnimation {
+	/**
+	 * Clears the canvas and resets the drawing styles.
+	 */
+	private clearContext = () => {
+		this.ctx.clearRect(0, 0, this.width, this.height);
+		this.ctx.strokeStyle = 'none';
+		this.ctx.lineWidth = 0;
+		this.ctx.shadowBlur = 0;
+	};
+
+	/**
+	 * Recalculates a stars position in space based on it's speed value.
+	 * @param orbit - The orbit the star is placed on
+	 * @param star - The star to calculate the new position for
+	 */
+	private recalculateStarPosition = (orbit: number, star: Star) => {
+		const { x, y } = star.pos;
+
+		const radius = this.CIRCLE_DIAMETERS[orbit] / 2;
+		const centerX = Math.floor(this.width / 2);
+		const centerY = Math.floor(this.height / 2);
+
+		const angle = Math.atan2(y - centerY, x - centerX);
+		const newAngle = angle + star.speed;
+
+		return {
+			...star,
+			pos: {
+				x: centerX + Math.cos(newAngle) * radius,
+				y: centerY + Math.sin(newAngle) * radius,
+			},
+		};
+	};
+
+	/**
+	 * Resets the canvas, then re-draws all orbits, moves the stars forward based on their 
+	 * speed and draws them as well.
+	 */
+	private animateStars = () => {
+		this.clearContext();
+		this.drawCircles();
+
+		for (let i = 0; i < this.stars.length; i++) {
+			for (let j = 0; j < this.stars[i].length; j++) {
+				const star = this.stars[i][j];
+				const newStar = this.recalculateStarPosition(i, star);
+
+				this.drawStar(newStar);
+				this.stars[i][j] = newStar;
+			}
+		}
+		
+		if (!this.isUsingReducedMotion) {
+			requestAnimationFrame(this.animateStars);
+		}
+	}
+}
+```
+
+This is also where we finally check whether or not the user prefers reduced motion. If they do, we just don't request the next animation frame, meaning the stars stay put where they are and the lifecycle stops. Otherwise, the context is cleared again, the circles are drawn, the star positions updated and the whole thing begins anew.
+
+An additional adjustment I made is to check how well the animation runs by tracking the FPS (frames per second) of the animation. If it drops below 30, we can assume that either
+1. The user's hardware is unable to handle the animation or
+2. The user has hardware acceleration turned off and the animation will look choppy
+
+In either way, if that happens, I also don't request a new animation frame and just stop the animation altogether.
+
+If you want to check out the final code for this hero animation, it's available on the [GitHub repository for the new website](https://github.com/withstudiocms/studiocms.dev/blob/af1b576f609953c742ae65bf36b1661950d55700/src/components/HeroAnimation.astro)!
+
+### Interfacing With the User
+
+What helped immensely when building the page was that I was able to use [StudioCMS UI](https://ui.studiocms.dev), an Astro-native UI library I created a while back to build our dashboard. Here, it helped with the small things, like cards, buttons and the colors. If you're able to use such a tool, even if it's `shadcn/ui` or a different library of your choice, it can help immensely with getting a page up and running.
+
+It probably makes sense to explain my workflow here. Many people nowadays do "mobile-first development", however I am not one of them. I believe that mobile-first development (and, by extension, mobile-first design) leads to websites that feel empty on desktop devices. Of course, when developing for desktops, you might run into the issue that your information density on mobile is too high. In my opinion, it is easier to properly space your content on mobile instead of having to spread it out on desktops, so that's why I go with this approach.
+
+I develop pages top to bottom, meaning I started with the hero section in this case. For alignment I mostly use flex divs, but whenever I have card grids I use the `display: grid` property as it provides greater control over how these cards look on different screen sizes. Usually I finish the hero section in it's entirety, then move on and add scaffolding for the other sections and go through them again, adding styles and content as I go. Once all content is filled in, I make sure to add little animations that make the page come alive (like our mascot, Apollo, poking up from behind certain elements or a hover effect). It's always in the details for these pages - not everything needs to be 100% interactive, but the user shouldn't feel bored while scrolling. Switch up the layout, use some bold colors to grab attention! It gets more and more difficult each year to grab people's attention, so the details usually are what makes the difference.
+
+### Page by Page
+
+Once the main site is done, I move on to different pages. This is also where I can *finally* use the Skip2 page header design and adjust it to our page. Remember that `mask-image` property? We'll use that again here.
+
+It's time to create another Astro component, with two props for the title and description:
+
+```astro title="PageHeader.astro"
+---
+import Orbits from '@/assets/orbits.svg';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+<section class="page-header">
+	<Orbits class="orbits" />
+	<div class="container">
+		<h1>{title}</h1>
+		<slot name="description" />
+	</div>
+</section>
+```
+
+We'll also use an SVG version of the orbits from the hero section. Thanks to Astro's [experimental SVG support](https://docs.astro.build/en/reference/experimental-flags/svg/), this is as easy as importing the SVG and using it like a component!
+
+Time to style this baby. We'll start by centering all context in the page header, giving it some padding, aligning it on the page and some additional styling to make sure everything works as intended:
+
+```astro title="PageHeader.astro"
+<!-- ... -->
+<style>
+	.page-header {
+		/* Center everything */
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		gap: 1rem;
+		/* Padding, 12rem top and 8rem bottom */
+		padding: 12rem 0 8rem 0;
+		/* Make it fill the available space */
+		width: 100%;
+		/* Give it a border radius, but only at the bottom */
+		border-bottom-left-radius: 1.25rem;
+		border-bottom-right-radius: 1.25rem;
+		/* Relative positioning for later */
+		position: relative;
+		/* Various other styles */
+		overflow: hidden;
+		background-color: #0b0b0b;
+		z-index: 1;
+		margin-bottom: 2rem;
+	}
+
+	.page-header > * {
+		z-index: 5;
+	}
+</style>
+```
+Next, we'll style the orbits to take up the entire space and be centered at the bottom. We also give the heading a bigger text size:
+
+```astro title="PageHeader.astro"
+<!-- ... -->
+<style>
+	/* ... */
+	.orbits {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		transform: translateY(-50%);
+		width: 100%;
+		height: auto;
+	}
+
+	h1 {
+		font-size: 2.5em;
+		margin-bottom: 1rem;
+	}
+</style>
+```
+
+Last but not least, the fun stuff. We'll add a pseudo-element which acts as an overlay to the orbits and give it a solid background color. Then, we'll use the `mask-image` property to define two ellipses, positioned roughly in the top-left and top-right corners of the parent. Both of these will act as masks so it looks like the title is surrounded by a purple glow. We also tune down the opacity a bit and set the `z-index` to one. Last but not least, we add some white noise to make sure the color banding isn't as obvious by adding a second pseudo element, giving it an `opacity` of `.5` and a setting the background image to the noise, and that's our page headers done!
+
+```astro title="PageHeader.astro"
+<!-- ... -->
+<style>
+	/* ... */
+	.page-header::before {
+		content: "";
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: #a581f3;
+		mask-image: 
+			radial-gradient(ellipse at 0% -10%, hsl(var(--background-base) / 0) 0%, hsla(var(--background-base) / 0) 70%, hsl(var(--background-base)) 100%),
+			radial-gradient(ellipse at 100% -10%, hsl(var(--background-base) / 0) 0%, hsla(var(--background-base) / 0) 70%, hsl(var(--background-base)) 100%);
+		opacity: 0.4;
+		z-index: 1;
+	}
+
+	.page-header::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-image: url('/noise.webp');
+		background-repeat: repeat;
+		opacity: .5;
+		z-index: 2;
+	}
+</style>
+```
+
+Thanks to Astro's component system, we can now re-use this wherever we need, bringing some much needed coherence between the various sub-pages to our new site.
+
+### Damn kids and their phones these days
+
+Yep, we're still not quite done, even though I skipped most of the page creation. Unfortunately, we're still missing what I consider the biggest piece of work with any site: optimizing the layout for various resolutions (in our case, tablets and mobile devices). For this, I usually go through all the pages again and use the developer tools to "squeeze" down the website, then fix any mistakes I notice along the way. Once I think I've optimized enough, I make a preview deployment of the site (you can use [Netlify](https://www.netlify.com/) or [Vercel](https://vercel.com/) for this, we at StudioCMS use [Coolify](https://coolify.io/) instead) to view it on my phone and iron out any final issues I notice. If possible, I also send that preview deployment to a few people to collect feedback. Everyone's feedback is different, and a second or third pair of eyes might notice something you didn't!
+
+Another important thing is that you test your site on at least Firefox and Chrome, and if possible, Safari. The web these days is fairly standardized, however, some of the features like SVGs and Videos might differ between the various engines. Although a bit of a pain, there's tools like [caniuse.com](https://caniuse.com) that can help with figuring these things out. A general rule of thumb for me is: SVG blurring is a no-go, and anything that needs to interact with the user's device probably won't work with Apple's walled garden.
 
 ## Afterthoughts
 
-You've made it to the end! Let's summarize what we've learned this time. For one, it's incredibly important to collect lots of ideas. You may not end up using all of them (as you can see from what was actually implemented out of the things from my list), but it's nice to have ideas to bounce of. When creating a page, your goal is **always** to get users to click something, to get them to use your product, or read more about you. CTAs are the way to do this. Think about what type of user might visit your page, what they are looking for, what they might be interested in. Call them by name if you have to! "For Marketers" is incredibly effective when a marketer visits a page. Imagine them going "Oh hey, that's me, I'm a marketer!". Also, don't forget to always show useful information. I recently watched [an incredible video by YouTuber Malewicz](https://www.youtube.com/watch?v=HnTv9J9RYrw), where he (in part) talked about how modern designs have become meaningless. That was a big wake-up call to me, and I tried my best with this site to convey meaningful information, and you should try the same! Yes, buzzwords are nice, but they're useless if nobody can tell what your product is actually about. Last but not least, never forget your social proof. Be it numbers or quotes from people, even both! Peer pressure is quite effective at converting users 😉
+You've made it to the end! Let's summarize what we've learned this time. For one, it's incredibly important to collect lots of ideas. You may not end up using all of them (as you can see from what was actually implemented out of the things from my list), but it's nice to have ideas to bounce of. When creating a page, your goal is **always** to get users to click something, to get them to use your product, or read more about you. CTAs are the way to do this. Think about what type of user might visit your page, what they are looking for, what they might be interested in. Call them by name if you have to! "For Content Creators" is incredibly effective when a content creator visits a page. Imagine them going "Oh hey, that's me, I'm a content creator!". Also, don't forget to always show useful information. I recently watched [an incredible video by YouTuber Malewicz](https://www.youtube.com/watch?v=HnTv9J9RYrw), where he (in part) talked about how modern designs have become meaningless. That was a big wake-up call to me, and I tried my best with this site to convey meaningful information, and you should try the same! Yes, buzzwords are nice, but they're useless if nobody can tell what your product is actually about. Last but not least, never forget your social proof. Be it numbers or quotes from people, even both! Peer pressure is quite effective at converting users 😉
 
 Alright, I'll leave you be now. Thanks for checking out this post! If you want to read more, there's a blogpost I recently wrote about [what building a UI library has taught me](/blog/building-a-ui-lib).
 
