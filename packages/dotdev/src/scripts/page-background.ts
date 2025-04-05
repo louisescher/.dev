@@ -148,17 +148,10 @@ class PageBackground {
       return 0;
     }
     
-    // If the current timestamp is after the end, return 0
-    if (timestamp > end) {
-      const elapsedAfterEnd = timestamp - end;
-      const progressAfterEnd = elapsedAfterEnd / (totalDuration / 2);
-      
-      return Math.sin(progressAfterEnd * Math.PI);
-    }
+    const elapsedAfterEnd = timestamp - end;
+    const progressAfterEnd = elapsedAfterEnd / (totalDuration / 2);
     
-    const progress = (timestamp - start) / totalDuration;
-    
-    return Math.max(0, 0.5 - 0.5 * Math.cos(progress * Math.PI));
+    return Math.max(0, 0.75 - 0.75 * Math.cos(progressAfterEnd * Math.PI));
   }
 
   /**
