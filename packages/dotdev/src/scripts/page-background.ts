@@ -23,13 +23,8 @@ class PageBackground {
   private baseCtx: CanvasRenderingContext2D;
   private overlayCtx: CanvasRenderingContext2D;
   
-  private width: number = document.body.clientWidth;
-  private height: number = Math.max(
-    document.body.scrollHeight, 
-    document.body.offsetHeight, 
-    document.documentElement.clientHeight,
-    document.documentElement.offsetHeight 
-  );
+  private width: number = window.innerWidth;
+  private height: number = window.innerHeight;
 
   private letterPositions: LetterPosition[] = [];
   private letterInstances: LetterInstance[] = [];
@@ -221,13 +216,8 @@ class PageBackground {
    * Resizes the background canvases.
    */
   public resizeBackground = () => {
-    this.width = document.body.clientWidth;
-    this.height = Math.max(
-      document.body.scrollHeight,
-      document.body.offsetHeight,
-      document.documentElement.clientHeight,
-      document.documentElement.offsetHeight
-    );
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
 
     this.baseCanvas.width = this.width;
     this.baseCanvas.height = this.height;
