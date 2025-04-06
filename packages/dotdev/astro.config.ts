@@ -22,7 +22,9 @@ export default defineConfig({
     }
   },
   integrations: [
-    expressiveCode(),
+    expressiveCode({
+      themes: ['github-dark', 'github-dark']
+    }),
     mdx(),
     sitemap(),
     spectre({
