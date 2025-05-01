@@ -1,6 +1,6 @@
 # louisescher/.dev
 
-This is the monorepo which holds the code and all surrounding tools that make up my personal website, [louisescher.dev](https://louisescher.dev).
+This is the monorepo which holds the code and all surrounding tools that make up my personal website, [lou.gg](https://lou.gg).
 
 ## Project Structure
 

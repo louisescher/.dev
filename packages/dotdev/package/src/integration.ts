@@ -93,7 +93,7 @@ export const optionsSchema = z.object({
        */
       emitMetadata: z.boolean(),
       /**
-       * The theme to use for the comments. Defaults to `https://spectre.louisescher.dev/styles/giscus`.
+       * The theme to use for the comments. Defaults to `https://spectre.lou.gg/styles/giscus`.
        */
       theme: z.string().optional(),
       /**
