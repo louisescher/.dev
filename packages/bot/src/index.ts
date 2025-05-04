@@ -8,6 +8,7 @@ const GUILD_ID = process.env.GUILD_ID!;
 const USER_ID = process.env.USER_ID!;
 
 const client = new Client({ intents: [GatewayIntentBits.GuildPresences] });
+const MUSIC_SERVICE_NAME = ("YouTube Music").toLowerCase();
 
 interface ListeningStatus {
   song: string;
@@ -91,7 +92,7 @@ client.once(Events.ClientReady, async (client) => {
   let listening: ListeningStatus | null = null;
 
   for (const activity of activities) {
-    if(activity.name.toLowerCase() === "tidal") {
+    if(activity.name.toLowerCase() === MUSIC_SERVICE_NAME) {
       const imageURL = activity.assets?.largeImageURL({
         "size": 128
       });
@@ -118,7 +119,7 @@ client.on(Events.PresenceUpdate, async (_, newPresence) => {
   let listening: ListeningStatus | null = null;
 
   for (const activity of activities) {
-    if(activity.name.toLowerCase() === "tidal") {
+    if(activity.name.toLowerCase() === MUSIC_SERVICE_NAME) {
       const imageURL = activity.assets?.largeImageURL({
         "size": 128
       });
