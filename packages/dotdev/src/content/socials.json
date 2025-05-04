@@ -2,6 +2,15 @@
   {
     "id": "1",
     "icon": {
+      "type": "simple-icons",
+      "name": "bluesky"
+    },
+    "text": "Bluesky",
+    "link": "https://bsky.app/profile/lou.gg"
+  },
+  {
+    "id": "2",
+    "icon": {
       "type": "lucide",
       "name": "github"
     },
@@ -9,7 +18,7 @@
     "link": "https://github.com/louisescher"
   },
   {
-    "id": "2",
+    "id": "3",
     "icon": {
       "type": "lucide",
       "name": "linkedin"
@@ -18,7 +27,7 @@
     "link": "https://www.linkedin.com/in/louis-escher"
   },
   {
-    "id": "3",
+    "id": "4",
     "icon": {
       "type": "simple-icons",
       "name": "patreon"
