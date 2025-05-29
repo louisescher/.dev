@@ -58,7 +58,7 @@ export default function integration(): AstroIntegration {
 }
 ```
 
-This hook runs on initialization, before the Vite or Astro configurations have initialized, giving you the option to modify either configuration with options that your integration might need. It also allows you to add renderers like `@astrojs/react`, add middleware, or even inject scripts to be sent to the browser. Here's a full reference of the options that are exposed by this hook, taken from the [`astro:config:setup hook reference`](https://docs.astro.build/en/reference/integrations-reference/#astroconfigsetup):
+This hook runs on initialization, before the Vite or Astro configurations have initialized, allowing you to modify either configuration with options that your integration might need. It also allows you to add renderers like `@astrojs/react`, add middleware, or even inject scripts to be sent to the browser. Here's a full reference of the options that are exposed by this hook, taken from the [`astro:config:setup hook reference`](https://docs.astro.build/en/reference/integrations-reference/#astroconfigsetup):
 
 ```ts
 'astro:config:setup'?: (options: {
@@ -94,7 +94,7 @@ export default function integration(): AstroIntegration {
 }
 ```
 
-You can then access these variables in other hooks later down the line. This works with some functions[^1] and all variables exposed by any hook!
+This works with some functions[^1] and all variables exposed by any hook!
 
 ## Integration Options
 Many integrations allow the user to pass options to them. You can add these options by adding a parameter to your integration function:
@@ -137,7 +137,7 @@ export default function integration(options: z.infer<typeof optionsSchema>): Ast
 }
 ```
 
-As you can see, these Schemas are incredibly helpful when it comes to integration options.
+As you can see, these schemas are incredibly helpful when it comes to integration options.
 
 ## Virtual Modules & Runtime Modifications
 In some cases, your integration won't just live within the hooks themselves. Sometimes, you want to pass data to pages within Astro at runtime, for example a component or a certain string that has been passed to your integration as an option. The way to go about this? [Vite's virtual modules](https://vite.dev/guide/api-plugin.html#virtual-modules-convention). We're going to get into more technical explanations here, but I'll try to keep it as simple as possible.
@@ -256,7 +256,7 @@ You might have seen that it is possible to define integrations entirely using AI
 ## Virtual Module Types
 If you have tried to use this new virtual module, you probably noticed that there are no types. This is an unfortunate side effect of us defining our virtual modules as strings - TypeScript does not recognize our code. The solution to this is creating a `.d.ts` file containing your types! A `.d.ts` file is a TypeScript declaration file that contains type information about JavaScript code. You might have seen them in your `node_modules` folder before, where they are commonly used by distributed packages that are compiled to normal JavaScript before they are published. This way, they can be used in TypeScript and JavaScript, while still providing types. Astro also uses these files in a few places, for example when you want to add types to your [`context.locals` data](https://docs.astro.build/en/guides/middleware/#storing-data-in-contextlocals).
 
-We're going to inject these types using the [`astro:config:done` hook](https://docs.astro.build/en/reference/integrations-reference/#astroconfigdone), since it exposes a helpful function we can use to inject types into the `.astro` directory. Let's start by creating a `my-module.d.ts` file next to our two other files:
+We're going to inject these types using the [`astro:config:done` hook](https://docs.astro.build/en/reference/integrations-reference/#astroconfigdone), since it exposes a helpful function we can use to inject types into the `.astro` directory. Let's start by creating a `my-module.d.ts` file next to our two other files so we don't have to type out the entire type declaration within a string:
 
 ```ts
 type Options = {
@@ -302,7 +302,7 @@ The `?raw` is a Vite feature, allowing us to import any file as a string. We wil
 }
 ```
 
-And that's it! When you next start the development server, the file will be created in your `.astro` directory.
+And that's it! By the way, typing out the declarations in an inline string allows you to dynamically generate types based on the options the user passes in. There's some cool things you can do! When you next start the development server, the file will be created in your `.astro` directory.
 
 ## Exposing Astro Components & CSS
 You may want to expose Astro components or CSS files through virtual modules. This is relatively simple and works similar to functions and variables. For Astro components, you can simply re-export the default export of a file:
@@ -339,6 +339,7 @@ Astro Integrations are a great way to enhance Astro with new functionality and b
 
 - [`@studiocms/ui`](https://ui.studiocms.dev), a UI library which exposes all of it's components, CSS and helpers through virtual modules
 - [Domain Expansion](https://domainexpansion.gg), an integration that modifies Astro's build process to support incremental builds
+- [Typed Rest Routes](https://github.com/louisescher/typed-rest-routes), an integration that does heavy type generation for type-safe API routes
 - Any and all integrations that are part of [Inox Tools by Fryuni](https://inox-tools.fryuni.dev/)
 
 That's it for this post! If you've got questions, put them in the comments below.
