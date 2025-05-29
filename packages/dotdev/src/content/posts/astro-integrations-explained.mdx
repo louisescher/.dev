@@ -37,7 +37,7 @@ export default function integration(): AstroIntegration {
 What you see above is a valid integration! All it needs is a name and the `hooks` object, and you're good to go. You can run any code you want before the return statement, for example adding a `console.log` statement, which will show up once your integration is loaded by Astro. But the hooks are where the real magic happens.
 
 ## Integration Hooks
-Astro allows you to "hook into" certain events during the development and build processes. A full list of these hooks can be seen in the [integrations reference](https://docs.astro.build/en/reference/integrations-reference/#hooks), and I recommend reading through them if you are in the process of writing an integration.
+Astro allows you to "hook" into certain events during the development and build processes. A full list of these hooks can be seen in the [integrations reference](https://docs.astro.build/en/reference/integrations-reference/#hooks), and I recommend reading through them if you are in the process of writing an integration.
 
 Each hook exposes a few helpful properties like the user's full Astro configuration, a logger you can use to print to console in the same format as Astro, and multiple functions that you can use to add functionality programmatically.
 
