@@ -8,7 +8,7 @@ import Layout from "../layouts/Layout.astro";
 import { openGraph } from 'spectre:globals';
 
 const posts = await getCollection('posts', (post) => post.data.draft !== true);
-const tags = posts.flatMap((post) => post.data.tags);
+const tags = posts.flatMap((post) => post.data.tags.map((tag) => tag.id));
 ---
 <Layout
   title={openGraph.blog.title || "Blog"}
@@ -24,9 +24,9 @@ const tags = posts.flatMap((post) => post.data.tags);
             <a
               class="blog-tag"
               href="/blog"
-              data-tag={tag.id}
+              data-tag={tag}
             >
-              {tag.id}
+              {tag}
             </a>
           </li>
         ))}
