@@ -21,7 +21,7 @@ npx astro add sitemap
 You can also add multiple integrations by chaining their names after each other. Refer to [the Astro Documentation's Integration Guide](https://docs.astro.build/en/guides/integrations-guide/) for more information!
 
 ## A Deeper Look
-Internally, Astro Integrations, which are powered by [Vite](https://vite.dev), are nothing but a small TypeScript function which is exported from the package you install (or code locally). They can take in one or multiple parameters and return an Object of the `AstroIntegration` type:
+Internally, Astro Integrations, which are powered by [Vite](https://vite.dev), are nothing but a small function which is exported from the package you install (or code locally). They can take in one or multiple parameters and return an Object of the `AstroIntegration` type:
 
 ```ts
 import type { AstroIntegration } from 'astro';
