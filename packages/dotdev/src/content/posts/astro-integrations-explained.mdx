@@ -1,0 +1,333 @@
+---
+title: "Astro Integrations Explained"
+description: "Learn about the basics of Astro's integration system, the foundation of the Astro Ecosystem!"
+image: "../assets/ui-lib.png"
+createdAt: 5-29-2025
+draft: true
+tags:
+  - astro
+  - guide
+---
+If you've ever used Astro, you will no doubt have come across Astro's Integration System. You can think of integrations like plugins: They're pieces of code that add new functionality and behavior to your project.
+Astro Integrations come in many different shapes and sizes! If you come from React, you might have used [`@astrojs/react`](https://docs.astro.build/en/guides/integrations-guide/react/) before, which is an integration that allows you to use React components in your Astro project. There are more of these "renderer" integrations, both official ones from the Astro team and community-made ones! There are also "feature" integrations, like [`@astrojs/sitemap`](https://docs.astro.build/en/guides/integrations-guide/sitemap/), which add new features to your project. The aforementioned integration adds a sitemap to your site, as the name suggests. There are also "library" integrations. They add new behavior to your site and sometimes come with components and scripts you can use in your project once installed. The last type if integrations are "Adapters", which allow you to deploy Astro to various platforms like Vercel, Netlify or a NodeJS environment.
+You can add any integration to your project by running `npx astro add`, and then tagging the name of the integration to the end of that command. For example, to add the sitemap integration to your project, simply run:
+
+```bash
+npx astro add sitemap
+```
+
+You can also add multiple integrations by chaining their names after each other. Refer to [the Astro Documentation's Integration Guide](https://docs.astro.build/en/guides/integrations-guide/) for more information!
+## A Deeper Look
+Internally, Astro Integrations, which are powered by [Vite](https://vite.dev), are nothing but a small TypeScript function which is exported from the package you install (or code locally). They can take in one or multiple parameters and return an Object of the `AstroIntegration` type:
+
+```ts
+import type { AstroIntegration } from 'astro';
+
+export default function integration(): AstroIntegration {
+	return {
+		name: 'my-custom-integration',
+		hooks: {},
+	};
+}
+```
+
+What you see above is a valid integration! All it needs is a name and the `hooks` object, and you're good to go. You can run any code you want before the return statement, for example adding a `console.log` statement, which will show up once your integration is loaded by Astro. But the real magic comes from the `hooks`.
+## Integration Hooks
+Astro allows you to "hook into" certain events during the development and build processes. A full list of these hooks can be seen in the [Integrations Reference](https://docs.astro.build/en/reference/integrations-reference/#hooks), and I recommend reading through them if you are in the process of writing an integration.
+Each hook exposes a few helpful properties like the user's full Astro configuration, a logger you can use to print to console in the same format as Astro, and multiple functions that you can use to add functionality programmatically. 
+Let's take a look at the `astro:config:setup` hook as an example! You can add it to your integration like this:
+
+```ts
+import type { AstroIntegration } from 'astro';
+
+export default function integration(): AstroIntegration {
+	return {
+		name: 'my-custom-integration',
+		hooks: {
+			'astro:config:setup': (params) => {
+				// Your code goes here!
+			}
+		},
+	};
+}
+```
+
+This hook runs on initialization, before the Vite or Astro configurations have initialized, giving you the option to modify either configuration with options that your integration might need. It also allows you to add renderers like `@astrojs/react`, add middleware, or even inject scripts to be sent to the browser. Here's a full reference of the options that are exposed by this hook, taken from the [`astro:config:setup hook reference`](https://docs.astro.build/en/reference/integrations-reference/#astroconfigsetup):
+
+```ts
+'astro:config:setup'?: (options: {
+  config: AstroConfig;
+  command: 'dev' | 'build' | 'preview' | 'sync';
+  isRestart: boolean;
+  updateConfig: (newConfig: DeepPartial<AstroConfig>) => AstroConfig;
+  addRenderer: (renderer: AstroRenderer) => void;
+  addClientDirective: (directive: ClientDirectiveConfig) => void;
+  addMiddleware: (middleware: AstroIntegrationMiddleware) => void;
+  addDevToolbarApp: (entrypoint: DevToolbarAppEntry) => void;
+  addWatchFile: (path: URL | string) => void;
+  injectScript: (stage: InjectedScriptStage, content: string) => void;
+  injectRoute: (injectedRoute: InjectedRoute) => void;
+  createCodegenDir: () => URL;
+  logger: AstroIntegrationLogger;
+}) => void | Promise<void>;
+```
+
+As you can see, this hook gives you a lot of helpful information you might need later on in your integration's logic. It is worth noting that, in any hook, you can always store information in other variables to access them in other hooks later on:
+
+```ts
+export default function integration(): AstroIntegration {
+	let command: 'dev' | 'build' | 'preview' | 'sync';
+	return {
+		name: 'my-custom-integration',
+		hooks: {
+			'astro:config:setup': (params) => {
+				command = params.command;
+			}
+		},
+	};
+}
+```
+
+You can then access the used command in hooks later on. This works with any function or variable exposed by any hooks, with only a few caveats[^1]!
+## Integration Options
+Many integrations give the user the option of passing options to them. You can add these options by adding a parameter to your integration function:
+
+```ts
+export default function integration(options): AstroIntegration {
+	// ...
+}
+```
+
+Since we're writing TypeScript code, TypeScript will complain that these options are of the `any` type, and not sufficiently typed. Luckily, Astro ships with [Zod](https://zod.dev), a TypeScript schema validation library that is extremely helpful in creating type-safe, verifiable options.
+
+> **Zod's Version**
+>
+> At the time of writing, Astro (currently at v5.8.1) still ships with Zod v3. Although Zod 4 doesn't change much, please refer to the [old Zod v3 docs](https://v3.zod.dev) to make sure you don't run into any issues. I will update this article as soon as Astro switches to Zod v4.
+
+Zod is, in my opinion, the way to go when it comes to validating the options of your integration. Let's implement a small schema, infer it's types and validate it so we have type-safe access to the options passed to the integration:
+
+```ts
+import { z } from "astro/zod";
+
+/**
+ * The options for this integration. You can use docstrings on the schema so the user can see them too!
+ */
+const optionsSchema = z.object({
+	/**
+	 * A string.
+	 */
+	foo: z.string(),
+	/**
+	 * A boolean.
+	 */
+	bar: z.boolean()
+});
+
+export default function integration(options: z.infer<typeof optionsSchema>): AstroIntegration {
+	const parsedOptions = optionsSchema.parse(options);
+	// parsedOptions.foo and parsedOptions.bar will be fully typed!
+	// Additionally, if invalid options are passed, the server will fail to start.
+}
+```
+
+As you can see, these Schemas are incredibly helpful when it comes to integration options.
+## Virtual Modules & Runtime Modifications
+In some cases, your integration won't just live within the hooks themselves. Sometimes, you want to pass data to pages within Astro at runtime, for example a component or a certain string that has been passed to your integration as an option. The was to go about this? [Vite's virtual modules](https://vite.dev/guide/api-plugin.html#virtual-modules-convention). 
+We're going to get into more technical explanations here, but I'll try to keep it as simple as possible. Essentially, a virtual module is a "fake" module created at runtime when the server starts, contrary to normal JavaScript modules. A normal JavaScript module can be any file with an export; it can also import and re-export other modules/files. The virtual module is a way of collecting information when the server starts, allowing you to access information a normal JS module could not expose. Virtual modules are held in memory and discarded once the server stops.
+The easiest way to differentiate between a virtual module and a normal module is by looking at it's name. Usually, virtual modules will have a colon in their names, since that is an "illegal" symbol in normal NodeJS modules:
+
+```ts
+// Normal module
+import something from "normal-module";
+// Virtual Module
+import something from "virtual:module";
+```
+
+Creating these virtual modules can be a bit of a pain, since they are low-level Vite code and difficult to understand. You can read [the Vite guide](https://vite.dev/guide/api-plugin.html#virtual-modules-convention) for more information on the conventions.
+
+Luckily, the community has created the [Astro Integration Kit (AIK)](https://astro-integration-kit.netlify.app/), which makes creating these virtual imports a breeze. First, [install AIK](https://astro-integration-kit.netlify.app/getting-started/installation/). After that, you can use the `addVirtualImports` function to specify your virtual modules:
+
+```ts
+import { addVirtualImports } from "astro-integration-kit";
+
+// ...
+
+export default function integration(options: z.infer<typeof optionsSchema>): AstroIntegration {
+	const parsedOptions = optionsSchema.parse(options);
+	
+	return {
+		name: "my-custom-integration",
+		hooks: {
+			'astro:config:setup': (params) => {
+				addVirtualImports(params, {
+					name: "my-custom-integration",
+					imports: {
+						"virtual:foo": `export default { foo: ${parsedOptions.foo} }`
+					}
+				});
+			}
+		}
+	}
+}
+```
+
+Virtual imports/modules are specified with a key-value structure, with the key being the name of the module (which should contain a colon) and the value being the TypeScript code that is used for the virtual module. In the example above, you can see the `foo` option being used inside of this string, meaning we can later import it from `virtual:foo` anywhere inside of our Astro project.
+
+It is important to mention that virtual modules, when defined like this, can only contain strings. If you want to pass objects, you need to `JSON.stringify` them:
+
+```ts
+// ...
+export default function integration(options: z.infer<typeof optionsSchema>): AstroIntegration {
+	const parsedOptions = optionsSchema.parse(options);
+	
+	return {
+		name: "my-custom-integration",
+		hooks: {
+			'astro:config:setup': (params) => {
+				addVirtualImports(params, {
+					name: "my-custom-integration",
+					imports: {
+						"virtual:options": `export default ${JSON.stringify(parsedOptions)}`
+					}
+				});
+			}
+		}
+	}
+}
+```
+
+If you want to expose functions or entire files through virtual modules, the process is a little more involved. Since we don't want to define entire functions inside of a string, we are going to move them to another file, which we then re-export through the virtual module. Let's get started by defining a function in a new `utils.ts` file:
+
+```ts
+export function add(a: number, b: number): number {
+	return a + b;
+}
+```
+
+Next, in the file where we define our integration, we're going to construct a string to turn into a virtual module. For this to work, we need to make sure that even once our integration is published to NPM, the paths still get resolved correctly. To do this, we're going to use [AIK's `createResolver`](https://astro-integration-kit.netlify.app/core/create-resolver/) function. This will return a function we can use to resolve the path to the file correctly, without having to mess with any `package.json` export fields:
+
+```ts
+import { createResolver, addVirtualImports } from "astro-integration-kit";
+
+// ...
+
+export default function integration(options: z.infer<typeof optionsSchema>): AstroIntegration {
+	const parsedOptions = optionsSchema.parse(options);
+	
+	const resolver = createResolver(import.meta.url);
+	
+	return {
+		name: "my-custom-integration",
+		hooks: {
+			'astro:config:setup': (params) => {
+				addVirtualImports(params, {
+					name: "my-custom-integration",
+					imports: {
+						"virtual:options": `export default ${JSON.stringify(parsedOptions)}`,
+						"virtual:utils": `export { add } from '${resolve("./utils.js")}';`
+					}
+				});
+			}
+		}
+	}
+}
+```
+
+Once done, you can access and call the function from the `virtual:utils` module:
+
+```ts
+import { add } from `virtual:utils`;
+
+console.log(add(1, 2)); // Output: 3
+```
+
+You might have seen that it is possible to define integrations entirely using AIK. While this can be a nice option for some, this post focuses solely on the basics and bare internals! Having said that, I encourage you to check out their other utility functions as they are very helpful, even if you just want to learn how integrations function under the hood.
+## Virtual Module Types
+If you have tried to use this new virtual module, you probably noticed that there are no types. This is an unfortunate side effect of us defining our virtual modules as strings - TypeScript does not recognize our code. The solution to this is creating a `.d.ts` file containing your types! A `.d.ts` file is a TypeScript declaration file that contains type information about JavaScript code. You might have seen them in your `node_modules` folder before, where they are commonly used by distributed packages that are compiled to normal JavaScript before they are published. This way, they can be used in TypeScript and JavaScript, while still providing types. Astro also uses these files in a few places, for example when you want to add types to your [`context.locals` data](https://docs.astro.build/en/guides/middleware/#storing-data-in-contextlocals).
+We're going to inject these types using the [`astro:config:done` hook](https://docs.astro.build/en/reference/integrations-reference/#astroconfigdone), since it exposes a helpful function we can use to inject types into the `.astro` directory. Let's start by creating a `my-module.d.ts` file next to our two other files:
+
+```ts
+type Options = {
+    foo: string;
+    bar: boolean;
+}
+
+declare module "virtual:options" {
+    export default Options;
+} 
+
+declare module "virtual:utils" {
+    export const add: (a: number, b: number) => number;
+}
+```
+
+> **Importing in `.d.ts` files**
+>
+> Due to the way that `.d.ts` files work, you must not use normal, top level `import ... from "...";` statements, as they will turn the declaration file into a normal module. Instead, if you want to import types instead of declaring them twice, use [inline imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import):
+> ```ts
+> // ...
+> type AddFn = typeof import('./utils.js').add;
+> 
+> declare module "virtual:utils" {
+>     export const add: AddFn;
+> }
+> ```
+
+Then, head to your file where you define your integration and import the file as a raw string:
+
+```ts
+import declarations from "./my-module.d.ts?raw";
+```
+
+The `?raw` is a Vite feature, allowing us to import any file as a string. We will then pass this to the `injectTypes` function exposed by the `astro:config:done` hook:
+
+```ts
+'astro:config:done': ({ injectTypes }) => {
+	injectTypes({
+		filename: "my-module.d.ts",
+		content: declarations
+	});
+}
+```
+
+And that's it! When you next start the development server, the file will be created in your `.astro` directory.
+## Exposing Astro Components & CSS
+You may want to expose Astro components or CSS files through virtual modules. This is relatively simple and works similar to functions and variables. For Astro components, you can simply re-export the default export of a file:
+
+```ts
+'astro:config:setup': (params) => {
+	addVirtualImports(params, {
+		name: "my-custom-integration",
+		imports: {
+			// Importable using `import Component from "v:component";`
+			"v:component": `export { default } from '${resolve("./Component.astro")}';`
+			// Importable using `import { Foo } from "v:component";`
+			"v:component": `export { default as Foo } from '${resolve("./Component.astro")}';`
+		}
+	});
+}
+```
+
+If you want to expose a CSS file, it's even easier! You just need to import the file within the virtual module:
+
+```ts
+'astro:config:setup': (params) => {
+	addVirtualImports(params, {
+		name: "my-custom-integration",
+		imports: {
+			// CSS will be applied when imported with `import "v:css";`
+			"v:css": `import '${resolve("./custom.css")}';`
+		}
+	});
+}
+```
+## Afterthoughts
+Astro Integrations are a great way to enhance Astro with new functionality and behavior. While I hope that this post has been a good explainer for the basics, I encourage you to look at AIK, the Integrations API reference and other integrations by the community to see what is possible using integrations. If you want to look at some *very* advanced integrations, I can recommend the following:
+- [`@studiocms/ui`](https://ui.studiocms.dev), a UI library which exposes all of it's components, CSS and helpers through virtual modules
+- [Domain Expansion](https://domainexpansion.gg), an integration that modifies Astro's build process to support incremental builds
+- Any and all integrations that are part of [Inox Tools by Fryuni](https://inox-tools.fryuni.dev/)
+That's it for this post! If you've got questions, put them in the comments below.
+
+Until next time!
+
+[^1]: If you want to add your own ambient types by generating a `.d.ts` file, make sure to do so before the config has resolved. There might be certain cases where the function does not work anymore after a certain hook. It is always recommended to use the functions within the hooks you get them from!

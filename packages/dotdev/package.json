@@ -11,14 +11,14 @@
     "postbuild": "pagefind --site dist/client"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.0.8",
-    "@astrojs/node": "^9.0.2",
-    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/mdx": "^4.3.0",
+    "@astrojs/node": "^9.2.2",
+    "@astrojs/sitemap": "^3.4.0",
     "@iconify-json/lucide": "^1.2.20",
     "@iconify-json/simple-icons": "^1.2.18",
     "@iconify/utils": "^2.2.1",
     "@libsql/client": "^0.14.0",
-    "astro": "^5.2.5",
+    "astro": "^5.8.1",
     "astro-expressive-code": "^0.38.3",
     "drizzle-orm": "^0.38.3",
     "human-date": "^1.4.0",
