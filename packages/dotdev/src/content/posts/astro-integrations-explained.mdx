@@ -58,7 +58,7 @@ export default function integration(): AstroIntegration {
 }
 ```
 
-This hook runs on initialization, before the Vite or Astro configurations have initialized, allowing you to modify either configuration with options that your integration might need. It also allows you to add renderers like `@astrojs/react`, add middleware, or even inject scripts to be sent to the browser. Here's a full reference of the options that are exposed by this hook, taken from the [`astro:config:setup hook reference`](https://docs.astro.build/en/reference/integrations-reference/#astroconfigsetup):
+This hook runs on initialization, before the Vite or Astro configurations have initialized, allowing you to modify either configuration with options that your integration might need. It also allows you to add renderers like `@astrojs/react`, add middleware, or even inject scripts to be sent to the browser. Here's a full reference of the options that are exposed by this hook, taken from the [`astro:config:setup` hook reference](https://docs.astro.build/en/reference/integrations-reference/#astroconfigsetup):
 
 ```ts
 'astro:config:setup'?: (options: {
