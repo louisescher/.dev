@@ -127,6 +127,9 @@ class PageBackground {
   
     // Make the base canvas visible
     this.baseCanvas.style.opacity = '1';
+
+    console.log(this.letterPositions);
+    console.log(this.letterInstances);
   }
 
   /**
@@ -146,7 +149,7 @@ class PageBackground {
     const elapsedAfterEnd = timestamp - end;
     const progressAfterEnd = elapsedAfterEnd / (totalDuration / 2);
     
-    return Math.max(0, 0.75 - 0.75 * Math.cos(progressAfterEnd * Math.PI));
+    return Math.max(0, 0.5 - 0.5 * Math.cos(progressAfterEnd * Math.PI));
   }
 
   /**
@@ -181,15 +184,21 @@ class PageBackground {
   private redrawBackground = () => {
     // Clear the overlay canvas
     this.overlayCtx.clearRect(0, 0, this.overlayCanvas.width, this.overlayCanvas.height);
+      
+    this.overlayCtx.font = 'bold 28px Geist Mono';
+    this.overlayCtx.textAlign = 'start';
+    this.overlayCtx.textBaseline = 'top';
+    this.overlayCtx.shadowBlur = 16;
   
     for(const letter of this.letterInstances) {
       if (letter.fadeout > Date.now()) continue;
 
       const alpha = this.easeInOutSine(Date.now(), letter.timestamp, letter.fadeout);
-
-      if(alpha <= 0 && Date.now() > letter.fadeout) {
+      
+      if(Math.abs(alpha) < 0.000001 && Date.now() > letter.fadeout) {
         this.letterInstances.splice(this.letterInstances.indexOf(letter), 1);
         const randomLetter = this.getRandomAmountFromArray<LetterPosition>(this.letterPositions, 1);
+        console.log(randomLetter[0]);
 
         this.letterInstances.push({
           x: randomLetter[0].x,
@@ -198,15 +207,11 @@ class PageBackground {
           timestamp: Date.now(),
           fadeout: Date.now() + (this.LETTER_FADE_DURATION[0] + Math.random() * (this.LETTER_FADE_DURATION[1] - this.LETTER_FADE_DURATION[0])) * 1000
         });
+      } else {
+        this.overlayCtx.fillStyle = `rgba(${this.primaryRgb}, ${alpha})`;
+        this.overlayCtx.shadowColor = `rgba(${this.primaryRgb}, ${alpha})`;
+        this.overlayCtx.fillText(letter.letter, letter.x, letter.y);
       }
-      
-      this.overlayCtx.font = 'bold 28px Geist Mono';
-      this.overlayCtx.textAlign = 'start';
-      this.overlayCtx.textBaseline = 'top';
-      this.overlayCtx.fillStyle = `rgba(${this.primaryRgb}, ${alpha})`;
-      this.overlayCtx.shadowBlur = 16;
-      this.overlayCtx.shadowColor = `rgba(${this.primaryRgb}, ${alpha})`;
-      this.overlayCtx.fillText(letter.letter, letter.x, letter.y);
     }
     
     requestAnimationFrame(this.redrawBackground);
