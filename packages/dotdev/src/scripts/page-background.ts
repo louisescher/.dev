@@ -127,9 +127,6 @@ class PageBackground {
   
     // Make the base canvas visible
     this.baseCanvas.style.opacity = '1';
-
-    console.log(this.letterPositions);
-    console.log(this.letterInstances);
   }
 
   /**
@@ -198,7 +195,6 @@ class PageBackground {
       if(Math.abs(alpha) < 0.000001 && Date.now() > letter.fadeout) {
         this.letterInstances.splice(this.letterInstances.indexOf(letter), 1);
         const randomLetter = this.getRandomAmountFromArray<LetterPosition>(this.letterPositions, 1);
-        console.log(randomLetter[0]);
 
         this.letterInstances.push({
           x: randomLetter[0].x,
