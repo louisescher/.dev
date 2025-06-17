@@ -10,6 +10,7 @@ import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import { getCollection } from "astro:content";
 import { giscus } from 'spectre:globals';
+import RSSHint from '../../components/RSSHint.astro';
 
 /**
  * Estimates the time it takes to read a post in minutes based on:
@@ -87,6 +88,7 @@ const { Content, headings } = await render(post);
           </div>
         </div>
       </div>
+      <RSSHint />
       <Content />
       <hr class="end-of-article" />
       <a href="/blog" class="block-link" data-pagefind-ignore>← Back to blog</a>

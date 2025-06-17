@@ -1,6 +1,4 @@
 ---
-export const prerender = false;
-
 import '../styles/index.css';
 
 import ProfilePicture from '../assets/pfp.jpg';
@@ -14,6 +12,8 @@ import { getEntry } from 'astro:content';
 import { render } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
 import Status from '../components/Status.astro';
+import OnlineStatusCard from '../components/OnlineStatusCard.astro';
+import CurrentSongCard from '../components/CurrentSongCard.astro';
 
 const [posts, projects, about, workExperience, quickInfo, socials] = await Promise.all([
 	getCollection('posts', (post) => post.data.draft !== true),
@@ -59,7 +59,20 @@ const { Content: About } = await render(about!);
 				))}
 			</ul>
 		</Card>
-		<Status />
+		<Status server:defer>
+			<Fragment slot="fallback">
+				<OnlineStatusCard online={true} />
+				<CurrentSongCard
+					data={{
+						song: "???",
+						artists: "???",
+						image: "/img/music-placeholder.webp"
+					}}
+					listening={false}
+					timestamp={Date.now()}
+				/>
+			</Fragment>
+		</Status>
 	</div>
 	<div class="layout-grid-right" slot="right">
 		<Card>

@@ -34,5 +34,14 @@
     },
     "text": "Patreon",
     "link": "https://patreon.com/louis_escher"
+  },
+  {
+    "id": "5",
+    "icon": {
+      "type": "lucide",
+      "name": "rss"
+    },
+    "text": "RSS Feed",
+    "link": "https://lou.gg/rss.xml"
   }
 ]

@@ -28,6 +28,12 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/png" href="/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
+		<link
+			rel="alternate"
+			type="application/rss+xml"
+			title={name}
+			href={new URL("rss.xml", Astro.site)}
+		/>
 
 		<title>{title}</title>
 		{description && <meta name="description" content={description} />}
