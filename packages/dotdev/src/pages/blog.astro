@@ -6,6 +6,7 @@ import Card from "../components/Card.astro";
 import Icon from "../components/Icon.astro";
 import Layout from "../layouts/Layout.astro";
 import { openGraph } from 'spectre:globals';
+import RSSHint from '../components/RSSHint.astro';
 
 const posts = await getCollection('posts', (post) => post.data.draft !== true);
 const tags = posts.flatMap((post) => post.data.tags.map((tag) => tag.id));
@@ -32,6 +33,7 @@ const tags = posts.flatMap((post) => post.data.tags.map((tag) => tag.id));
         ))}
       </ul>
     </Card>
+    <RSSHint card />
   </div>
   <div class="layout-grid-right" slot="right">
 		<Card>

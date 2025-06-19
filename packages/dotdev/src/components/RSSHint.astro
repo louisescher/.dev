@@ -1,8 +1,14 @@
 ---
 import Icon from "./Icon.astro";
+
+interface Props {
+	card?: boolean;
+}
+
+const { card } = Astro.props;
 ---
 
-<a href="/rss.xml" class="rss-hint">
+<a href="/rss.xml" class="rss-hint" class:list={{ card }}>
 	<Icon type="lucide" name="rss" width={24} height={24} class={"rss-icon"} />
 	<span>Subscribe to RSS Feed</span> 
 </a>
@@ -16,14 +22,25 @@ import Icon from "./Icon.astro";
 		margin-top: 1rem;
 		border: 1px solid #353535;
 		padding: .5rem;
-		background-color .15s ease, border .15s ease
+		transition: .15s ease, border .15s ease;
 	}
 
 	.rss-hint:hover {
 		border: 1px solid var(--primary);
-		background-color: rgba(var(--primary-rgb), .125);
 		text-decoration: none;
 		color: white;
+	}
+
+	.rss-hint.card {
+		width: 100%;
+    background-color: #121212;
+    padding: 1.5rem;
+	}
+
+	.rss-hint.card:hover {
+		width: 100%;
+		background-color: #121212;
+		padding: 1.5rem;
 	}
 
 	.rss-icon {
