@@ -60,6 +60,13 @@ const { interpolation, points, showChart = true, code } = Astro.props;
 		margin-bottom: 1rem;
 	}
 
+	@media screen and (max-width: 500px) {
+		.animation-container {
+			flex-direction: column;
+			align-items: start;
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.ball {
 			transition: none;
