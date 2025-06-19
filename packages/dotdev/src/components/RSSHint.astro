@@ -8,7 +8,7 @@ interface Props {
 const { card } = Astro.props;
 ---
 
-<a href="/rss.xml" class="rss-hint" class:list={{ card }}>
+<a href="/rss.xml" class="rss-hint" class:list={{ card }} data-rybbit-event="rss_feed_click">
 	<Icon type="lucide" name="rss" width={24} height={24} class={"rss-icon"} />
 	<span>Subscribe to RSS Feed</span> 
 </a>
