@@ -17,7 +17,7 @@ import RSSHint from '../../components/RSSHint.astro';
  * - A reading speed of 200 words per minute
  * - 10 seconds per image
  * - 20 seconds per code block
- * 
+ *
  * @param post The post to estimate the reading time for
  */
 function timeToRead(post: CollectionEntry<'posts'>): number {
@@ -28,8 +28,9 @@ function timeToRead(post: CollectionEntry<'posts'>): number {
 
   const numImages = post.body?.match(/!\[/g)?.length || 0;
   const numCodeblocks = post.body?.match(/```/g)?.length || 0;
+  const numCustomElements = post.body?.match(/\/>/g)?.length || 0;
 
-  return Math.ceil(numWords / 200) + Math.ceil(numImages / 6) + Math.ceil(numCodeblocks / 3);
+  return Math.ceil(numWords / 200) + Math.ceil(numImages / 6) + Math.ceil(numCodeblocks / 3) + Math.ceil(numCustomElements / 4);
 };
 
 interface Props {

@@ -21,6 +21,7 @@
     "@libsql/client": "^0.14.0",
     "astro": "^5.9.4",
     "astro-expressive-code": "^0.38.3",
+    "chart.js": "^4.5.0",
     "drizzle-orm": "^0.38.3",
     "human-date": "^1.4.0",
     "sharp": "^0.33.5"

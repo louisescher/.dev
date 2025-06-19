@@ -1,0 +1,168 @@
+---
+type Props = {
+	interpolation: "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out" | 'cubic';
+	points: [number, number, number, number];
+	showChart?: boolean;
+	code?: string;
+};
+
+const { interpolation, points, showChart = true, code } = Astro.props;
+---
+
+<div class="animation-container" data-custom-el>
+	{showChart && (
+		<div class="canvas-wrapper">
+			<canvas width="150" height="150" class="animation-canvas" data-interpolation={interpolation} data-points={JSON.stringify(points)} />
+		</div>
+	)}
+	<div class="ball-container">
+		<div class="ball" style={`transition-timing-function: ${interpolation !== "cubic" ? interpolation : `cubic-bezier(${points.join(",")})`};`} />
+	</div>
+</div>
+{code && (
+	<div class="code">
+		<code>{code}</code>
+	</div>
+)}
+<style>
+	.animation-container {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+	}
+
+	.ball-container {
+		width: 100%;
+		height: 112px;
+		border: 1px solid #353535;
+		display: flex;
+		align-items: center;
+		padding: 28px;
+	}
+
+	.animation-container:has(.canvas-wrapper) .ball-container {
+		position: relative;
+		bottom: 9px;
+	}
+
+	.ball {
+		border-radius: 50%;
+		width: 3rem;
+		height: 3rem;
+		transition: all 2s;
+		background: var(--primary);
+		position: relative;
+		left: 0%;
+		box-shadow: 0px 0px 10px var(--primary);
+	}
+
+	.code {
+		margin-bottom: 1rem;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.ball {
+			transition: none;
+		}
+	}
+</style>
+<script>
+	import Chart from 'chart.js/auto';
+
+	function cubicBezier(t: number, p0: number, p1: number, p2: number, p3: number) {
+	  const cX = 3 * (p1 - p0);
+	  const bX = 3 * (p2 - p1) - cX;
+	  const aX = p3 - p0 - cX - bX;
+
+	  return aX * t * t * t + bX * t * t + cX * t + p0;
+	}
+
+	const animationContainers = document.querySelectorAll<HTMLDivElement>('.animation-container');
+
+	animationContainers.forEach((container) => {
+		const chartCanvas = container.querySelector<HTMLCanvasElement>(".animation-canvas");
+
+		if (chartCanvas) {
+			const useCubic = chartCanvas.dataset.interpolation! !== "linear";
+			let points = JSON.parse(chartCanvas.dataset.points!);
+
+			if (useCubic) {
+				const data = [];
+				const steps = 70;
+				for (let i = 0; i <= steps; i++) {
+				  const t = i / steps;
+				  const x = cubicBezier(t, 0, points[0], points[2], 1);
+				  const y = cubicBezier(t, 0, points[1], points[3], 1);
+				  data.push({ x, y });
+				}
+
+				points = data;
+			}
+
+			new Chart(chartCanvas, {
+				type: "line",
+				data: {
+					labels: points,
+					datasets: [
+						{
+							data: points,
+							fill: false,
+							cubicInterpolationMode: useCubic ? "default" : undefined,
+							tension: 0,
+							pointRadius: -1,
+							clip: false
+						}
+					]
+				},
+				options: {
+					plugins: {
+						legend: {
+							display: false,
+						},
+						tooltip: {
+							enabled: false,
+						}
+					},
+					borderColor: "#8c5cf5",
+					scales: {
+						x: {
+							type: 'linear',
+							min: 0,
+							max: 1,
+							grid: {
+								color: '#353535',
+							},
+							ticks: {
+								stepSize: 1,
+								callback: (value) => Number.isInteger(value) ? value : null
+							}
+						},
+						y: {
+							min: 0,
+							max: 1,
+							grid: {
+								color: `#353535`,
+							},
+							ticks: {
+								stepSize: 1,
+								callback: (value) => Number.isInteger(value) ? value : null
+							}
+						}
+					}
+				}
+			});
+		}
+
+		const ball = container.querySelector<HTMLDivElement>(".ball")!;
+		let ballPosToggle = true;
+		setInterval(() => {
+			if (ballPosToggle) {
+				ball.style.left = "calc(100% - 48px)";
+			} else {
+				ball.style.left = "0%";
+			}
+
+			ballPosToggle = !ballPosToggle;
+		}, 5000);
+	});
+</script>

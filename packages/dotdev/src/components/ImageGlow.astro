@@ -13,14 +13,14 @@ const height = props.height;
 <div class="glow-image" style={`--width: ${width}px; --height: ${height}px;`}>
   <Image {...props} loading="eager" />
   <Image
-    width={width ? ((typeof width === 'number' ? width : Number.parseInt(width)) / 4) : undefined} 
+    width={width ? ((typeof width === 'number' ? width : Number.parseInt(width)) / 4) : undefined}
     height={height ? ((typeof height === 'number' ? height : Number.parseInt(height)) / 4) : undefined}
     {...props}
     alt={''}
     class='glow'
     class:list={[props.class]}
     quality={10}
-    loading="lazy"
+    loading="eager"
   />
 </div>
 <style is:global>

@@ -149,6 +149,11 @@ main {
   outline: none;
 }
 
+.custom-pre {
+	padding: 1rem;
+	font-size: revert;
+}
+
 @media screen and (max-width: 1380px) {
   body {
     padding: 0 2rem;
