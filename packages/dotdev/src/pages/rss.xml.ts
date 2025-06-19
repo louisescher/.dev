@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import { name, openGraph } from "spectre:globals";
 
 export async function GET(context: APIContext) {
-	const posts = await getCollection('posts');
+	const posts = await getCollection('posts', (entry) => entry.data.draft !== true);
 
   return rss({
     title: name,
