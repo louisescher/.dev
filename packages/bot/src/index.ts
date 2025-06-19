@@ -65,6 +65,7 @@ async function updateStatus(newStatus: Status) {
 }
 
 async function computeImageFromURL(url: string): Promise<string> {
+  console.log(`New Image: ${url}`);
   const buffer = await (await fetch(url)).arrayBuffer();
   return `data:image/png;base64,${Buffer.from(buffer).toString('base64')}`;
 }
