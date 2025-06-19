@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { Activity, Client, Events, GatewayIntentBits } from 'discord.js';
 import { db, statusTable } from './db';
 import { deepStrictEqual } from 'assert';
 
@@ -65,7 +65,6 @@ async function updateStatus(newStatus: Status) {
 }
 
 async function computeImageFromURL(url: string): Promise<string> {
-  console.log(`New Image: ${url}`);
   const buffer = await (await fetch(url)).arrayBuffer();
   return `data:image/png;base64,${Buffer.from(buffer).toString('base64')}`;
 }
@@ -80,6 +79,31 @@ function logCurrentStatus() {
   }
 }
 
+async function computeAndUpdateStatus(status: string, activities: Activity[]) {
+  let listening: ListeningStatus | null = null;
+
+  for (const activity of activities) {
+    if(activity.name.toLowerCase() === MUSIC_SERVICE_NAME) {
+      console.log(activity);
+      
+      const imageURL = activity.assets?.largeImageURL({
+        "size": 128
+      });
+
+      listening = {
+        song: activity.details ?? "Unknown",
+        artists: activity.state?.replace("by ", "") ?? "Unknown",
+        albumCover: imageURL ? await computeImageFromURL(imageURL) : null
+      };
+    }
+  }
+
+  await updateStatus({
+    listening,
+    status: status === 'online' ? 'online' : 'offline'
+  });
+}
+
 client.once(Events.ClientReady, async (client) => {
 	console.log(`Ready! Logged in as ${client.user.tag}`);
 
@@ -90,26 +114,7 @@ client.once(Events.ClientReady, async (client) => {
 
   const { status, activities } = member.presence;
 
-  let listening: ListeningStatus | null = null;
-
-  for (const activity of activities) {
-    if(activity.name.toLowerCase() === MUSIC_SERVICE_NAME) {
-      const imageURL = activity.assets?.largeImageURL({
-        "size": 128
-      });
-
-      listening = {
-        song: activity.details ?? "Unknown",
-        artists: activity.state?.replace("by ", "") ?? "Unknown",
-        albumCover: imageURL ? await computeImageFromURL(imageURL) : null
-      };
-    }
-  }
-
-  await updateStatus({
-    listening,
-    status: status === 'online' ? 'online' : 'offline'
-  });
+  computeAndUpdateStatus(status, activities);
 });
 
 client.on(Events.PresenceUpdate, async (_, newPresence) => {
@@ -117,26 +122,7 @@ client.on(Events.PresenceUpdate, async (_, newPresence) => {
 
   if (userId !== USER_ID) return;
 
-  let listening: ListeningStatus | null = null;
-
-  for (const activity of activities) {
-    if(activity.name.toLowerCase() === MUSIC_SERVICE_NAME) {
-      const imageURL = activity.assets?.largeImageURL({
-        "size": 128
-      });
-
-      listening = {
-        song: activity.details ?? "Unknown",
-        artists: activity.state?.replace("by ", "") ?? "Unknown",
-        albumCover: imageURL ? await computeImageFromURL(imageURL) : null
-      };
-    }
-  }
-
-  await updateStatus({
-    listening,
-    status: status === 'online' ? 'online' : 'offline'
-  });
+  computeAndUpdateStatus(status, activities);
 });
 
 client.login(TOKEN);
