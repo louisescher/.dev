@@ -14,6 +14,7 @@ interface ListeningStatus {
   song: string;
   artists: string;
   albumCover: string | null;
+  shouldRefetch: boolean;
 }
 
 interface Status {
@@ -84,8 +85,6 @@ async function computeAndUpdateStatus(status: string, activities: Activity[]) {
 
   for (const activity of activities) {
     if(activity.name.toLowerCase() === MUSIC_SERVICE_NAME) {
-      console.log(activity);
-      
       const imageURL = activity.assets?.largeImageURL({
         "size": 128
       });
@@ -93,20 +92,26 @@ async function computeAndUpdateStatus(status: string, activities: Activity[]) {
       listening = {
         song: activity.details ?? "Unknown",
         artists: activity.state?.replace("by ", "") ?? "Unknown",
-        albumCover: imageURL ? await computeImageFromURL(imageURL) : null
+        albumCover: imageURL ? await computeImageFromURL(imageURL) : null,
+        shouldRefetch: !activity.assets?.smallImage,
       };
     }
   }
 
-  await updateStatus({
-    listening,
-    status: status === 'online' ? 'online' : 'offline'
-  });
+  if (listening?.shouldRefetch) {
+    console.warn("Unable to load status correctly. Retrying in 1 second...")
+    setTimeout(() => {
+      fetchUserStatusManually();
+    }, 1000);
+  } else {
+    await updateStatus({
+      listening,
+      status: status === 'online' ? 'online' : 'offline'
+    });
+  }
 }
 
-client.once(Events.ClientReady, async (client) => {
-	console.log(`Ready! Logged in as ${client.user.tag}`);
-
+async function fetchUserStatusManually() {
   const guild = await client.guilds.fetch(GUILD_ID);
   const member = await guild.members.fetch({ user: USER_ID, withPresences: true });
 
@@ -115,6 +120,11 @@ client.once(Events.ClientReady, async (client) => {
   const { status, activities } = member.presence;
 
   computeAndUpdateStatus(status, activities);
+}
+
+client.once(Events.ClientReady, async (client) => {
+	console.log(`Ready! Logged in as ${client.user.tag}`);
+  fetchUserStatusManually();
 });
 
 client.on(Events.PresenceUpdate, async (_, newPresence) => {
