@@ -1,0 +1,31 @@
+---
+import Icon from "./Icon.astro";
+---
+
+<a href="https://coff.ee/louisescher" class="bmac-hint" data-rybbit-event="bmac_click">
+	<Icon type="simple-icons" name="buymeacoffee" width={24} height={24} class={"bmac-icon"} />
+	<span>Buy Me A Coffee</span> 
+</a>
+<style>
+	.bmac-hint {
+		width: fit-content;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: .5rem;
+		border: 1px solid #353535;
+		background-color: #FFDD00;
+		color: black;
+		padding: .5rem;
+		transition: .15s ease, border .15s ease;
+	}
+
+	.bmac-hint:hover {
+		text-decoration: none;
+		background-color: #ffec71;
+	}
+
+	.bmac-icon {
+		transform: scale(.85);
+	}
+</style>

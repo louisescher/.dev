@@ -30,10 +30,10 @@
     "id": "4",
     "icon": {
       "type": "simple-icons",
-      "name": "patreon"
+      "name": "buymeacoffee"
     },
-    "text": "Patreon",
-    "link": "https://patreon.com/louis_escher"
+    "text": "Buy Me A Coffee",
+    "link": "https://coff.ee/louisescher"
   },
   {
     "id": "5",

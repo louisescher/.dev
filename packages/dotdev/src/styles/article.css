@@ -167,13 +167,16 @@ code:not(.astro-code code) {
   z-index: 1;
 }
 
-.end-of-article {
+.end-of-article, .end-of-hints {
   margin-top: 1rem;
-  margin-bottom: 1.5rem;
   width: 100%;
   height: 1px;
   background-color: #353535;
   border: none;
+}
+
+.end-of-hints {
+  margin-bottom: 1.5rem;
 }
 
 blockquote {

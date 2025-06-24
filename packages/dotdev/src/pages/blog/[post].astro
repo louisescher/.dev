@@ -4,13 +4,14 @@ import '../../styles/article.css';
 import ImageGlow from "../../components/ImageGlow.astro";
 import Card from "../../components/Card.astro";
 import Layout from "../../layouts/Layout.astro";
+import RSSHint from '../../components/RSSHint.astro';
+import BuyMeACoffee from '../../components/BuyMeACoffee.astro';
 
 import type { GetStaticPaths } from "astro";
 import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import { getCollection } from "astro:content";
 import { giscus } from 'spectre:globals';
-import RSSHint from '../../components/RSSHint.astro';
 
 /**
  * Estimates the time it takes to read a post in minutes based on:
@@ -64,7 +65,7 @@ const { Content, headings } = await render(post);
         <li class="toc-li">
           <a href={`#_top`} class="active">{post.data.title}</a>
         </li>
-        {headings.map((heading, i) => (
+        {headings.map((heading) => (
           <li class="toc-li" data-depth={heading.depth}>
             <a href={`#${heading.slug}`}>{heading.text}</a>
           </li>
@@ -89,9 +90,17 @@ const { Content, headings } = await render(post);
           </div>
         </div>
       </div>
-      <RSSHint />
+      <div class="hints">
+        <RSSHint />
+        <BuyMeACoffee />
+      </div>
       <Content />
       <hr class="end-of-article" />
+      <div class="hints">
+        <RSSHint />
+        <BuyMeACoffee />
+      </div>
+      <hr class="end-of-hints" />
       <a href="/blog" class="block-link" data-pagefind-ignore>← Back to blog</a>
     </Card>
     {giscus && (
@@ -174,5 +183,12 @@ const { Content, headings } = await render(post);
     article {
       gap: 1rem;
     }
+  }
+
+  .hints {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
   }
 </style>
