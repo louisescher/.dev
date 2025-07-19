@@ -91,7 +91,7 @@ async function computeAndUpdateStatus(status: string, activities: Activity[]) {
 
       listening = {
         song: activity.details ?? "Unknown",
-        artists: activity.state?.replace("by ", "") ?? "Unknown",
+        artists: activity.state ?? "Unknown",
         albumCover: imageURL ? await computeImageFromURL(imageURL) : null,
         shouldRefetch: !activity.assets?.smallImage,
       };
