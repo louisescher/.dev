@@ -1,0 +1,112 @@
+---
+title: "A Successor to E-Mail"
+description: "E-Mail is old. Lets talk about how to fix it."
+image: "../assets/a-successor-to-e-mail/og.png"
+createdAt: 07-03-2025
+draft: false
+tags:
+  - fun
+  - manifesto
+---
+As a person growing up in the digital age, communication has never been an issue for me. Need to ask a friend a question? Send them a WhatsApp. My Grandma has an issue with her Laptop? Just call her with your Smartphone. It's a blessing that, surprisingly, has not been around for long. While I use Discord and Microsoft Teams almost every day, both my parents and Grandparents come from a Generation that regularly sent letters and used a hardwired telephone! It's very interesting to think that so much has changed in such a short time span. And arguably, it's all built on a single idea: Electronic Mail.
+
+## A Quick History Lesson
+Humans have had their ways of communicating across long distances. Smoke signals and Drums in Africa, Asia and the Americas were easy ways to transmit information using either optics or audio as their medium of choice. In addition, homing pigeons and postal services have been used to deliver written letters between fixed points, allowing people to send letters and packages. It wasn't until 1726 that experiments on communicating via electricity started. The first working telegraph was built by Sir Francis Ronalds in 1816, ushering in the age of long-distance communication by wire.
+
+Even when the telephone was invented, letters, for some reason, stuck around! Maybe they have just been engrained in people's minds as a very personal way of communication, maybe the idea of romantic letters or the customization of paper and envelopes resonated with people. Or maybe it was just cheaper.
+
+In any case, skip forward a few years and we've skipped past the invention of radio and television and arrived in the era of semiconductors, in the year 1981. Electronic Mail had been discussed for a while; first being discussed in relation with the US Governments ARPANET as the "Mail Box Protocol", and then again in RFC 524, where a proposal for a Mail Protocol was made. While these two were never implemented, they laid the ground work for the eventual RFC 788, in which proposed SMTP with the goal of implementing electronic mail reliably and efficiently.
+
+## Simple Messed-up Trash Protocol, amirite?
+If you've ever read one of my articles, you know I tend to write my articles in a way that is more funny than educational. Then again, the latter would be boring, so I suppose that's a good thing.
+
+Let's discuss how SMTP works. When you send an E-Mail, you start a transaction between an SMTP sender and an SMTP receiver. As part of this transaction, three steps have to be fulfilled:
+
+- A `MAIL` command to let the receiving server know a new mail is being sent
+- A `RCPT` command to let the receiving server know who is meant to receive the mail
+- A `DATA` command that sends over the data
+
+We always that SMTP is holding us back, but it seems that's not really the case! It's actually a fairly open protocol, even in terms of sizes. The RFC even states that, "to the maximum extend possible", an implementation should be used which imposes no limits whatsoever. So, who is the real culprit leading to ridiculous file sizes for mail storage? We can't let SMTP get slandered like this, so let's get investigating!
+
+## POP and IMAP
+As soon as the use of E-Mail became more widespread, protocols were invented that made the communication between a remote e-mail server and a user's system possible.
+
+POP, the Post Office Protocol, introduced in 1984, was the first of the two. It provides access to the remote mailbox via an IP network, downloads all messages from the remote server and stores them on the user's computer. Ah, it also deletes all E-Mails from the remote server. Wait, **what?!**
+While writing normally cannot convey meaning, I'm fairly certain that you had the same reaction as I had reading that information for the first time. While seeming unnecessary now, the design behind POP was influenced by the fact that a lot of users back then only had temporary Internet connections, mostly dial-up access. The idea was that users could download the mail while online, and then view and manipulate it once offline. The good news: POP3 clients have the option to leave mail on the server after retrieval. The better news: IMAP supported this from the start.
+
+IMAP was designed in 1986, with the primary difference to POP being that mail is kept on the server even after retrieval, allowing for true remote access and downloading messages on demand. It also allows for dynamic, updating views while connected to a server. POP clients on the other hand, due to their design, must reconnect to the server before being able to view new messages.
+
+IMAP4, which was proposed in RFC 1730 in December 1994, is the version we use today, having been revised twice since then, the last time being in August 2021 (RFC 9051). For example. IMAP4 allows for tracking state for the messages through flags, having multiple mailboxes on the server for a user and server-side searching.
+
+Although IMAP seems like it trumps POP in many if not all ways, there are a few drawbacks. For one, the IMAP protocol is very complex, for example in the way it handles multiple clients accessing the same mailbox at the same time. It has also been criticized for very strict, not allowing for certain behavior that could improve the protocol.
+
+## I couldn't think of a heading for this one.
+Back when electronic mail was still new, these two protocols built the foundation for an interconnected world - but in my opinion, they've gotten out of shape, much like an ex Olympic medalist in their 50s. Or LeBron James. In any case, with electronic mail being as wide-spread as it is, it's going to be a hard sell to replace it anytime soon. It's not like you can tell your Grandma to hop on Slack or Discord. In my opinion, the reason E-Mail is great is it's simplicity. But it's also the reason it's aging like milk.
+
+E-Mail nowadays is not used for 1:1 communication anymore, at least not casual chats. Apps like WhatsApp and Discord have taken over in that space. It's mostly used for formal communication purposes now, for verification purposes, one time passwords, or, worst of all, advertisements. But don't mistake that for a declining volume of E-Mails sent. In 2023, almost 350 billion E-Mails were sent and received around the world, according to [Statista](https://www.statista.com/statistics/456500/daily-number-of-e-mails-worldwide/).
+
+My point is that it's time for a soft reboot of how we interact with electronic mail. There are just too many ways in which the current standards are failing us. A few examples:
+
+- E-Mails are often used for phishing, leading to security risks for normal users and businesses alike.
+	- It's often difficult to verify whether an E-Mail is legitimate as small character differences in E-Mails are difficult to distinguish.
+- Replying to E-Mails creates ridiculously long chains of text, making it difficult to get back into conversations.
+- Developers struggle with creating E-Mails that look appealing because every client supports different specifications of web technology.
+- Replying in a conversation with multiple recipients is unnecessarily difficult.
+- Signatures are sent with every mail when they really only should be displayed once.
+- It is impossible to un-send E-Mails or edit them after they've been sent.
+- E-Mails with content that expires after a certain amount of time, like one-time passwords, stay in your inbox forever, even though they only take up space.
+- Attachments are sent in-line, and large attachments cause the E-Mail to take longer to send.
+
+While the first few points could be resolved with current clients implementing their own solution, wouldn't it make sense to finally give the protocol that has (quite literally) carried the weight of the world a new coat of paint?
+
+## MMTP - A Modern Mail Transfer Protocol.
+You read that right, this blog post is a manifesto now. Jokes aside, I think that a new remote E-Mail protocol makes sense at this point. The goal would be to implement a few features mentioned above, with backwards compatibility being ensured by the server sending and receiving the E-Mail.
+
+### Goals
+- Backwards compatibility with SMTP, handled by the server
+- Introducing a better reply system with chains and replies to some or all recipients
+- Better support for attachments
+- Better support for signatures
+- Better phishing & spam protection and/or prevention
+- Support for automatic expiry of E-Mails, with the expiry date set by the sender
+- Editing of E-Mails after they have been sent
+	- Editing text or adding attachments should be possible
+- Built-in "read" functionality, similar to messaging services
+	- User should be allowed to turn this off
+- Un-sending of Mails should they have not been read yet
+	- This always deletes the mail from the sender server. Should the recipient have read markers turned off, nothing happens on their end, but the sender can still delete the mail without knowing if the mail has been read or not.
+- Providing an IMAP/POP3 extension that allows for utilizing these new features *or* implementing a new remote-access protocol
+
+### Implementation
+#### Backwards Compatibility
+Backwards compatibility should be easy to achieve. When sending a message, an MMTP-compatible server can send a `HELP` command to ask the recipient for more information, or send a different, new command. SMTP-only servers will reply with a 500 status code, while MMTP-compatible servers can send a different status code to indicate that they understand the protocol. Based on this information, the server can choose how to send the data.
+
+#### Better Replies
+As mentioned before, and I won't state this again, based on the `HELP` command we can infer what to do from now on. But better replies can be mostly handled by embedding some sort of ID for the mail we wait to reply to, then the rest is up the UI.
+
+#### Attachment Support
+Bit of a personal anecdote, but a friend of mine once had his brother ask him if he could send him a power point presentation. His brother had just moved out, and so he forgot a USB stick. My friend, thinking nothing of it, just attached the power point presentation to an E-Mail. That same e-mail then took 3 months to arrive.
+
+I imagine sending entire assets won't be practical in most cases, even from server to server. For large attachments, maybe over 10 MB, the sender's server could store it until the recipient requests the data? It could then be simultaneously be downloaded on both the recipients server and their device. 
+
+#### Signatures
+Signatures, right now, are just images and some text embedded within the e-mail itself. Since we're already talking about more action from the server itself, maybe that signature could be stored on the server, then requested by clients if needed?
+
+#### Phishing & Spam Protection
+This one will be difficult since phishing and spam tactics constantly evolve. But at least suspicious links could be blocked / warned about. Any other tactics could, again, be implemented on the server. Services like Proton already do this anyway, be that on the frontend or the backend.
+
+#### Automatic Expiry
+Similar to the replies, the sender could attach a timestamp to their message indicating when the recipient server should delete it. Nothing major.
+
+#### Edits & Deletions
+A bit more tricky, especially related to backwards compatibility. Maybe that feature should be disabled in such cases, since we can detect whether we're communicating with an old server anyway. If we're not dealing with that however, since we already store mail IDs for everything because we need them for replies, we can notify recipient servers of changes when they're made. There's a point to be made here that the recipient should be able to turn off this feature on their end, which the sender then has to respect - but I'm just proposing features here. On to the last one.
+
+#### Read Markers
+Same story. Store the message ID, notify the sender when it is opened. This should definitely be a feature that users can turn off, similar to WhatsApp and co.
+
+## Afterthoughts
+Well, this was a bit of a weird one. I started writing this article at the end of May after a heated discussion on the Astro Discord server, then forgot about it entirely while studying for exams just a month later. But it's finally done! Never written a manifesto before, so I hope this was adequate? I had to make a new tag on my blog for it, so I hope it was.
+
+In any case. Maybe some tech genius reads this and makes it a reality. Or some company throws a shit ton of money at me and asks me to make it. Maybe I should mention that the Spam detection is powered by AI, so I can get that VC money?
+
+Joking, of course. Hope you enjoyed, and until the next one.
