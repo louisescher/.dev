@@ -51,7 +51,7 @@ const { Content: About } = await render(about!);
 			<ul class="overview-list">
 				{socials.map((item) => (
 					<li>
-						<a href={item.data.link} class="socials-link">
+						<a href={item.data.link} class="socials-link" target="_blank">
 							<Icon type={item.data.icon.type} name={item.data.icon.name as any} width={24} height={24} class='glow-icon' />
 							<span>{item.data.text}</span>
 						</a>
