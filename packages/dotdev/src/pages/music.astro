@@ -1,0 +1,67 @@
+---
+import '../styles/article-list.css';
+import '../styles/music.css';
+
+import { getCollection } from "astro:content";
+import Card from "../components/Card.astro";
+import Layout from "../layouts/Layout.astro";
+import ImageGlow from '../components/ImageGlow.astro';
+import Icon from '../components/Icon.astro';
+import AudioPlayer from '../components/AudioPlayer.astro';
+
+const tracks = await getCollection('music');
+---
+<Layout
+  title={"Music"}
+  description={"Discover some of the tunes I made or sang to."}
+	pagefindIgnore
+>
+  <div class="layout-grid-left" slot="left">
+    <Card class="flex-col-card">
+      <h2 class="no-mt">About</h2>
+			<p>
+				I was always into music. Not in a professional way, but I played instruments as a child and always enjoyed singing, 
+				so on this page you can find some of the tunes I've made myself or covered.
+			</p>
+    </Card>
+  </div>
+  <div class="layout-grid-right" slot="right">
+		{tracks.map(({ data: track }) => (
+			<Card>
+				<div class="content-container">
+					<div class="music-track">
+						<div class="track-cover">
+							<ImageGlow src={track.cover} alt={track.title} width={239} height={239} />
+						</div>
+						<div class="track-info">
+							<div class="title-download-wrapper">
+								<h3>{track.title}</h3>
+								<a download href={track.path}>
+									<Icon type="lucide" name='download' width={24} height={24} />
+								</a>
+							</div>
+							<hr>
+							<div class="track-metadata">
+								{Object.entries(track.metadata).map(([key, value]) => {
+									const Tag = typeof value === "string" ? "span" : "a";
+									return (
+										<div class="metadata-entry">
+											<span class="metadata-category">{key}</span>
+											<Tag href={typeof value === "string" ? undefined : value.href}>{typeof value === "string" ? value : value.text}</Tag>
+										</div>
+									)
+								})}
+							</div>
+							<hr>
+							<p class="track-desc">{track.description}</p>
+							<AudioPlayer enclosure={track.path} duration={track.duration} />
+						</div>
+					</div>
+				</div>
+			</Card>
+		))}
+  </div>
+</Layout>
+<script>
+	// Duration of a track, current playback status
+</script>

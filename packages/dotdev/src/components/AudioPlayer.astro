@@ -1,0 +1,199 @@
+---
+import Icon from './Icon.astro';
+import { generateZeroes } from '../util/generate-zeroes';
+
+interface Props {
+	enclosure: string;
+	duration: number;
+}
+
+const { enclosure, duration } = Astro.props;
+
+const seconds = duration % 60;
+const minutes = Math.floor(duration / 60);
+---
+<div class="player" data-enclosure={enclosure} data-duration={duration}>
+	<button class="play-btn">
+		<Icon type='lucide' name='play' class="play-icon" width={24} height={24} />
+		<Icon type='lucide' name='loader-circle' class="spinner" width={24} height={24} />
+		<Icon type='lucide' name='pause' class="pause-icon" width={24} height={24} />
+	</button>
+	<div class="player-progress"></div>
+	<span class="duration-info">
+		<span class="current-time">{generateZeroes(`${minutes}`.length)}:{generateZeroes(`${seconds}`.length)}</span> / {minutes}:{seconds}
+	</span>
+</div>
+<script>
+	import { generateZeroes } from '../util/generate-zeroes';
+
+	const players = document.querySelectorAll<HTMLDivElement>(".player");
+
+	players.forEach((player) => {
+		const playBtn = player.querySelector<HTMLButtonElement>(`.play-btn`)!;
+		const playerProgress = player.querySelector<HTMLDivElement>(`.player-progress`)!;
+		const currentTimeSpan = player.querySelector<HTMLSpanElement>(`.current-time`)!;
+		const ogCurrentTime = currentTimeSpan.textContent;
+
+		let playingInterval: NodeJS.Timeout;
+			
+		const duration = Number.parseInt(player.dataset.duration!);
+		const audio = new Audio(player.dataset.enclosure!);
+
+		playBtn.addEventListener("click", async () => {
+			if (playBtn.classList.contains("playing") || playBtn.classList.contains("loading")) {
+				playBtn.classList.remove("playing", "loading");
+				
+				clearInterval(playingInterval);
+				audio.pause();
+
+				return;
+			}
+
+			if (audio.currentTime === 0) {
+				currentTimeSpan.innerText = ogCurrentTime!;
+				playerProgress.style.setProperty("--track-progress", `0%`);
+			}
+
+			if (audio.readyState === 4) {
+				playBtn.classList.add("playing");
+			} else {
+				playBtn.classList.add("loading");
+
+				await new Promise((res) => {
+					audio.readyState
+					audio.addEventListener("canplay", res);
+				});
+
+				// User pressed again, stop
+				if (!playBtn.classList.contains("loading")) return;
+
+				playBtn.classList.remove("loading");
+				playBtn.classList.add("playing");
+			}
+
+			audio.play();
+
+			playingInterval = setInterval(() => {
+				playerProgress.style.setProperty("--track-progress", `${Math.ceil((audio.currentTime / duration) * 100)}%`);
+				
+				const ogSecondsLength = `${duration % 60}`.length;
+				const ogMinutesLength = `${Math.floor(duration / 60)}`.length;
+
+				const seconds = Math.floor(audio.currentTime + 1) % 60;
+				const minutes = Math.floor((audio.currentTime + 1) / 60);
+
+				const paddingSecondZeros = generateZeroes(ogSecondsLength - `${seconds}`.length);
+				const paddingMinuteZeros = generateZeroes(ogMinutesLength - `${minutes}`.length);
+
+				currentTimeSpan.innerText = `${paddingMinuteZeros}${minutes}:${paddingSecondZeros}${seconds}`;
+			}, 1000);
+		});
+
+		audio.addEventListener("ended", () => {
+			clearInterval(playingInterval);
+			playBtn.classList.remove("playing", "loading");
+			audio.currentTime = 0;
+		});
+	});
+</script>
+<style>
+	.player {
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
+		height: 40px;
+		width: 100%;
+		align-items: center;
+	}
+
+	.play-btn {
+		width: 40px;
+		min-width: 40px;
+		height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: var(--primary);
+		color: white;
+	}
+
+	.pause-icon, .spinner {
+		display: none;
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	.play-btn.loading {
+		.play-icon, .pause-icon {
+			display: none;
+		}
+
+		.spinner {
+			display: block;
+			animation: spin 2s linear infinite;
+		}
+	}
+
+	.play-btn.playing {
+		.play-icon, .spinner {
+			display: none;
+		}
+
+		.pause-icon {
+			display: block;
+		}
+	}
+
+	.player-progress {
+		--track-progress: 0%;
+		width: calc(100% - 40px);
+		height: 4px;
+		background-color: #353535;
+		position: relative;
+	}
+
+	.player-progress::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 4px;
+		width: var(--track-progress);
+		background-color: var(--primary);
+	}
+
+	.player-progress::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 4px;
+		width: var(--track-progress);
+		background-color: var(--primary);
+		filter: blur(4px);
+	}
+
+	.duration-info {
+		white-space: nowrap;
+	}
+
+	@media screen and (max-width: 640px) {
+		.player {
+			flex-wrap: wrap;
+			height: fit-content;
+			justify-content: space-between;
+		}
+
+		.player-progress {
+			order: -1;
+			width: 100%;
+		}
+	}
+</style>

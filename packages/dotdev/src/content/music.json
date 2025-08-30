@@ -1,0 +1,18 @@
+[
+	{
+    "id": "1",
+		"path": "/music/downfall.mp3",
+		"duration": 173,
+		"cover": "./assets/music/covers/downfall.jpg",
+		"title": "Downfall (Cover)",
+		"description": "Recorded as part of the ✧ Archive #02: Desire Cover Contest ✧.",
+		"metadata": {
+			"Original Artist": {
+				"text": "Derivakat",
+				"href": "https://derivakat.com/"
+			},
+			"Year": "2025",
+			"Genre": "Alternative"
+		}
+  }
+]

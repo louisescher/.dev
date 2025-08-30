@@ -87,4 +87,23 @@ const projects = defineCollection({
   })
 });
 
-export const collections = { tags, posts, projects, other, quickInfo, socials, workExperience };
+const music = defineCollection({
+  loader: file("src/content/music.json"),
+  schema: ({ image }) => z.object({
+    id: z.string(),
+    path: z.string(),
+    duration: z.number(),
+    cover: image(),
+    title: z.string(),
+    description: z.string(),
+    metadata: z.record(z.union([
+      z.string(),
+      z.object({
+        text: z.string(),
+        href: z.string().url(),
+      }),
+    ])),
+  })
+});
+
+export const collections = { tags, posts, projects, other, quickInfo, socials, workExperience, music };
