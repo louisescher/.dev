@@ -1,5 +1,6 @@
 ---
 import '../styles/index.css';
+import '../styles/music.css';
 
 import ProfilePicture from '../assets/pfp.jpg';
 
@@ -14,18 +15,21 @@ import { name, openGraph } from 'spectre:globals';
 import Status from '../components/Status.astro';
 import OnlineStatusCard from '../components/OnlineStatusCard.astro';
 import CurrentSongCard from '../components/CurrentSongCard.astro';
+import AudioPlayer from '../components/AudioPlayer.astro';
 
-const [posts, projects, about, workExperience, quickInfo, socials] = await Promise.all([
+const [posts, projects, about, workExperience, quickInfo, socials, music] = await Promise.all([
 	getCollection('posts', (post) => post.data.draft !== true),
 	getCollection('projects'),
 	getEntry('other', 'about'),
 	getCollection('workExperience'),
 	getCollection('quickInfo'),
-	getCollection('socials')
+	getCollection('socials'),
+	getCollection('music')
 ]);
 
 // biome-ignore lint/style/noNonNullAssertion: Should always be defined.
 const { Content: About } = await render(about!);
+const track = music[music.length - 1].data;
 ---
 
 <Layout
@@ -116,6 +120,42 @@ const { Content: About } = await render(about!);
 						<span>{project.data.description}</span>
 					</a>
 				))}
+			</div>
+		</Card>
+		<Card>
+			<div class="header-container">
+				<Icon type='lucide' name="music" width={24} height={24} class='glow-icon' />
+				<h2>Latest Tune</h2>
+			</div>
+			<div class="content-container">
+				<div class="music-track">
+					<div class="track-cover">
+						<ImageGlow src={track.cover} alt={track.title} width={239} height={239} quality={100} />
+					</div>
+					<div class="track-info">
+						<div class="title-download-wrapper">
+							<h3>{track.title}</h3>
+							<a download href={track.path}>
+								<Icon type="lucide" name='download' width={24} height={24} />
+							</a>
+						</div>
+						<hr />
+						<div class="track-metadata">
+							{Object.entries(track.metadata).map(([key, value]) => {
+								const Tag = typeof value === "string" ? "span" : "a";
+								return (
+									<div class="metadata-entry">
+										<span class="metadata-category">{key}</span>
+										<Tag href={typeof value === "string" ? undefined : value.href}>{typeof value === "string" ? value : value.text}</Tag>
+									</div>
+								)
+							})}
+						</div>
+						<hr />
+						<p class="track-desc">{track.description}</p>
+						<AudioPlayer enclosure={track.path} duration={track.duration} />
+					</div>
+				</div>
 			</div>
 		</Card>
 		<Card>

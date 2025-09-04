@@ -26,7 +26,7 @@ const tracks = await getCollection('music');
     </Card>
   </div>
   <div class="layout-grid-right" slot="right">
-		{tracks.map(({ data: track }) => (
+		{tracks.reverse().map(({ data: track }) => (
 			<Card>
 				<div class="content-container">
 					<div class="music-track">
@@ -40,7 +40,7 @@ const tracks = await getCollection('music');
 									<Icon type="lucide" name='download' width={24} height={24} />
 								</a>
 							</div>
-							<hr>
+							<hr />
 							<div class="track-metadata">
 								{Object.entries(track.metadata).map(([key, value]) => {
 									const Tag = typeof value === "string" ? "span" : "a";
@@ -52,7 +52,7 @@ const tracks = await getCollection('music');
 									)
 								})}
 							</div>
-							<hr>
+							<hr />
 							<p class="track-desc">{track.description}</p>
 							<AudioPlayer enclosure={track.path} duration={track.duration} />
 						</div>
@@ -62,6 +62,10 @@ const tracks = await getCollection('music');
 		))}
   </div>
 </Layout>
-<script>
-	// Duration of a track, current playback status
-</script>
+<style>
+	.layout-grid-right {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+</style>
