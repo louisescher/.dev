@@ -14,5 +14,22 @@
 			"Year": "2025",
 			"Genre": "Alternative"
 		}
+  },
+	
+	{
+    "id": "2",
+		"path": "/music/love-you-like.mp3",
+		"duration": 178,
+		"cover": "./assets/music/covers/love-you-like.jpg",
+		"title": "Love You Like (Cover)",
+		"description": "Recorded as part of the ✧ Archive #02: Desire Cover Contest ✧.",
+		"metadata": {
+			"Original Artist": {
+				"text": "Derivakat",
+				"href": "https://derivakat.com/"
+			},
+			"Year": "2025",
+			"Genre": "Alternative"
+		}
   }
 ]
