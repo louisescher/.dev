@@ -93,7 +93,7 @@ async function computeAndUpdateStatus(status: string, activities: Activity[]) {
         song: activity.details ?? "Unknown",
         artists: activity.state ?? "Unknown",
         albumCover: imageURL ? await computeImageFromURL(imageURL) : null,
-        shouldRefetch: !activity.assets?.smallImage,
+        shouldRefetch: !activity.assets?.largeImage,
       };
     }
   }
