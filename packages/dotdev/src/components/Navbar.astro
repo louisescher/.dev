@@ -115,7 +115,7 @@ const path = Astro.url.pathname;
       i++;
 
       const data = await result.data();
-      
+
       results.innerHTML += `
         <a href="${data.url}">
           <h3 class="no-mt">${data.meta.title}</h3>
@@ -138,7 +138,7 @@ const path = Astro.url.pathname;
   });
 
   const handleTabletChange = () => {
-    if (window.matchMedia('(max-width: 640px)').matches) {
+    if (window.matchMedia('(max-width: 768px)').matches) {
       searchElement.placeholder = 'Search';
     } else {
       searchElement.placeholder = 'Search (Ctrl+K)';
@@ -214,6 +214,10 @@ const path = Astro.url.pathname;
     width: 200%;
     z-index: 10;
     padding: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 50vh;
+    font-size: .825em;
   }
 
   #search-results.active:has(*) {
@@ -244,7 +248,7 @@ const path = Astro.url.pathname;
     display: none;
   }
 
-  @media screen and (max-width: 640px) {
+  @media screen and (max-width: 768px) {
     nav {
       padding: 0 1rem;
       padding-top: 1rem;
@@ -296,7 +300,7 @@ const path = Astro.url.pathname;
       padding: 0;
       font-size: 1.125em;
     }
-  
+
     nav ul li a {
       display: block;
       padding: .75rem 0;

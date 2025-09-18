@@ -35,14 +35,14 @@ const minutes = Math.floor(duration / 60);
 		const ogCurrentTime = currentTimeSpan.textContent;
 
 		let playingInterval: NodeJS.Timeout;
-			
+
 		const duration = Number.parseInt(player.dataset.duration!);
 		const audio = new Audio(player.dataset.enclosure!);
 
 		playBtn.addEventListener("click", async () => {
 			if (playBtn.classList.contains("playing") || playBtn.classList.contains("loading")) {
 				playBtn.classList.remove("playing", "loading");
-				
+
 				clearInterval(playingInterval);
 				audio.pause();
 
@@ -75,7 +75,7 @@ const minutes = Math.floor(duration / 60);
 
 			playingInterval = setInterval(() => {
 				playerProgress.style.setProperty("--track-progress", `${Math.ceil((audio.currentTime / duration) * 100)}%`);
-				
+
 				const ogSecondsLength = `${duration % 60}`.length;
 				const ogMinutesLength = `${Math.floor(duration / 60)}`.length;
 
@@ -86,7 +86,7 @@ const minutes = Math.floor(duration / 60);
 				const paddingMinuteZeros = generateZeroes(ogMinutesLength - `${minutes}`.length);
 
 				currentTimeSpan.innerText = `${paddingMinuteZeros}${minutes}:${paddingSecondZeros}${seconds}`;
-			}, 1000);
+			}, 1000) as NodeJS.Timeout;
 		});
 
 		audio.addEventListener("ended", () => {

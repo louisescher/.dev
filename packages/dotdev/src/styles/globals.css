@@ -154,13 +154,7 @@ main {
 	font-size: revert;
 }
 
-@media screen and (max-width: 1280px) {
-  body {
-    padding: 0 2rem;
-  }
-}
-
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 768px) {
   body {
     padding: 0;
   }
