@@ -130,7 +130,7 @@ ol li a.active {
   width: fit-content;
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 768px) {
   .header {
     position: relative;
     bottom: 0;
