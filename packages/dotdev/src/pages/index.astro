@@ -164,14 +164,26 @@ const track = music[music.length - 1].data;
 				<h2>Work Experience</h2>
 			</div>
 			<div class="work-experience-container">
-				{workExperience.reverse().map((entry) => (
-					<div class="work-experience-entry">
-						<span class="work-experience-duration">{entry.data.duration}</span>
-						<h3 class="work-experience-company">{entry.data.company}</h3>
-						<span class="work-experience-role">{entry.data.title}</span>
-						<p class="work-experience-desc">{entry.data.description}</p>
-					</div>
-				))}
+				{workExperience.reverse().map((entry) => {
+					const props = {
+						href: entry.data.href
+					};
+
+					return (
+						<div class="work-experience-entry">
+							<span class="work-experience-duration">{entry.data.duration}</span>
+							<h3 class="work-experience-company">
+								{entry.data.href ? (
+									<a href={entry.data.href}>{entry.data.company}</a>
+								) : (
+									entry.data.company
+								)}
+							</h3>
+							<span {...props} class="work-experience-role">{entry.data.title}</span>
+							<p class="work-experience-desc">{entry.data.description}</p>
+						</div>
+					)
+				})}
 			</div>
 		</Card>
 	</div>
