@@ -63,6 +63,21 @@ const track = music[music.length - 1].data;
 				))}
 			</ul>
 		</Card>
+		<Card>
+			<h3 class="no-mt">Webrings</h3>
+			<ul class="overview-list">
+				<li>
+					<a href="https://astro-webrings.lou.gg/next?site=lou.gg&ring=built-with-astro">
+						<img src="https://astro-webrings.lou.gg/rings/built-with-astro.webp" alt="Built with Astro webring badge" width="88" height="31" />
+					</a>
+				</li>
+				<li>
+					<a href="https://astro-webrings.lou.gg/next?site=lou.gg&ring=friends-of-houston">
+						<img src="https://astro-webrings.lou.gg/rings/friends-of-houston.gif" alt="Friends of Houston webring badge" width="88" height="31" />
+					</a>
+				</li>
+			</ul>
+		</Card>
 		<Status server:defer>
 			<Fragment slot="fallback">
 				<OnlineStatusCard online={true} />
