@@ -175,3 +175,10 @@ main {
   flex-direction: column;
   gap: 1rem;
 }
+
+.webrings {
+	display: flex;
+	flex-direction: row;
+	gap: .5rem;
+	flex-wrap: wrap;
+}
