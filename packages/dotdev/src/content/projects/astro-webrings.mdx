@@ -1,0 +1,42 @@
+---
+title: "Astro Webrings"
+date: 09-30-2025
+description: "Add your site to an Astro webring!"
+image: ../assets/astro-webrings.png
+info:
+  - text: Website
+    link: https://astro-webrings.lou.gg/
+    icon:
+      type: lucide
+      name: globe
+  - text: GitHub
+    link: https://github.com/louisescher/astro-webrings
+    icon:
+      type: lucide
+      name: github
+---
+
+Add your site to an Astro webring!
+
+## What?
+A webring, [according to Wikipedia](https://en.wikipedia.org/wiki/Webring), is a collection of websites linked together in a circular structure, usually organized around a specific theme, and often educational or social. This one is about [Astro](https://astro.build/)!
+
+## How?
+The entire project is essentially just a very small Astro site. Anyone can add their site to the available webrings by submitting a pull request to the [GitHub repository](https://github.com/louisescher/astro-webrings). All they need to provide is a JSON file:
+
+```json
+{
+  "name": "Example Site",
+  "id": "a-unique-slug",
+  "url": "https://example.com"
+}
+```
+
+Once that's done, and their PR is approved and merged, users can install [an NPM package, `astro-webrings`](npmjs.com/package/astro-webrings) and use the provided component to add some badges to their website! Check out [my landing page](/) for an example of this, and feel free to click on the badges to snoop around the rings.
+
+Behind the scenes, when you add a new JSON file and the PR gets merged, my CI pipeline rebuilds the Astro site. The JSON file then gets loaded by a [content collection](https://docs.astro.build/en/guides/content-collections/), which is used in the `/next` endpoint which is responsible for the redirects. The badge users add to their site includes two URL parameters:
+
+- A `site`, which is the site the user is currently on
+- A `ring`, the identifier of the current webring people are on
+
+When the badge is clicked and the user visits the page, both of these parameters are read, the entry and it's following entry are grabbed from the content collection, and the user is redirected to the next site. The code for the endpoint is [only 40 lines](https://github.com/louisescher/astro-webrings/blob/master/packages/web/src/pages/next.ts)!
