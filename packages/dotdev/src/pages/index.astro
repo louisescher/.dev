@@ -146,7 +146,7 @@ const track = music[music.length - 1].data;
 					<div class="track-info">
 						<div class="title-download-wrapper">
 							<h3>{track.title}</h3>
-							<a download href={track.path}>
+							<a download href={track.path} aria-label="Download this song">
 								<Icon type="lucide" name='download' width={24} height={24} />
 							</a>
 						</div>

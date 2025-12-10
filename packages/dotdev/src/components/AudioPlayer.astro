@@ -13,7 +13,7 @@ const seconds = duration % 60;
 const minutes = Math.floor(duration / 60);
 ---
 <div class="player" data-enclosure={enclosure} data-duration={duration}>
-	<button class="play-btn">
+	<button class="play-btn" aria-label="Play Song">
 		<Icon type='lucide' name='play' class="play-icon" width={24} height={24} />
 		<Icon type='lucide' name='loader-circle' class="spinner" width={24} height={24} />
 		<Icon type='lucide' name='pause' class="pause-icon" width={24} height={24} />
