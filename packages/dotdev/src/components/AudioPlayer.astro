@@ -14,8 +14,6 @@ const secondsString = `${seconds < 10 ? `0${seconds}` : seconds}`;
 
 const minutes = Math.floor(duration / 60);
 const minutesString = `${minutes < 10 ? `0${minutes}` : minutes}`;
-
-console.log(duration, seconds, minutes, `${seconds < 10 ? `0${seconds}` : seconds}`);
 ---
 <div class="player" data-enclosure={enclosure} data-duration={duration}>
 	<button class="play-btn" aria-label="Play Song">
