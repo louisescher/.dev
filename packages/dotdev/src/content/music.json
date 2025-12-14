@@ -1,6 +1,6 @@
 [
 	{
-    "id": "1",
+		"id": "1",
 		"path": "/music/downfall.mp3",
 		"duration": 173,
 		"cover": "./assets/music/covers/downfall.jpg",
@@ -14,10 +14,9 @@
 			"Year": "2025",
 			"Genre": "Alternative"
 		}
-  },
-	
+	},
 	{
-    "id": "2",
+		"id": "2",
 		"path": "/music/love-you-like.mp3",
 		"duration": 178,
 		"cover": "./assets/music/covers/love-you-like.jpg",
@@ -31,5 +30,21 @@
 			"Year": "2025",
 			"Genre": "Alternative"
 		}
-  }
+	},
+	{
+		"id": "3",
+		"path": "/music/battle-against-my-procrastination.mp3",
+		"duration": 121,
+		"cover": "./assets/music/covers/battle-against-my-procrastination.png",
+		"title": "Battle against my Procrastination",
+		"description": "Should've been productive instead of playing around in a sequencer.",
+		"metadata": {
+			"Original Artist": {
+				"text": "Lou",
+				"href": "https://lou.gg/"
+			},
+			"Year": "2025",
+			"Genre": "Retro"
+		}
+	}
 ]
