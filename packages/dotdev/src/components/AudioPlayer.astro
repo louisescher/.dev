@@ -10,7 +10,12 @@ interface Props {
 const { enclosure, duration } = Astro.props;
 
 const seconds = duration % 60;
+const secondsString = `${seconds < 10 ? `0${seconds}` : seconds}`;
+
 const minutes = Math.floor(duration / 60);
+const minutesString = `${minutes < 10 ? `0${minutes}` : minutes}`;
+
+console.log(duration, seconds, minutes, `${seconds < 10 ? `0${seconds}` : seconds}`);
 ---
 <div class="player" data-enclosure={enclosure} data-duration={duration}>
 	<button class="play-btn" aria-label="Play Song">
@@ -20,7 +25,7 @@ const minutes = Math.floor(duration / 60);
 	</button>
 	<div class="player-progress"></div>
 	<span class="duration-info">
-		<span class="current-time">{generateZeroes(`${minutes}`.length)}:{generateZeroes(`${seconds}`.length)}</span> / {minutes}:{seconds}
+		<span class="current-time">{generateZeroes(minutesString.length)}:{generateZeroes(secondsString.length)}</span> / {minutesString}:{secondsString}
 	</span>
 </div>
 <script>
@@ -76,8 +81,11 @@ const minutes = Math.floor(duration / 60);
 			playingInterval = setInterval(() => {
 				playerProgress.style.setProperty("--track-progress", `${Math.ceil((audio.currentTime / duration) * 100)}%`);
 
-				const ogSecondsLength = `${duration % 60}`.length;
-				const ogMinutesLength = `${Math.floor(duration / 60)}`.length;
+				const ogSeconds = duration % 60;
+				const ogSecondsLength = `${ogSeconds < 10 ? `0${ogSeconds}` : ogSeconds}`.length;
+
+				const ogMinutes = `${Math.floor(duration / 60)}`.length;
+				const ogMinutesLength = `${ogMinutes < 10 ? `0${ogMinutes}` : ogMinutes}`.length;
 
 				const seconds = Math.floor(audio.currentTime + 1) % 60;
 				const minutes = Math.floor((audio.currentTime + 1) / 60);
