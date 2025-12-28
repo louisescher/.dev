@@ -76,6 +76,7 @@ const reviews = defineCollection({
     title: z.string(),
     description: z.string(),
     summary: z.string(),
+    spoilers: z.boolean().optional().default(false),
     draft: z.boolean().optional().default(false),
     rating: z.number({ coerce: false }),
     platform: z.string(),

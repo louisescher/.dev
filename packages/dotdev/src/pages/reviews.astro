@@ -44,6 +44,10 @@ const reviews = await getCollection('reviews', (review) => !review.data.draft);
 							<span class="metadata-category">Platform</span>
 							<span>{review.platform}</span>
 						</div>
+						<div class="review-metadata">
+							<span class="metadata-category">Spoilers?</span>
+							<span>{review.spoilers ? "Yes" : "No"}</span>
+						</div>
 					</div>
 					<a href={`/review/${id}`}>Read the full review →</a>
 				</div>

@@ -20,13 +20,16 @@
 	border-top: 1px solid #353535;
 	border-bottom: 1px solid #353535;
 	margin-top: 1rem;
-	padding: 1rem 0;
+	padding: .5rem 0;
 }
 
-.review-metadata:last-of-type {
+.review-metadata {
 	border-bottom: 1px solid #353535;
-	margin-bottom: 1rem;
-	padding: 1rem 0;
+	padding: .5rem 0;
+}
+
+.metadata-category {
+	font-weight: bold;
 }
 
 .review-metadata {
@@ -52,4 +55,21 @@
 	.review-entry {
 		flex-direction: column;
 	}
+}
+
+.spoiler-warning {
+	width: 100%;
+	background-color: #05DF7220;
+	border-left: 2px solid #05DF72;
+	padding: 1rem;
+	margin-top: 1rem;
+
+	p {
+		margin: 0;
+	}
+}
+
+.spoiler-warning.has-spoiler {
+	background-color: #FF205620;
+	border-left: 2px solid #FF2056;
 }
