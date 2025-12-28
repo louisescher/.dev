@@ -73,3 +73,7 @@
 	background-color: #FF205620;
 	border-left: 2px solid #FF2056;
 }
+
+article li::marker {
+	color: var(--primary-light);
+}
