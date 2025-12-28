@@ -70,6 +70,22 @@ const posts = defineCollection({
   })
 });
 
+const reviews = defineCollection({
+  loader: glob({ base: "src/content/reviews", pattern: "**/*.{md,mdx}" }),
+  schema: ({ image }) => z.object({
+    title: z.string(),
+    description: z.string(),
+    summary: z.string(),
+    spoilers: z.boolean().optional().default(false),
+    draft: z.boolean().optional().default(false),
+    rating: z.number({ coerce: false }),
+    platform: z.string(),
+    grid: image(),
+    hero: image(),
+    date: z.date()
+  })
+});
+
 const projects = defineCollection({
   loader: glob({ base: "src/content/projects", pattern: "**/*.{md,mdx}" }),
   schema: ({ image }) => z.object({
@@ -107,4 +123,4 @@ const music = defineCollection({
   })
 });
 
-export const collections = { tags, posts, projects, other, quickInfo, socials, workExperience, music };
+export const collections = { tags, posts, projects, other, quickInfo, socials, workExperience, music, reviews };

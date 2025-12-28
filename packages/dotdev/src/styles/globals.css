@@ -182,3 +182,23 @@ main {
 	gap: .5rem;
 	flex-wrap: wrap;
 }
+
+.image-description {
+	font-size: .875em;
+	color: #c7c7c7;
+	text-align: center;
+	width: 100%;
+	display: block;
+	margin-bottom: 1rem;
+	transform: translateY(-.5rem);
+}
+
+lite-youtube {
+	max-width: none !important;
+}
+
+hr {
+	height: 1px;
+	border: none;
+	background-color: #353535;
+}
