@@ -1,0 +1,60 @@
+---
+import '../styles/reviews.css';
+
+import { getCollection } from "astro:content";
+import Card from "../components/Card.astro";
+import Layout from "../layouts/Layout.astro";
+import ImageGlow from '../components/ImageGlow.astro';
+
+const reviews = await getCollection('reviews');
+---
+<Layout
+  title={"Reviews"}
+  description={"Reviews and thoughts on games, shows and other stuff I've (possibly) enjoyed."}
+	pagefindIgnore
+>
+  <div class="layout-grid-left" slot="left">
+    <Card class="flex-col-card">
+      <h2 class="no-mt">About</h2>
+			<p>
+				Who doesn't dream of being a journalist? Alright, probably not everyone. But everyone likes having opinions,
+				so here's mine on games I played.
+			</p>
+    </Card>
+  </div>
+  <div class="layout-grid-right" slot="right">
+		{reviews.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).map(({ data: review, id }) => (
+			<Card class={"review-entry"}>
+				<ImageGlow
+					src={review.grid}
+					alt={review.title}
+					width={180}
+					height={270}
+					quality={100}
+				/>
+				<div class="review-overview">
+					<div>
+						<h2>{review.title}</h2>
+						<p>{review.description}</p>
+						<div class="review-metadata">
+							<span class="metadata-category">Rating</span>
+							<span><span class="badge">{review.rating.toFixed(1)}</span>/10</span>
+						</div>
+						<div class="review-metadata">
+							<span class="metadata-category">Platform</span>
+							<span>{review.platform}</span>
+						</div>
+					</div>
+					<a href={`/review/${id}`}>Read the full review →</a>
+				</div>
+			</Card>
+		))}
+  </div>
+</Layout>
+<style>
+	.layout-grid-right {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+</style>

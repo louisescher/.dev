@@ -1,9 +1,9 @@
 {
   "name": "root",
   "private": false,
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "pnpm@10.26.2",
   "engines": {
-    "node": "20.11.0"
+    "node": "20.18.0"
   },
   "scripts": {
     "dev": "turbo run dev",
