@@ -6,7 +6,7 @@ import Card from "../components/Card.astro";
 import Layout from "../layouts/Layout.astro";
 import ImageGlow from '../components/ImageGlow.astro';
 
-const reviews = await getCollection('reviews');
+const reviews = await getCollection('reviews', (review) => !review.data.draft);
 ---
 <Layout
   title={"Reviews"}
