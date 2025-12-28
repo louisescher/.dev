@@ -62,7 +62,7 @@ const { Content } = await render(review);
 			<hr />
 			<p>Played on <strong>{review.data.platform}</strong></p>
 			<p>Published: <strong>{review.data.date.toLocaleDateString("en-US")}</strong></p>
-			<p>This review <strong>does {!review.data.spoilers && "not"} contain spoilers!</strong></p>
+			<p>This review <strong>does {!review.data.spoilers && "not"} contain spoilers.</strong></p>
 		</Card>
 	</div>
 	<article slot="right" data-pagefind-body>
