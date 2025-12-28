@@ -5,7 +5,6 @@ import '../../styles/reviews.css';
 import ImageGlow from "../../components/ImageGlow.astro";
 import Card from "../../components/Card.astro";
 import Layout from "../../layouts/Layout.astro";
-import RSSHint from '../../components/RSSHint.astro';
 import BuyMeACoffee from '../../components/BuyMeACoffee.astro';
 
 import type { GetStaticPaths } from "astro";
@@ -79,7 +78,6 @@ const { Content } = await render(review);
 				</div>
 			</div>
 			<div class="hints">
-				<RSSHint />
 				<BuyMeACoffee />
 			</div>
 			{review.data.spoilers ? (
@@ -95,7 +93,6 @@ const { Content } = await render(review);
 			<ReviewSummary rating={review.data.rating} summary={review.data.summary} />
 			<hr class="end-of-article" />
 			<div class="hints">
-				<RSSHint />
 				<BuyMeACoffee />
 			</div>
 			<hr class="end-of-hints" />
