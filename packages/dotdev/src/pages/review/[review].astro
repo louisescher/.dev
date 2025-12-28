@@ -1,5 +1,6 @@
 ---
 import '../../styles/article.css';
+import '../../styles/reviews.css';
 
 import ImageGlow from "../../components/ImageGlow.astro";
 import Card from "../../components/Card.astro";
@@ -12,6 +13,7 @@ import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import { getCollection } from "astro:content";
 import { giscus } from 'spectre:globals';
+import ReviewSummary from '../../components/ReviewSummary.astro';
 
 /**
  * Estimates the time it takes to read a post in minutes based on:
@@ -46,7 +48,7 @@ export const getStaticPaths = (async () => {
 	return reviews.map((review) => ({ params: { review: review.id }, props: { review } }));
 }) satisfies GetStaticPaths;
 
-const { Content, headings } = await render(review);
+const { Content } = await render(review);
 ---
 
 <Layout
@@ -55,18 +57,11 @@ const { Content, headings } = await render(review);
 	image={review.data.hero}
 >
 	<div class="left" slot="left">
-		<Card class="toc-card">
-			<h2 class="no-mt">Table of contents</h2>
-			<ol>
-				<li class="toc-li">
-					<a href=`#_top` class="active">{review.data.title}</a>
-				</li>
-				{headings.map((heading) => (
-					<li class="toc-li" data-depth={heading.depth}>
-						<a href={`#${heading.slug}`}>{heading.text}</a>
-					</li>
-				))}
-			</ol>
+		<Card class="details-card">
+			<p><strong>{review.data.title}</strong>: {review.data.description}</p>
+			<hr />
+			<p>Played on <strong>{review.data.platform}</strong></p>
+			<p>Published: <strong>{review.data.date.toLocaleDateString("en-US")}</strong></p>
 		</Card>
 	</div>
 	<article slot="right" data-pagefind-body>
@@ -87,13 +82,14 @@ const { Content, headings } = await render(review);
 				<BuyMeACoffee />
 			</div>
 			<Content />
+			<ReviewSummary rating={review.data.rating} summary={review.data.summary} />
 			<hr class="end-of-article" />
 			<div class="hints">
 				<RSSHint />
 				<BuyMeACoffee />
 			</div>
 			<hr class="end-of-hints" />
-			<a href="/blog" class="block-link" data-pagefind-ignore>← Back to blog</a>
+			<a href="/blog" class="block-link" data-pagefind-ignore>← Back to all reviews</a>
 		</Card>
 		{giscus && (
 			<Card>

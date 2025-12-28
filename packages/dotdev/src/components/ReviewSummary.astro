@@ -1,0 +1,54 @@
+---
+interface Props {
+	rating: number;
+	summary: string;
+}
+
+const { rating, summary } = Astro.props;
+---
+<div class="review-summary">
+	<div class="rating-score">{rating}</div>
+	<p class="rating-summary">{summary}</p>
+</div>
+<style>
+	.review-summary {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		gap: 2rem;
+		align-items: start;
+		margin: 2rem 0;
+		border-top: 1px solid #353535;
+		padding-top: 2rem;
+	}
+
+	.rating-score {
+		font-size: 5em;
+		font-weight: bold;
+		width: 8rem;
+		height: 8rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: var(--primary);
+	}
+
+	.rating-summary {
+		width: calc(100% - 10rem);
+		margin: 0;
+	}
+
+	@media screen and (max-width: 786px) {
+		.review-summary {
+			flex-direction: column;
+		}
+
+		.rating-score {
+			width: 100%;
+		}
+
+		.rating-summary {
+			width: 100%;
+		}
+	}
+</style>
