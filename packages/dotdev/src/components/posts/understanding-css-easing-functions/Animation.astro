@@ -1,6 +1,12 @@
 ---
 type Props = {
-	interpolation: "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out" | 'cubic';
+	interpolation:
+		| "linear"
+		| "ease"
+		| "ease-in"
+		| "ease-out"
+		| "ease-in-out"
+		| "cubic";
 	points: [number, number, number, number];
 	showChart?: boolean;
 	code?: string;

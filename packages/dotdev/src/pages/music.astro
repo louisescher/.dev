@@ -1,15 +1,15 @@
 ---
-import '../styles/article-list.css';
-import '../styles/music.css';
+import "../styles/article-list.css";
+import "../styles/music.css";
 
 import { getCollection } from "astro:content";
+import AudioPlayer from "../components/AudioPlayer.astro";
 import Card from "../components/Card.astro";
+import Icon from "../components/Icon.astro";
+import ImageGlow from "../components/ImageGlow.astro";
 import Layout from "../layouts/Layout.astro";
-import ImageGlow from '../components/ImageGlow.astro';
-import Icon from '../components/Icon.astro';
-import AudioPlayer from '../components/AudioPlayer.astro';
 
-const tracks = await getCollection('music');
+const tracks = await getCollection("music");
 ---
 <Layout
   title={"Music"}

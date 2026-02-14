@@ -1,47 +1,47 @@
 [
-  {
-    "id": "1",
-    "icon": {
-      "type": "simple-icons",
-      "name": "bluesky"
-    },
-    "text": "Bluesky",
-    "link": "https://bsky.app/profile/lou.gg"
-  },
-  {
-    "id": "2",
-    "icon": {
-      "type": "lucide",
-      "name": "github"
-    },
-    "text": "GitHub",
-    "link": "https://github.com/louisescher"
-  },
-  {
-    "id": "3",
-    "icon": {
-      "type": "lucide",
-      "name": "linkedin"
-    },
-    "text": "LinkedIn",
-    "link": "https://www.linkedin.com/in/louis-escher"
-  },
-  {
-    "id": "4",
-    "icon": {
-      "type": "simple-icons",
-      "name": "buymeacoffee"
-    },
-    "text": "Buy Me A Coffee",
-    "link": "https://coff.ee/louisescher"
-  },
-  {
-    "id": "5",
-    "icon": {
-      "type": "lucide",
-      "name": "rss"
-    },
-    "text": "RSS Feed",
-    "link": "https://lou.gg/rss.xml"
-  }
+	{
+		"id": "1",
+		"icon": {
+			"type": "simple-icons",
+			"name": "bluesky"
+		},
+		"text": "Bluesky",
+		"link": "https://bsky.app/profile/lou.gg"
+	},
+	{
+		"id": "2",
+		"icon": {
+			"type": "lucide",
+			"name": "github"
+		},
+		"text": "GitHub",
+		"link": "https://github.com/louisescher"
+	},
+	{
+		"id": "3",
+		"icon": {
+			"type": "lucide",
+			"name": "linkedin"
+		},
+		"text": "LinkedIn",
+		"link": "https://www.linkedin.com/in/louis-escher"
+	},
+	{
+		"id": "4",
+		"icon": {
+			"type": "simple-icons",
+			"name": "buymeacoffee"
+		},
+		"text": "Buy Me A Coffee",
+		"link": "https://coff.ee/louisescher"
+	},
+	{
+		"id": "5",
+		"icon": {
+			"type": "lucide",
+			"name": "rss"
+		},
+		"text": "RSS Feed",
+		"link": "https://lou.gg/rss.xml"
+	}
 ]

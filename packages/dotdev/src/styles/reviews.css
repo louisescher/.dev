@@ -20,12 +20,12 @@
 	border-top: 1px solid #353535;
 	border-bottom: 1px solid #353535;
 	margin-top: 1rem;
-	padding: .5rem 0;
+	padding: 0.5rem 0;
 }
 
 .review-metadata {
 	border-bottom: 1px solid #353535;
-	padding: .5rem 0;
+	padding: 0.5rem 0;
 }
 
 .metadata-category {
@@ -44,7 +44,7 @@
 	background-color: var(--primary);
 	color: white;
 	font-weight: bold;
-	padding: 0 .25rem;
+	padding: 0 0.25rem;
 }
 
 .details-card > p:first-of-type {
@@ -59,8 +59,8 @@
 
 .spoiler-warning {
 	width: 100%;
-	background-color: #05DF7220;
-	border-left: 2px solid #05DF72;
+	background-color: #05df7220;
+	border-left: 2px solid #05df72;
 	padding: 1rem;
 	margin-top: 1rem;
 
@@ -70,8 +70,8 @@
 }
 
 .spoiler-warning.has-spoiler {
-	background-color: #FF205620;
-	border-left: 2px solid #FF2056;
+	background-color: #ff205620;
+	border-left: 2px solid #ff2056;
 }
 
 article li::marker {

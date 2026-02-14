@@ -1,18 +1,17 @@
 ---
-import '../../styles/article.css';
-import '../../styles/reviews.css';
+import "../../styles/article.css";
+import "../../styles/reviews.css";
 
-import ImageGlow from "../../components/ImageGlow.astro";
-import Card from "../../components/Card.astro";
-import Layout from "../../layouts/Layout.astro";
-import BuyMeACoffee from '../../components/BuyMeACoffee.astro';
+import type { CollectionEntry } from "astro:content";
+import { getCollection, render } from "astro:content";
+import { giscus } from "spectre:globals";
 
 import type { GetStaticPaths } from "astro";
-import type { CollectionEntry } from "astro:content";
-import { render } from "astro:content";
-import { getCollection } from "astro:content";
-import { giscus } from 'spectre:globals';
-import ReviewSummary from '../../components/ReviewSummary.astro';
+import BuyMeACoffee from "../../components/BuyMeACoffee.astro";
+import Card from "../../components/Card.astro";
+import ImageGlow from "../../components/ImageGlow.astro";
+import ReviewSummary from "../../components/ReviewSummary.astro";
+import Layout from "../../layouts/Layout.astro";
 
 /**
  * Estimates the time it takes to read a post in minutes based on:
@@ -22,7 +21,7 @@ import ReviewSummary from '../../components/ReviewSummary.astro';
  *
  * @param post The post to estimate the reading time for
  */
-function timeToRead(post: CollectionEntry<'reviews'>): number {
+function timeToRead(post: CollectionEntry<"reviews">): number {
 	const numWords = (post.body || "")
 		.replace(/.*\[(.*?)\].*/gm, "$1")
 		.replace(/```.*?```/gms, "")
@@ -32,19 +31,30 @@ function timeToRead(post: CollectionEntry<'reviews'>): number {
 	const numCodeblocks = post.body?.match(/```/g)?.length || 0;
 	const numCustomElements = post.body?.match(/\/>/g)?.length || 0;
 
-	return Math.ceil(numWords / 200) + Math.ceil(numImages / 6) + Math.ceil(numCodeblocks / 3) + Math.ceil(numCustomElements / 4);
-};
+	return (
+		Math.ceil(numWords / 200) +
+		Math.ceil(numImages / 6) +
+		Math.ceil(numCodeblocks / 3) +
+		Math.ceil(numCustomElements / 4)
+	);
+}
 
 interface Props {
-	review: CollectionEntry<'reviews'>;
+	review: CollectionEntry<"reviews">;
 }
 
 const { review } = Astro.props;
 
 export const getStaticPaths = (async () => {
-	const reviews = await getCollection('reviews', (review) => review.data.draft !== true);
+	const reviews = await getCollection(
+		"reviews",
+		(review) => review.data.draft !== true,
+	);
 
-	return reviews.map((review) => ({ params: { review: review.id }, props: { review } }));
+	return reviews.map((review) => ({
+		params: { review: review.id },
+		props: { review },
+	}));
 }) satisfies GetStaticPaths;
 
 const { Content } = await render(review);

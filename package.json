@@ -10,10 +10,12 @@
     "build": "pnpm --filter dotdev build",
     "start": "turbo run start",
     "lint": "biome check .",
+    "lint:fix": "biome check . --write",
     "docker:build": "docker build -t louisescher-dotdev .",
     "docker:start": "docker run -p 4321:4321 louisescher-dotdev"
   },
   "devDependencies": {
+  	"@biomejs/biome": "2.3.15",
     "turbo": "^2.3.3"
   }
 }
