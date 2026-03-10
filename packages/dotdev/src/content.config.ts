@@ -1,7 +1,8 @@
-import { file, glob } from "astro/loaders";
-import { defineCollection, z, reference } from "astro:content";
+import { defineCollection, reference } from "astro:content";
 import type { icons as lucideIcons } from "@iconify-json/lucide/icons.json";
 import type { icons as simpleIcons } from "@iconify-json/simple-icons/icons.json";
+import { file, glob } from "astro/loaders";
+import { z } from "astro/zod";
 
 const other = defineCollection({
 	loader: glob({ base: "src/content/other", pattern: "**/*.{md,mdx}" }),
@@ -32,7 +33,7 @@ const socials = defineCollection({
 		id: z.string(),
 		icon: z.union([lucideIconSchema, simpleIconSchema]),
 		text: z.string(),
-		link: z.string().url(),
+		link: z.url(),
 	}),
 });
 
@@ -94,12 +95,12 @@ const projects = defineCollection({
 			description: z.string(),
 			date: z.coerce.date(),
 			image: image(),
-			link: z.string().url().optional(),
+			link: z.url().optional(),
 			info: z.array(
 				z.object({
 					text: z.string(),
 					icon: z.union([lucideIconSchema, simpleIconSchema]),
-					link: z.string().url().optional(),
+					link: z.url().optional(),
 				}),
 			),
 		}),
@@ -121,7 +122,7 @@ const music = defineCollection({
 					z.string(),
 					z.object({
 						text: z.string(),
-						href: z.string().url(),
+						href: z.url(),
 					}),
 				]),
 			),

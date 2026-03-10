@@ -1,31 +1,29 @@
 ---
-import '../styles/index.css';
-import '../styles/music.css';
+import "../styles/index.css";
+import "../styles/music.css";
 
-import ProfilePicture from '../assets/pfp.jpg';
+import { getCollection, getEntry, render } from "astro:content";
+import { name, openGraph } from "spectre:globals";
+import ProfilePicture from "../assets/pfp.jpg";
+import AudioPlayer from "../components/AudioPlayer.astro";
+import Card from "../components/Card.astro";
+import CurrentSongCard from "../components/CurrentSongCard.astro";
+import Icon from "../components/Icon.astro";
+import ImageGlow from "../components/ImageGlow.astro";
+import OnlineStatusCard from "../components/OnlineStatusCard.astro";
+import Status from "../components/Status.astro";
+import Layout from "../layouts/Layout.astro";
 
-import Card from '../components/Card.astro';
-import Layout from '../layouts/Layout.astro';
-import ImageGlow from '../components/ImageGlow.astro';
-import Icon from '../components/Icon.astro';
-import { getCollection } from 'astro:content';
-import { getEntry } from 'astro:content';
-import { render } from 'astro:content';
-import { name, openGraph } from 'spectre:globals';
-import Status from '../components/Status.astro';
-import OnlineStatusCard from '../components/OnlineStatusCard.astro';
-import CurrentSongCard from '../components/CurrentSongCard.astro';
-import AudioPlayer from '../components/AudioPlayer.astro';
-
-const [posts, projects, about, workExperience, quickInfo, socials, music] = await Promise.all([
-	getCollection('posts', (post) => post.data.draft !== true),
-	getCollection('projects'),
-	getEntry('other', 'about'),
-	getCollection('workExperience'),
-	getCollection('quickInfo'),
-	getCollection('socials'),
-	getCollection('music')
-]);
+const [posts, projects, about, workExperience, quickInfo, socials, music] =
+	await Promise.all([
+		getCollection("posts", (post) => post.data.draft !== true),
+		getCollection("projects"),
+		getEntry("other", "about"),
+		getCollection("workExperience"),
+		getCollection("quickInfo"),
+		getCollection("socials"),
+		getCollection("music"),
+	]);
 
 // biome-ignore lint/style/noNonNullAssertion: Should always be defined.
 const { Content: About } = await render(about!);

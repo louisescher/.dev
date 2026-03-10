@@ -1,48 +1,48 @@
 [
-  {
-    "id": "1",
-    "duration": "2019 - 2021",
-    "company": "Self-employed",
-    "title": "Hobbyist",
-    "description": "Learning how to code, mainly developing Discord chat-bots."
-  },
-  {
-    "id": "2",
-    "duration": "2021 - 2023",
-    "company": "VALTracker (Self-employed)",
-    "title": "Core Maintainer",
-    "description": "Working as lead developer on VALTracker.gg, a project I created to track your Valorant stats. Reached 12.000+ downloads during those two years."
-  },
-  {
-    "id": "3",
-    "duration": "2023 - current",
-    "company": "Entropic Software (Self-employed)",
-    "title": "CEO & Lead Developer",
-    "description": "Founded Entropic Software, a software development company. Working on multiple projects for clients.",
-    "href": "https://entropic.software"
-  },
-  {
-    "id": "4",
-    "duration": "2024 - projected 2027",
-    "company": "websedit AG",
-    "title": "University Student",
-    "description": "Studying at a cooperative state university to get a Bachelor of Science.",
-    "href": "https://websedit.de"
-  },
-  {
-    "id": "5",
-    "duration": "2024 - current",
-    "company": "StudioCMS",
-    "title": "Core Maintainer",
-    "description": "Working on an open-source Astro-native CMS with members of the Astro community, with a special focused on (UI) design across the ecosystem.",
-    "href": "https://studiocms.dev"
-  },
-  {
-    "id": "6",
-    "duration": "2025 - current",
-    "company": "Astro",
-    "title": "Maintainer",
-    "description": "Helping out the Astro community in public support channels and helping maintain Astro, a meta-framework for content-driven websites.",
-    "href": "https://astro.build"
-  }
+	{
+		"id": "1",
+		"duration": "2019 - 2021",
+		"company": "Self-employed",
+		"title": "Hobbyist",
+		"description": "Learning how to code, mainly developing Discord chat-bots."
+	},
+	{
+		"id": "2",
+		"duration": "2021 - 2023",
+		"company": "VALTracker (Self-employed)",
+		"title": "Core Maintainer",
+		"description": "Working as lead developer on VALTracker.gg, a project I created to track your Valorant stats. Reached 12.000+ downloads during those two years."
+	},
+	{
+		"id": "3",
+		"duration": "2023 - current",
+		"company": "Entropic Software (Self-employed)",
+		"title": "CEO & Lead Developer",
+		"description": "Founded Entropic Software, a software development company. Working on multiple projects for clients.",
+		"href": "https://entropic.software"
+	},
+	{
+		"id": "4",
+		"duration": "2024 - projected 2027",
+		"company": "websedit AG",
+		"title": "University Student",
+		"description": "Studying at a cooperative state university to get a Bachelor of Science.",
+		"href": "https://websedit.de"
+	},
+	{
+		"id": "5",
+		"duration": "2024 - current",
+		"company": "StudioCMS",
+		"title": "Core Maintainer",
+		"description": "Working on an open-source Astro-native CMS with members of the Astro community, with a special focused on (UI) design across the ecosystem.",
+		"href": "https://studiocms.dev"
+	},
+	{
+		"id": "6",
+		"duration": "2025 - current",
+		"company": "Astro",
+		"title": "Maintainer",
+		"description": "Helping out the Astro community in public support channels and helping maintain Astro, a meta-framework for content-driven websites.",
+		"href": "https://astro.build"
+	}
 ]

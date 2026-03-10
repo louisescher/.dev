@@ -1,24 +1,24 @@
 ---
-import Card from './Card.astro';
-import ImageGlow from './ImageGlow.astro';
-import hdate from 'human-date';
+import hdate from "human-date";
+import Card from "./Card.astro";
+import ImageGlow from "./ImageGlow.astro";
 
 interface NonPlaceholderProps {
-  isPlaceholder?: false;
-  data: {
-    song: string | null;
-    artists: string | null;
-    image: string | null;
-  };
-  timestamp: number;
-  listening: boolean;
+	isPlaceholder?: false;
+	data: {
+		song: string | null;
+		artists: string | null;
+		image: string | null;
+	};
+	timestamp: number;
+	listening: boolean;
 }
 
 interface PlaceholderProps {
-  isPlaceholder: true;
-  data: null;
-  listening: null;
-  timestamp: null;
+	isPlaceholder: true;
+	data: null;
+	listening: null;
+	timestamp: null;
 }
 
 type Props = NonPlaceholderProps | PlaceholderProps;

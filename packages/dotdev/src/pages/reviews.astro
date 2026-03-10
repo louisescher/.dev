@@ -1,12 +1,12 @@
 ---
-import '../styles/reviews.css';
+import "../styles/reviews.css";
 
 import { getCollection } from "astro:content";
 import Card from "../components/Card.astro";
+import ImageGlow from "../components/ImageGlow.astro";
 import Layout from "../layouts/Layout.astro";
-import ImageGlow from '../components/ImageGlow.astro';
 
-const reviews = await getCollection('reviews', (review) => !review.data.draft);
+const reviews = await getCollection("reviews", (review) => !review.data.draft);
 ---
 <Layout
   title={"Reviews"}

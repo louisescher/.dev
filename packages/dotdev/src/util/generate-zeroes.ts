@@ -11,4 +11,4 @@ export const generateZeroes = (amount: number) => {
 	}
 
 	return string;
-}
+};

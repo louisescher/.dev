@@ -1,14 +1,14 @@
-import 'dotenv/config';
-import { Activity, Client, Events, GatewayIntentBits } from 'discord.js';
-import { db, statusTable } from './db';
-import { deepStrictEqual } from 'assert';
+import "dotenv/config";
+import { deepStrictEqual } from "node:assert";
+import { type Activity, Client, Events, GatewayIntentBits } from "discord.js";
+import { db, statusTable } from "./db";
 
 const TOKEN = process.env.TOKEN!;
 const GUILD_ID = process.env.GUILD_ID!;
 const USER_ID = process.env.USER_ID!;
 
 const client = new Client({ intents: [GatewayIntentBits.GuildPresences] });
-const MUSIC_SERVICE_NAME = ("YouTube Music").toLowerCase();
+const MUSIC_SERVICE_NAME = "YouTube Music".toLowerCase();
 
 interface ListeningStatus {
 	song: string;
@@ -19,12 +19,12 @@ interface ListeningStatus {
 
 interface Status {
 	listening: ListeningStatus | null;
-	status: 'online' | 'offline';
+	status: "online" | "offline";
 }
 
 let currentStatus: Status = {
 	listening: null,
-	status: 'offline'
+	status: "offline",
 };
 
 function deepEqual(a: any, b: any): boolean {
@@ -41,8 +41,8 @@ async function updateStatus(newStatus: Status) {
 	currentStatus = newStatus;
 
 	let tableReadyStatus: typeof statusTable.$inferInsert = {
-		id: 'status',
-		online: newStatus.status === 'online',
+		id: "status",
+		online: newStatus.status === "online",
 		listening: false,
 	};
 
@@ -53,7 +53,7 @@ async function updateStatus(newStatus: Status) {
 			artists: newStatus.listening.artists,
 			image: newStatus.listening.albumCover || null,
 			listening: true,
-			timestamp: Date.now()
+			timestamp: Date.now(),
 		};
 	}
 
@@ -67,16 +67,20 @@ async function updateStatus(newStatus: Status) {
 
 async function computeImageFromURL(url: string): Promise<string> {
 	const buffer = await (await fetch(url)).arrayBuffer();
-	return `data:image/png;base64,${Buffer.from(buffer).toString('base64')}`;
+	return `data:image/png;base64,${Buffer.from(buffer).toString("base64")}`;
 }
 
 function logCurrentStatus() {
 	const { listening, status } = currentStatus;
 
 	if (listening) {
-		console.log(`[${new Date().toLocaleTimeString()}] (${listening.song} - ${listening.artists}) / ${status}`);
+		console.log(
+			`[${new Date().toLocaleTimeString()}] (${listening.song} - ${listening.artists}) / ${status}`,
+		);
 	} else {
-		console.log(`[${new Date().toLocaleTimeString()}] Not listening / ${status}`);
+		console.log(
+			`[${new Date().toLocaleTimeString()}] Not listening / ${status}`,
+		);
 	}
 }
 
@@ -84,12 +88,12 @@ async function computeAndUpdateStatus(status: string, activities: Activity[]) {
 	let listening: ListeningStatus | null = null;
 
 	for (const activity of activities) {
-		if(activity.name.toLowerCase() === MUSIC_SERVICE_NAME) {
+		if (activity.name.toLowerCase() === MUSIC_SERVICE_NAME) {
 			// Wait for image to update in Discord
 			await new Promise((res) => setTimeout(res, 2000));
 
 			const imageURL = activity.assets?.largeImageURL({
-				"size": 128
+				size: 128,
 			});
 
 			listening = {
@@ -102,21 +106,24 @@ async function computeAndUpdateStatus(status: string, activities: Activity[]) {
 	}
 
 	if (listening?.shouldRefetch) {
-		console.warn("Unable to load status correctly. Retrying in 1 second...")
+		console.warn("Unable to load status correctly. Retrying in 1 second...");
 		setTimeout(() => {
 			fetchUserStatusManually();
 		}, 1000);
 	} else {
 		await updateStatus({
 			listening,
-			status: status === 'online' ? 'online' : 'offline'
+			status: status === "online" ? "online" : "offline",
 		});
 	}
 }
 
 async function fetchUserStatusManually() {
 	const guild = await client.guilds.fetch(GUILD_ID);
-	const member = await guild.members.fetch({ user: USER_ID, withPresences: true });
+	const member = await guild.members.fetch({
+		user: USER_ID,
+		withPresences: true,
+	});
 
 	if (!member.presence) return;
 
@@ -140,10 +147,10 @@ client.on(Events.PresenceUpdate, async (_, newPresence) => {
 
 client.login(TOKEN);
 
-process.on('exit', async () => {
+process.on("exit", async () => {
 	await updateStatus({
 		listening: null,
-		status: 'offline'
+		status: "offline",
 	});
 
 	console.log("Exiting...");
