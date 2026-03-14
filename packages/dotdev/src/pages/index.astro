@@ -1,4 +1,6 @@
 ---
+// NOTE: Temporary fix for server islands
+export const prerender = false;
 import "../styles/index.css";
 import "../styles/music.css";
 
@@ -37,38 +39,77 @@ const track = music[music.length - 1].data;
 >
 	<div class="layout-grid-left" slot="left">
 		<Card class="flex-col-card">
-			<ImageGlow quality={100} width={96} height={96} src={ProfilePicture} alt="Louis looking out of a window" loading='eager' />
+			<ImageGlow
+				quality={100}
+				width={96}
+				height={96}
+				src={ProfilePicture}
+				alt="Louis looking out of a window"
+				loading="eager"
+			/>
 			<h2>{name}</h2>
 			<ul class="overview-list">
-				{quickInfo.map((info) => (
-					<li>
-						<Icon type={info.data.icon.type} name={info.data.icon.name as any} width={24} height={24} class='glow-icon' />
-						<span>{info.data.text}</span>
-					</li>
-				))}
+				{
+					quickInfo.map((info) => (
+						<li>
+							<Icon
+								type={info.data.icon.type}
+								name={info.data.icon.name as any}
+								width={24}
+								height={24}
+								class="glow-icon"
+							/>
+							<span>{info.data.text}</span>
+						</li>
+					))
+				}
 			</ul>
 		</Card>
 		<Card>
 			<h3 class="no-mt">Socials</h3>
 			<ul class="overview-list">
-				{socials.map((item) => (
-					<li>
-						<a href={item.data.link} class="socials-link" target="_blank">
-							<Icon type={item.data.icon.type} name={item.data.icon.name as any} width={24} height={24} class='glow-icon' />
-							<span>{item.data.text}</span>
-						</a>
-					</li>
-				))}
+				{
+					socials.map((item) => (
+						<li>
+							<a href={item.data.link} class="socials-link" target="_blank">
+								<Icon
+									type={item.data.icon.type}
+									name={item.data.icon.name as any}
+									width={24}
+									height={24}
+									class="glow-icon"
+								/>
+								<span>{item.data.text}</span>
+							</a>
+						</li>
+					))
+				}
 			</ul>
 		</Card>
 		<Card>
 			<h3 class="no-mt">Webrings</h3>
 			<div class="webrings">
-				<a href="https://astro-webrings.lou.gg/next?site=lou.gg&ring=built-with-astro" style="height: 31px;">
-					<img src="https://astro-webrings.lou.gg/rings/built-with-astro.webp" alt="Built with Astro webring badge" width="88" height="31" />
+				<a
+					href="https://astro-webrings.lou.gg/next?site=lou.gg&ring=built-with-astro"
+					style="height: 31px;"
+				>
+					<img
+						src="https://astro-webrings.lou.gg/rings/built-with-astro.webp"
+						alt="Built with Astro webring badge"
+						width="88"
+						height="31"
+					/>
 				</a>
-				<a href="https://astro-webrings.lou.gg/next?site=lou.gg&ring=friends-of-houston" style="height: 31px;">
-					<img src="https://astro-webrings.lou.gg/rings/friends-of-houston.gif" alt="Friends of Houston webring badge" width="88" height="31" />
+				<a
+					href="https://astro-webrings.lou.gg/next?site=lou.gg&ring=friends-of-houston"
+					style="height: 31px;"
+				>
+					<img
+						src="https://astro-webrings.lou.gg/rings/friends-of-houston.gif"
+						alt="Friends of Houston webring badge"
+						width="88"
+						height="31"
+					/>
 				</a>
 			</div>
 		</Card>
@@ -79,7 +120,7 @@ const track = music[music.length - 1].data;
 					data={{
 						song: "???",
 						artists: "???",
-						image: "/img/music-placeholder.webp"
+						image: "/img/music-placeholder.webp",
 					}}
 					listening={false}
 					timestamp={Date.now()}
@@ -90,7 +131,13 @@ const track = music[music.length - 1].data;
 	<div class="layout-grid-right" slot="right">
 		<Card>
 			<div class="header-container">
-				<Icon type='lucide' name="user" width={24} height={24} class='glow-icon' />
+				<Icon
+					type="lucide"
+					name="user"
+					width={24}
+					height={24}
+					class="glow-icon"
+				/>
 				<h2>About me</h2>
 			</div>
 			<div class="prose">
@@ -99,66 +146,114 @@ const track = music[music.length - 1].data;
 		</Card>
 		<Card>
 			<div class="header-container">
-				<Icon type='lucide' name="rss" width={24} height={24} class='glow-icon' />
+				<Icon
+					type="lucide"
+					name="rss"
+					width={24}
+					height={24}
+					class="glow-icon"
+				/>
 				<h2>Latest Posts</h2>
 			</div>
 			<div class="content-container">
-				{posts.sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime()).slice(0, 2).map((post) => (
-					<a href={`/blog/${post.id}`} class="post-container">
-						<div class="post-header">
-							<h3>{post.data.title}</h3>
-							<span class="post-date">{post.data.createdAt.toLocaleDateString()}</span>
-						</div>
-						<span>{post.data.description}</span>
-					</a>
-				))}
+				{
+					posts
+						.sort(
+							(a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime(),
+						)
+						.slice(0, 2)
+						.map((post) => (
+							<a href={`/blog/${post.id}`} class="post-container">
+								<div class="post-header">
+									<h3>{post.data.title}</h3>
+									<span class="post-date">
+										{post.data.createdAt.toLocaleDateString()}
+									</span>
+								</div>
+								<span>{post.data.description}</span>
+							</a>
+						))
+				}
 			</div>
 		</Card>
 		<Card>
 			<div class="header-container">
-				<Icon type='lucide' name="folder-git" width={24} height={24} class='glow-icon' />
+				<Icon
+					type="lucide"
+					name="folder-git"
+					width={24}
+					height={24}
+					class="glow-icon"
+				/>
 				<h2>Latest Projects</h2>
 			</div>
 			<div class="content-container">
-				{projects.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 2).map((project) => (
-					<a href={`/projects/${project.id}`} class="post-container">
-						<div class="post-header">
-							<h3>{project.data.title}</h3>
-							<span class="post-date">{project.data.date.toLocaleDateString()}</span>
-						</div>
-						<span>{project.data.description}</span>
-					</a>
-				))}
+				{
+					projects
+						.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+						.slice(0, 2)
+						.map((project) => (
+							<a href={`/projects/${project.id}`} class="post-container">
+								<div class="post-header">
+									<h3>{project.data.title}</h3>
+									<span class="post-date">
+										{project.data.date.toLocaleDateString()}
+									</span>
+								</div>
+								<span>{project.data.description}</span>
+							</a>
+						))
+				}
 			</div>
 		</Card>
 		<Card>
 			<div class="header-container">
-				<Icon type='lucide' name="music" width={24} height={24} class='glow-icon' />
+				<Icon
+					type="lucide"
+					name="music"
+					width={24}
+					height={24}
+					class="glow-icon"
+				/>
 				<h2>Latest Tune</h2>
 			</div>
 			<div class="content-container">
 				<div class="music-track">
 					<div class="track-cover">
-						<ImageGlow src={track.cover} alt={track.title} width={239} height={239} quality={100} />
+						<ImageGlow
+							src={track.cover}
+							alt={track.title}
+							width={239}
+							height={239}
+							quality={100}
+						/>
 					</div>
 					<div class="track-info">
 						<div class="title-download-wrapper">
 							<h3>{track.title}</h3>
 							<a download href={track.path} aria-label="Download this song">
-								<Icon type="lucide" name='download' width={24} height={24} />
+								<Icon type="lucide" name="download" width={24} height={24} />
 							</a>
 						</div>
 						<hr />
 						<div class="track-metadata">
-							{Object.entries(track.metadata).map(([key, value]) => {
-								const Tag = typeof value === "string" ? "span" : "a";
-								return (
-									<div class="metadata-entry">
-										<span class="metadata-category">{key}</span>
-										<Tag href={typeof value === "string" ? undefined : value.href}>{typeof value === "string" ? value : value.text}</Tag>
-									</div>
-								)
-							})}
+							{
+								Object.entries(track.metadata).map(([key, value]) => {
+									const Tag = typeof value === "string" ? "span" : "a";
+									return (
+										<div class="metadata-entry">
+											<span class="metadata-category">{key}</span>
+											<Tag
+												href={
+													typeof value === "string" ? undefined : value.href
+												}
+											>
+												{typeof value === "string" ? value : value.text}
+											</Tag>
+										</div>
+									);
+								})
+							}
 						</div>
 						<hr />
 						<p class="track-desc">{track.description}</p>
@@ -169,30 +264,42 @@ const track = music[music.length - 1].data;
 		</Card>
 		<Card>
 			<div class="header-container">
-				<Icon type='lucide' name="briefcase-business" width={24} height={24} class='glow-icon' />
+				<Icon
+					type="lucide"
+					name="briefcase-business"
+					width={24}
+					height={24}
+					class="glow-icon"
+				/>
 				<h2>Work Experience</h2>
 			</div>
 			<div class="work-experience-container">
-				{workExperience.reverse().map((entry) => {
-					const props = {
-						href: entry.data.href
-					};
+				{
+					workExperience.reverse().map((entry) => {
+						const props = {
+							href: entry.data.href,
+						};
 
-					return (
-						<div class="work-experience-entry">
-							<span class="work-experience-duration">{entry.data.duration}</span>
-							<h3 class="work-experience-company">
-								{entry.data.href ? (
-									<a href={entry.data.href}>{entry.data.company}</a>
-								) : (
-									entry.data.company
-								)}
-							</h3>
-							<span {...props} class="work-experience-role">{entry.data.title}</span>
-							<p class="work-experience-desc">{entry.data.description}</p>
-						</div>
-					)
-				})}
+						return (
+							<div class="work-experience-entry">
+								<span class="work-experience-duration">
+									{entry.data.duration}
+								</span>
+								<h3 class="work-experience-company">
+									{entry.data.href ? (
+										<a href={entry.data.href}>{entry.data.company}</a>
+									) : (
+										entry.data.company
+									)}
+								</h3>
+								<span {...props} class="work-experience-role">
+									{entry.data.title}
+								</span>
+								<p class="work-experience-desc">{entry.data.description}</p>
+							</div>
+						);
+					})
+				}
 			</div>
 		</Card>
 	</div>
