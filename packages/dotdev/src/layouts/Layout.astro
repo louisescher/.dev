@@ -66,6 +66,8 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 		<meta name="twitter:title" content={title} />
 		{description && <meta name="twitter:description" content={description} />}
 		<meta name="twitter:image" content={image?.src || '/img/og.png'} />
+
+		<link rel="me" href="https://sifa.id/p/lou.gg">
 	</head>
 	<body>
 		<main data-pagefind-ignore={pagefindIgnore}>
