@@ -1,0 +1,40 @@
+---
+title: "Colibri Social"
+date: 03-26-2026
+description: "Colibri is a next-generation social chat app built on the AT protocol."
+image: ../assets/projects/colibri.png
+info:
+  - text: Website
+    link: https://colibri.social?utm_source=lou.gg
+    icon:
+      type: lucide
+      name: globe
+  - text: GitHub
+    link: https://github.com/colibri-social
+    icon:
+      type: lucide
+      name: github
+---
+
+Colibri is a next-generation social chat app built on the AT protocol.
+
+## Why
+
+The modern internet is rapidly becoming more and more closed off. Platforms like Discord rule the chat app, and most if not all companies hoard their users data like dragons guarding a treasure. Colibri is a chat platform where you own your data to reclaim your digital life, which is why I chose the AT protocol to build on.
+
+## How
+
+*If you end up getting confused with some of the terms here, check out the [ATproto Glossary of Terms](https://atproto.com/guides/glossary)!*
+
+Colibri follows the recommended Atproto architecture is a collection of services. It consists of:
+
+- A public-facing Jetstream instance, hosted at jetstream.colibri.social
+- A public-facing App View, hosted at appview.colibri.social
+- A PDS, hosted at colibri.social
+- The website and web-app, also hosted at colibri.social
+
+When you sign in to Colibri, we contact the PDS hosting your data and redirect you to it, asking you to authenticate. Once you’ve logged in and are redirected back to us, we check for some basic records in your PDS. We then create them if they do not yet exist.
+
+Once you’re in the app, you can start creating communities, categories, and channels. You can send and react to messages, change settings, et cetera. The event flow for this is quite interesting. Whenever you create anything, we send a request to your PDS on your behalf to create a record of that type.
+
+For the purpose of this explanation, let’s say you want to post a message. When you open a channel, your client connects to our App View via a WebSocket connection. Whenever you’ve typed in your message and hit Enter, the request that you’d like to create a new message record is sent to your PDS. At the same time, we display your message with gray text in the chat and wait. Next, as soon as the record is created, your PDS will notify (one of) the configured Relay(s) that a new record has been created. The Relay will then fetch the data for this record from the PDS and announce the record creation to the network via a firehose stream. Our Jetstream instance is listening to that firehose, and our App View is listening to the Jetstream. As soon as the App View catches wind of the message being created, it makes a copy of the record in a PostgreSQL database for indexing purposes. After that, it uses the aforementioned WebSocket connection to notify all clients that are currently viewing the channel you sent your message in that a new message has been posted. At that moment, your client realizes that the message has now been published, and we switch the text color from gray to white. Not exactly simple, but not exactly complicated either, right?
