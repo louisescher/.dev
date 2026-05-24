@@ -1,8 +1,24 @@
 import { defineCollection, reference } from "astro:content";
+import { defineAtProtoCollection } from "@fujocoded/astro-atproto-loader";
 import type { icons as lucideIcons } from "@iconify-json/lucide/icons.json";
 import type { icons as simpleIcons } from "@iconify-json/simple-icons/icons.json";
 import { file, glob } from "astro/loaders";
 import { z } from "astro/zod";
+
+export const positions = defineAtProtoCollection({
+	source: {
+		repo: "did:plc:w64dlsa4zwjv2wljlvmymldc",
+		collection: "id.sifa.profile.position",
+	},
+	outputSchema: z.object({
+		title: z.string(),
+		company: z.string(),
+		createdAt: z.string(),
+		startedAt: z.string(),
+		endedAt: z.string().optional(),
+		description: z.string(),
+	}),
+});
 
 const other = defineCollection({
 	loader: glob({ base: "src/content/other", pattern: "**/*.{md,mdx}" }),
@@ -34,18 +50,6 @@ const socials = defineCollection({
 		icon: z.union([lucideIconSchema, simpleIconSchema]),
 		text: z.string(),
 		link: z.url(),
-	}),
-});
-
-const workExperience = defineCollection({
-	loader: file("src/content/work.json"),
-	schema: z.object({
-		id: z.string(),
-		title: z.string(),
-		company: z.string(),
-		duration: z.string(),
-		description: z.string(),
-		href: z.string().optional(),
 	}),
 });
 
@@ -136,7 +140,7 @@ export const collections = {
 	other,
 	quickInfo,
 	socials,
-	workExperience,
 	music,
 	reviews,
+	positions,
 };

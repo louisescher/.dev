@@ -15,13 +15,14 @@ import ImageGlow from "../components/ImageGlow.astro";
 import OnlineStatusCard from "../components/OnlineStatusCard.astro";
 import Status from "../components/Status.astro";
 import Layout from "../layouts/Layout.astro";
+import { positions as _positions } from "../content.config";
 
-const [posts, projects, about, workExperience, quickInfo, socials, music] =
+const [posts, projects, about, positions, quickInfo, socials, music] =
 	await Promise.all([
 		getCollection("posts", (post) => post.data.draft !== true),
 		getCollection("projects"),
 		getEntry("other", "about"),
-		getCollection("workExperience"),
+		getCollection("positions"),
 		getCollection("quickInfo"),
 		getCollection("socials"),
 		getCollection("music"),
@@ -275,30 +276,50 @@ const track = music[music.length - 1].data;
 			</div>
 			<div class="work-experience-container">
 				{
-					workExperience.reverse().map((entry) => {
-						const props = {
-							href: entry.data.href,
-						};
+					positions
+						.map(
+							(entry) =>
+								entry.data as {
+									title: string;
+									company: string;
+									startedAt: string;
+									endedAt?: string;
+									description: string;
+								},
+						)
+						.sort((a, b) => {
+							const t_a = new Date(a.startedAt).getTime();
+							const t_b = new Date(b.startedAt).getTime();
 
-						return (
-							<div class="work-experience-entry">
-								<span class="work-experience-duration">
-									{entry.data.duration}
-								</span>
-								<h3 class="work-experience-company">
-									{entry.data.href ? (
-										<a href={entry.data.href}>{entry.data.company}</a>
-									) : (
-										entry.data.company
-									)}
-								</h3>
-								<span {...props} class="work-experience-role">
-									{entry.data.title}
-								</span>
-								<p class="work-experience-desc">{entry.data.description}</p>
-							</div>
-						);
-					})
+							return t_b - t_a;
+						})
+						.map((data) => {
+							const startedAt = new Date(data.startedAt).toLocaleDateString(
+								"en-US",
+								{
+									month: "short",
+									year: "numeric",
+								},
+							);
+
+							const endedAt = data.endedAt
+								? new Date(data.startedAt).toLocaleDateString("en-US", {
+										month: "short",
+										year: "numeric",
+									})
+								: "current";
+
+							return (
+								<div class="work-experience-entry">
+									<span class="work-experience-duration">
+										{startedAt} - {endedAt}
+									</span>
+									<h3 class="work-experience-company">{data.company}</h3>
+									<span class="work-experience-role">{data.title}</span>
+									<p class="work-experience-desc">{data.description}</p>
+								</div>
+							);
+						})
 				}
 			</div>
 		</Card>
