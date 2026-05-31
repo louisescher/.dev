@@ -56,145 +56,163 @@ const { Content, headings } = await render(post);
 ---
 
 <Layout
-  title={post.data.title}
-  description={post.data.description}
-  image={post.data.image}
-  article={{
-    createdAt: post.data.createdAt,
-    updatedAt: post.data.updatedAt,
-  }}
+	title={post.data.title}
+	description={post.data.description}
+	image={post.data.image}
+	article={{
+		createdAt: post.data.createdAt,
+		updatedAt: post.data.updatedAt,
+		atUri: post.data.atUri,
+	}}
 >
-  <div class="left" slot="left">
-    <Card class="toc-card">
-      <h2 class="no-mt">Table of contents</h2>
-      <ol>
-        <li class="toc-li">
-          <a href={`#_top`} class="active">{post.data.title}</a>
-        </li>
-        {headings.map((heading) => (
-          <li class="toc-li" data-depth={heading.depth}>
-            <a href={`#${heading.slug}`}>{heading.text}</a>
-          </li>
-        ))}
-      </ol>
-    </Card>
-  </div>
-  <article slot="right" data-pagefind-body>
-    <Card>
-      <div class="article-header" id="_top" data-pagefind-ignore>
-        <ImageGlow quality={100} width={1280} height={630} class="article-image" src={post.data.image} alt={post.data.title} />
-        <div class="header">
-          <div>
-            <h1 class="no-mt article-h1">{post.data.title}</h1>
-          </div>
-          <div class="article-info">
-            <span>{post.data.createdAt.toLocaleDateString()}</span>
-            <span>/</span>
-            <span>{timeToRead(post)} minute{timeToRead(post) === 1 ? "" : "s"} to read</span>
-            <span>/</span>
-            <span>Tags: {post.data.tags.map((tag) => tag.id).join(", ")}</span>
-          </div>
-        </div>
-      </div>
-      <div class="hints">
-        <RSSHint />
-        <BuyMeACoffee />
-      </div>
-      <Content />
-      <hr class="end-of-article" />
-      <div class="hints">
-        <RSSHint />
-        <BuyMeACoffee />
-      </div>
-      <hr class="end-of-hints" />
-      <a href="/blog" class="block-link" data-pagefind-ignore>← Back to blog</a>
-    </Card>
-    {giscus && (
-      <Card>
-        <div class="comments" data-pagefind-ignore>
-          <script
-            is:inline
-            src="https://giscus.app/client.js"
-            data-repo={giscus.repository}
-            data-repo-id={giscus.repositoryId}
-            data-category={giscus.category}
-            data-category-id={giscus.categoryId}
-            data-mapping={giscus.mapping}
-            data-strict={giscus.strict === true ? "1" : "0"}
-            data-reactions-enabled={giscus.reactionsEnabled === true ? "1" : "0"}
-            data-emit-metadata={giscus.emitMetadata === true ? "1" : "0"}
-            data-input-position={giscus.commentsInput}
-            data-theme={giscus.theme || "https://spectre.lou.gg/styles/giscus"}
-            data-lang={giscus.lang}
-            data-loading="lazy"
-            crossorigin="anonymous"
-            async
-          />
-        </div>
-      </Card>
-    )}
-  </article>
+	<div class="left" slot="left">
+		<Card class="toc-card">
+			<h2 class="no-mt">Table of contents</h2>
+			<ol>
+				<li class="toc-li">
+					<a href={`#_top`} class="active">{post.data.title}</a>
+				</li>
+				{
+					headings.map((heading) => (
+						<li class="toc-li" data-depth={heading.depth}>
+							<a href={`#${heading.slug}`}>{heading.text}</a>
+						</li>
+					))
+				}
+			</ol>
+		</Card>
+	</div>
+	<article slot="right" data-pagefind-body>
+		<Card>
+			<div class="article-header" id="_top" data-pagefind-ignore>
+				<ImageGlow
+					quality={100}
+					width={1280}
+					height={630}
+					class="article-image"
+					src={post.data.image}
+					alt={post.data.title}
+				/>
+				<div class="header">
+					<div>
+						<h1 class="no-mt article-h1">{post.data.title}</h1>
+					</div>
+					<div class="article-info">
+						<span>{post.data.createdAt.toLocaleDateString()}</span>
+						<span>/</span>
+						<span
+							>{timeToRead(post)} minute{timeToRead(post) === 1 ? "" : "s"} to read</span
+						>
+						<span>/</span>
+						<span>Tags: {post.data.tags.map((tag) => tag.id).join(", ")}</span>
+					</div>
+				</div>
+			</div>
+			<div class="hints">
+				<RSSHint />
+				<BuyMeACoffee />
+			</div>
+			<Content />
+			<hr class="end-of-article" />
+			<div class="hints">
+				<RSSHint />
+				<BuyMeACoffee />
+			</div>
+			<hr class="end-of-hints" />
+			<a href="/blog" class="block-link" data-pagefind-ignore>← Back to blog</a>
+		</Card>
+		{
+			giscus && (
+				<Card>
+					<div class="comments" data-pagefind-ignore>
+						<script
+							is:inline
+							src="https://giscus.app/client.js"
+							data-repo={giscus.repository}
+							data-repo-id={giscus.repositoryId}
+							data-category={giscus.category}
+							data-category-id={giscus.categoryId}
+							data-mapping={giscus.mapping}
+							data-strict={giscus.strict === true ? "1" : "0"}
+							data-reactions-enabled={
+								giscus.reactionsEnabled === true ? "1" : "0"
+							}
+							data-emit-metadata={giscus.emitMetadata === true ? "1" : "0"}
+							data-input-position={giscus.commentsInput}
+							data-theme={
+								giscus.theme || "https://spectre.lou.gg/styles/giscus"
+							}
+							data-lang={giscus.lang}
+							data-loading="lazy"
+							crossorigin="anonymous"
+							async
+						/>
+					</div>
+				</Card>
+			)
+		}
+	</article>
 </Layout>
-<script src="../../scripts/toc.ts" />
+<script src="../../scripts/toc.ts"></script>
 <style is:global>
-  .toc-card ol {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    margin-bottom: 0;
-    list-style-type: none;
-    position: relative;
-  }
+	.toc-card ol {
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin-bottom: 0;
+		list-style-type: none;
+		position: relative;
+	}
 
-  .toc-card ol li a {
-    color: #c7c7c7;
-    font-size: .925rem;
-    padding: .25rem .5rem;
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-  }
+	.toc-card ol li a {
+		color: #c7c7c7;
+		font-size: 0.925rem;
+		padding: 0.25rem 0.5rem;
+		box-decoration-break: clone;
+		-webkit-box-decoration-break: clone;
+	}
 
-  .toc-card ol li a:hover {
-    color: white;
-    text-decoration: none;
-  }
+	.toc-card ol li a:hover {
+		color: white;
+		text-decoration: none;
+	}
 
-  .toc-card ol li a.active {
-    color: white;
-    background: var(--primary);
-  }
+	.toc-card ol li a.active {
+		color: white;
+		background: var(--primary);
+	}
 
-  .left {
-    height: 100%;
-    position: relative;
-  }
+	.left {
+		height: 100%;
+		position: relative;
+	}
 
-  .toc-card {
-    position: sticky;
-    top: 2rem;
-  }
+	.toc-card {
+		position: sticky;
+		top: 2rem;
+	}
 
-  article {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
+	article {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
 
-  .comments * {
-    border-color: #353535 !important;
-  }
+	.comments * {
+		border-color: #353535 !important;
+	}
 
-  @media screen and (max-width: 768px) {
-    article {
-      gap: 1rem;
-    }
-  }
+	@media screen and (max-width: 768px) {
+		article {
+			gap: 1rem;
+		}
+	}
 
-  .hints {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-  }
+	.hints {
+		display: flex;
+		gap: 1rem;
+		margin-top: 1rem;
+		flex-wrap: wrap;
+	}
 </style>

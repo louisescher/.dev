@@ -1,0 +1,16 @@
+{
+  "$schema": "https://tangled.org/stevedylan.dev/sequoia/raw/main/sequoia.schema.json",
+  "siteUrl": "https://lou.gg",
+  "contentDir": "./src/content/posts",
+  "outputDir": "./dist",
+  "pathPrefix": "/blog",
+  "publicationUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.publication/3mn6dcjt4hc24",
+  "frontmatter": {
+    "publishDate": "createdAt",
+    "coverImage": "image"
+  },
+  "publishContent": false,
+  "bluesky": {
+    "enabled": true
+  }
+}
