@@ -1,0 +1,62 @@
+{
+  "posts": {
+    "src/content/posts/would-you-still-love-me-if-i-was-a-white-hat-tool.mdx": {
+      "contentHash": "ee6d1a14a9c925b29a6c7bc651659b05f500d648c0dde24427de2e62e6abf351",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6vkrtc24",
+      "lastPublished": "2026-06-01T06:09:32.048Z",
+      "slug": "would-you-still-love-me-if-i-was-a-white-hat-tool"
+    },
+    "src/content/posts/why-writing-blogs-isnt-hard.mdx": {
+      "contentHash": "b61089b649bb3d4319acd57db048d7a309dd5deaca5902028f14b7eb0fd655de",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6vt2i224",
+      "lastPublished": "2026-06-01T06:09:32.310Z",
+      "slug": "why-writing-blogs-isnt-hard"
+    },
+    "src/content/posts/a-successor-to-e-mail.mdx": {
+      "contentHash": "2c6bc4646bc45c6747615690f8329fb1addb60558e5ed2abcf9be4ab34c781b9",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6vzw7c24",
+      "lastPublished": "2026-06-01T06:09:32.559Z",
+      "slug": "a-successor-to-e-mail"
+    },
+    "src/content/posts/understanding-css-easing-functions.mdx": {
+      "contentHash": "6ea087a2ced621876f1260997d56b2f6e454944f57940f72604158c4ba898a08",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6wgqec24",
+      "lastPublished": "2026-06-01T06:09:32.953Z",
+      "slug": "understanding-css-easing-functions"
+    },
+    "src/content/posts/astro-integrations-explained.mdx": {
+      "contentHash": "023dbd66057c5fbc71d59f589858e551a34392964fb112970ae85fafa98c8af3",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6wno2224",
+      "lastPublished": "2026-06-01T06:09:33.170Z",
+      "slug": "astro-integrations-explained"
+    },
+    "src/content/posts/ai-artificial-incompetence.mdx": {
+      "contentHash": "6c887474f7995d821421655f9371defe04fb32880e5e656d36508c4c055bdeed",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6wuonk24",
+      "lastPublished": "2026-06-01T06:09:33.420Z",
+      "slug": "ai-artificial-incompetence"
+    },
+    "src/content/posts/pixel-perfect-studiocms-dev.mdx": {
+      "contentHash": "3b097bea88d7eaffa0786fe654caa7fb69e932d558fc257e4f8dab51e4079faf",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6x4tfc24",
+      "lastPublished": "2026-06-01T06:09:33.670Z",
+      "slug": "pixel-perfect-studiocms-dev"
+    },
+    "src/content/posts/how-to-test-your-astro-site.mdx": {
+      "contentHash": "67adf418a14c665bb7fc7709ce0af7efdba4736acc3f5b299763a4f4b50ca5cc",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6xcvq224",
+      "lastPublished": "2026-06-01T06:09:33.879Z",
+      "slug": "how-to-test-your-astro-site"
+    },
+    "src/content/posts/building-a-ui-lib.mdx": {
+      "contentHash": "6a611406c64a4efeb242462399c804ce0a7ef0d70b12f6dd8c1b226ca8243d8c",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6xi5p224",
+      "lastPublished": "2026-06-01T06:09:34.054Z",
+      "slug": "building-a-ui-lib"
+    }
+  },
+  "publication": {
+    "cid": "bafyreidsk6quuncmcjx4kyadduzsxjsizwipu4wepkeu7vweyvrxl7cqp4",
+    "uri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.publication/3mn6dcjt4hc24"
+  }
+}
