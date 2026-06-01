@@ -1,62 +1,62 @@
 {
   "posts": {
     "src/content/posts/would-you-still-love-me-if-i-was-a-white-hat-tool.mdx": {
-      "contentHash": "ee6d1a14a9c925b29a6c7bc651659b05f500d648c0dde24427de2e62e6abf351",
-      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6vkrtc24",
-      "lastPublished": "2026-06-01T06:09:32.048Z",
+      "contentHash": "084f49f870984d370df34398f0c35b501fd5a043d544e21e7621bc4a1cfae6a7",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7gumgbxk24",
+      "lastPublished": "2026-06-01T06:21:40.649Z",
       "slug": "would-you-still-love-me-if-i-was-a-white-hat-tool"
     },
     "src/content/posts/why-writing-blogs-isnt-hard.mdx": {
-      "contentHash": "b61089b649bb3d4319acd57db048d7a309dd5deaca5902028f14b7eb0fd655de",
-      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6vt2i224",
-      "lastPublished": "2026-06-01T06:09:32.310Z",
+      "contentHash": "e74ccd07a12e3bcb7e53d4c1ac62c780f2a9e6fa23a25705b6181042e2b1c545",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7gumpb3224",
+      "lastPublished": "2026-06-01T06:21:40.935Z",
       "slug": "why-writing-blogs-isnt-hard"
     },
     "src/content/posts/a-successor-to-e-mail.mdx": {
-      "contentHash": "2c6bc4646bc45c6747615690f8329fb1addb60558e5ed2abcf9be4ab34c781b9",
-      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6vzw7c24",
-      "lastPublished": "2026-06-01T06:09:32.559Z",
+      "contentHash": "d6b8eef1ea887c8378ac0a6f8fa1292fc82f8264faa6d73378a4a587019f42f0",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7gumzzsc24",
+      "lastPublished": "2026-06-01T06:21:41.304Z",
       "slug": "a-successor-to-e-mail"
     },
     "src/content/posts/understanding-css-easing-functions.mdx": {
-      "contentHash": "6ea087a2ced621876f1260997d56b2f6e454944f57940f72604158c4ba898a08",
-      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6wgqec24",
-      "lastPublished": "2026-06-01T06:09:32.953Z",
+      "contentHash": "2e1f86d04d93c36e163d6483b2816ecfb5666c800f2e99ceaf465a89533a2c36",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7gunetis24",
+      "lastPublished": "2026-06-01T06:21:41.645Z",
       "slug": "understanding-css-easing-functions"
     },
     "src/content/posts/astro-integrations-explained.mdx": {
-      "contentHash": "023dbd66057c5fbc71d59f589858e551a34392964fb112970ae85fafa98c8af3",
-      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6wno2224",
-      "lastPublished": "2026-06-01T06:09:33.170Z",
+      "contentHash": "dfbab876cf26422e01544d752deb2c6c6f43b8e0df839d3f3ab6448e52d1d74c",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7gunlw2s24",
+      "lastPublished": "2026-06-01T06:21:41.883Z",
       "slug": "astro-integrations-explained"
     },
     "src/content/posts/ai-artificial-incompetence.mdx": {
-      "contentHash": "6c887474f7995d821421655f9371defe04fb32880e5e656d36508c4c055bdeed",
-      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6wuonk24",
-      "lastPublished": "2026-06-01T06:09:33.420Z",
+      "contentHash": "ebc645155d1baceb99a5902feb0e58ac2f5a7e5d8bb3e241fd8827d04cd46938",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7guntcfc24",
+      "lastPublished": "2026-06-01T06:21:42.132Z",
       "slug": "ai-artificial-incompetence"
     },
     "src/content/posts/pixel-perfect-studiocms-dev.mdx": {
-      "contentHash": "3b097bea88d7eaffa0786fe654caa7fb69e932d558fc257e4f8dab51e4079faf",
-      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6x4tfc24",
-      "lastPublished": "2026-06-01T06:09:33.670Z",
+      "contentHash": "ab633bf1cffbdac2a27db5f3430ff58a2d6da6026219b92dfba38bb6087c976b",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7guo4n7s24",
+      "lastPublished": "2026-06-01T06:21:42.416Z",
       "slug": "pixel-perfect-studiocms-dev"
     },
     "src/content/posts/how-to-test-your-astro-site.mdx": {
-      "contentHash": "67adf418a14c665bb7fc7709ce0af7efdba4736acc3f5b299763a4f4b50ca5cc",
-      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6xcvq224",
-      "lastPublished": "2026-06-01T06:09:33.879Z",
+      "contentHash": "198fd94f530e401d154ef2ed2b20c7642a5330aa308bcc257c0a9a24aa6f41b2",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7guoduo224",
+      "lastPublished": "2026-06-01T06:21:42.666Z",
       "slug": "how-to-test-your-astro-site"
     },
     "src/content/posts/building-a-ui-lib.mdx": {
-      "contentHash": "6a611406c64a4efeb242462399c804ce0a7ef0d70b12f6dd8c1b226ca8243d8c",
-      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7g6xi5p224",
-      "lastPublished": "2026-06-01T06:09:34.054Z",
+      "contentHash": "496db08fbb256772727f917d6aeb254ff78857abdcf2974bb9b0766082a7f379",
+      "atUri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.document/3mn7guojt3s24",
+      "lastPublished": "2026-06-01T06:21:42.854Z",
       "slug": "building-a-ui-lib"
     }
   },
   "publication": {
-    "cid": "bafyreidsk6quuncmcjx4kyadduzsxjsizwipu4wepkeu7vweyvrxl7cqp4",
+    "cid": "bafyreih36tsbw7uwvrqauhhuxflzka2k5pi2hxgjk3z3arlerp6i2vseyq",
     "uri": "at://did:plc:w64dlsa4zwjv2wljlvmymldc/site.standard.publication/3mn6dcjt4hc24"
   }
 }
