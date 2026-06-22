@@ -9,7 +9,7 @@
     "publishDate": "createdAt",
     "coverImage": "image"
   },
-  "publishContent": false,
+  "publishContent": true,
   "bluesky": {
     "enabled": true
   }
