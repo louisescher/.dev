@@ -328,19 +328,23 @@ addEventListener('obsSourceVisibleChanged', e=>{ if (!e || !e.detail || e.detail
 if (typeof document.addEventListener==='function')
   document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) resetPhase(); });
 function loop(t){
-  if (last===null) last=t;
-  if (epoch===null) epoch=t;
-  const pt=t-epoch;                     /* phase time: 0 at every source activation */
-  if (playing){
-    acc+=t-last;
-    const step=1000/fps;
-    while (acc>=step){ acc-=step; fi=(fi+1)%N; draw(); }
-  }
-  last=t;
-  fluidTick(t);
-  globeTick(t);
-  polyTick(pt);
-  requestAnimationFrame(loop);
+  requestAnimationFrame(loop);          /* schedule first: one bad frame can't kill the chain */
+  try{
+    if (last===null) last=t;
+    if (epoch===null) epoch=t;
+    const pt=t-epoch;                   /* phase time: 0 at every source activation */
+    let dt=t-last; last=t;
+    if (dt<0 || dt>500) dt=0;           /* resumed after throttle/suspend: skip, never replay */
+    if (playing){
+      acc+=dt;
+      const step=1000/fps;
+      const steps=Math.floor(acc/step);
+      if (steps>0){ acc-=steps*step; fi=(fi+steps)%N; draw(); }   /* draw at most once per tick */
+    }
+    fluidTick(t);
+    globeTick(t);
+    polyTick(pt);
+  }catch(err){ /* transient render hiccup: drop the frame, keep animating */ }
 }
 ui('fps').addEventListener('input',e=>{ const v=+e.target.value; if(v>=1&&v<=60) fps=v; syncURL(); });
 ui('phs').addEventListener('input',e=>{ const v=parseInt(e.target.value,10); if(!isNaN(v)&&v>=-30000&&v<=30000) PHASE=v; syncURL(); });
@@ -449,13 +453,17 @@ function fluidTick(t){
   }
   const D=idata.data;
   for (let i=0;i<NPX;i++){
-    D[i*4]=F[i*3]; D[i*4+1]=F[i*3+1]; D[i*4+2]=F[i*3+2]; D[i*4+3]=255;
+    let r=F[i*3], g=F[i*3+1], b=F[i*3+2];
+    const gray=0.299*r+0.587*g+0.114*b;         /* saturate(1.06) */
+    r=gray+(r-gray)*1.06; g=gray+(g-gray)*1.06; b=gray+(b-gray)*1.06;
+    D[i*4]  =(r-128)*1.12+128;                  /* contrast(1.12); Uint8Clamped clamps */
+    D[i*4+1]=(g-128)*1.12+128;
+    D[i*4+2]=(b-128)*1.12+128;
+    D[i*4+3]=255;
   }
   sctx.putImageData(idata,0,0);
   fx.imageSmoothingEnabled=true; fx.imageSmoothingQuality='high';
-  fx.filter='contrast(1.12) saturate(1.06)';
   fx.drawImage(small,0,0,1200,675);
-  fx.filter='none';
 }
 
 /* ---- polyhedron: dice roll-in intro, then true 3D tumble ---- */
