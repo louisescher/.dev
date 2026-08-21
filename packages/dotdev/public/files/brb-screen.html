@@ -265,7 +265,8 @@ function frameHTML(fi, lock, paint, pin){
 /* ---- playback + controls ---- */
 const main=document.getElementById('cd-main'), glow=document.getElementById('cd-glow');
 const ui=id=>document.getElementById(id);
-const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const inOBS=typeof window!=='undefined' && !!window.obsstudio;
+const reduced=!inOBS && matchMedia('(prefers-reduced-motion: reduce)').matches;
 let fps=12, playing=!reduced, lock=true, paint='fixed', pin=true, fi=0, acc=0, last=null;
 if (reduced){ ui('play').checked=false; document.body.className='nopanel';
   ['fluid','sq','gl','po'].forEach(i=>ui(i).checked=false); }
@@ -319,8 +320,15 @@ const stage=document.getElementById('stage');
 function fit(){ stage.style.transform='scale('+Math.min(innerWidth/1200,innerHeight/675)+')'; }
 addEventListener('resize',fit); fit();
 
+let epoch=null;
+function resetPhase(){ epoch=null; }
+addEventListener('obsSourceVisibleChanged', e=>{ if (!e || !e.detail || e.detail.visible) resetPhase(); });
+if (typeof document.addEventListener==='function')
+  document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) resetPhase(); });
 function loop(t){
   if (last===null) last=t;
+  if (epoch===null) epoch=t;
+  const pt=t-epoch;                     /* phase time: 0 at every source activation */
   if (playing){
     acc+=t-last;
     const step=1000/fps;
@@ -329,7 +337,7 @@ function loop(t){
   last=t;
   fluidTick(t);
   globeTick(t);
-  polyTick(t);
+  polyTick(pt);
   requestAnimationFrame(loop);
 }
 ui('fps').addEventListener('input',e=>{ const v=+e.target.value; if(v>=1&&v<=60) fps=v; syncURL(); });
