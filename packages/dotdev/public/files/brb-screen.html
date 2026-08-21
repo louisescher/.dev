@@ -142,6 +142,7 @@
 
 <div id="panel">
   <label>speed <span><input id="fps" type="number" min="1" max="60" step="1" value="12"> fps</span></label>
+  <label>poly phase <span><input id="phs" type="number" min="-30000" max="30000" step="50" value="0"> ms</span></label>
   <label><span>playing</span><input id="play" type="checkbox" checked></label>
   <label><span>lock hub + bevel</span><input id="lock" type="checkbox" checked></label>
   <label><span>pin shading</span><input id="pin" type="checkbox" checked></label>
@@ -279,6 +280,7 @@ playing=qb('play',playing); lock=qb('lock',lock); pin=qb('pin',pin);
 let INTRO=1400; if (Q.has('intro')) INTRO=Math.min(10000,Math.max(0,parseInt(Q.get('intro'),10)||0));
 const FADE=500;
 let POLYSHOW=0; if (Q.has('polyshow')) POLYSHOW=Math.min(10000,Math.max(0,parseInt(Q.get('polyshow'),10)||0));
+let PHASE=0; if (Q.has('phase')) PHASE=Math.min(30000,Math.max(-30000,parseInt(Q.get('phase'),10)||0));
 if (Q.get('paint')==='travel') paint='travel'; else if (Q.get('paint')==='fixed') paint='fixed';
 const FLAGS={fluid:'fluid', sq:'anim-squares', gl:'anim-globe', po:'anim-poly'};
 for (const k in FLAGS){
@@ -287,16 +289,16 @@ for (const k in FLAGS){
 }
 document.body.classList.toggle('nopanel', !qb('panel', false));
 ui('play').checked=playing; ui('lock').checked=lock; ui('pin').checked=pin;
-ui('paint').value=paint; ui('fps').value=fps;
+ui('paint').value=paint; ui('fps').value=fps; ui('phs').value=PHASE;
 
-const DEFAULTS={fps:'12',play:'1',lock:'1',pin:'1',paint:'fixed',fluid:'1',sq:'1',gl:'1',po:'1',panel:'0',intro:'1400',polyshow:'0'};
+const DEFAULTS={fps:'12',play:'1',lock:'1',pin:'1',paint:'fixed',fluid:'1',sq:'1',gl:'1',po:'1',panel:'0',intro:'1400',polyshow:'0',phase:'0'};
 function syncURL(){
   const p=new URLSearchParams();
   const t=Q.get('text'); if (t) p.set('text', t);
   const cur={fps:String(fps), play:playing?'1':'0', lock:lock?'1':'0', pin:pin?'1':'0',
     paint, fluid:ui('fluid').checked?'1':'0', sq:ui('sq').checked?'1':'0',
     gl:ui('gl').checked?'1':'0', po:ui('po').checked?'1':'0',
-    panel:document.body.classList.contains('nopanel')?'0':'1', intro:String(INTRO), polyshow:String(POLYSHOW)};
+    panel:document.body.classList.contains('nopanel')?'0':'1', intro:String(INTRO), polyshow:String(POLYSHOW), phase:String(PHASE)};
   for (const k in cur) if (cur[k]!==DEFAULTS[k]) p.set(k, cur[k]);
   const qs=p.toString();
   try{ history.replaceState(null,'', qs ? '?'+qs : location.pathname); }catch(e){}
@@ -341,6 +343,7 @@ function loop(t){
   requestAnimationFrame(loop);
 }
 ui('fps').addEventListener('input',e=>{ const v=+e.target.value; if(v>=1&&v<=60) fps=v; syncURL(); });
+ui('phs').addEventListener('input',e=>{ const v=parseInt(e.target.value,10); if(!isNaN(v)&&v>=-30000&&v<=30000) PHASE=v; syncURL(); });
 ui('play').addEventListener('change',e=>{ playing=e.target.checked; syncURL(); });
 ui('lock').addEventListener('change',e=>{ lock=e.target.checked; draw(); syncURL(); });
 ui('pin').addEventListener('change',e=>{ pin=e.target.checked; draw(); syncURL(); });
@@ -488,6 +491,7 @@ const rollFaces=ICO.F.map(()=>{
 const PCX=1108, PCY=538, PR=36.5;
 
 /* rotation helpers */
+const ambP = t => ambM(t + PHASE);   /* poly clock with calibration offset */
 function ambM(t){
   const a=t*2*Math.PI/26000, b=t*2*Math.PI/17000;
   const ca=Math.cos(a), sa=Math.sin(a), cb=Math.cos(b), sb=Math.sin(b);
@@ -545,7 +549,7 @@ function drawSolid(M, cx, cy, fillO){
   }
 }
 function drawWire(t){
-  const M=ambM(t);
+  const M=ambP(t);
   const pts=ICO.V.map(v=>{ const p=apply3(M,v); return [PCX+PR*p[0], PCY+PR*p[1], p[2]]; });
   for (let k=0;k<ICO.E.length;k++){
     const [i,j]=ICO.E[k], p=pts[i], q=pts[j], l=polyLines[k];
@@ -566,12 +570,12 @@ function polyTick(t){
     const u=Math.min(1, t/INTRO), e=easeOutCubic(u);
     const x=-80+(PCX+80)*e;
     const y=PCY-120*Math.pow(1-u,1.7)*Math.abs(Math.sin(3*Math.PI*u));
-    const M=mul3(axisRot(ROLLAXIS,(PCX-x)/PR), ambM(INTRO));
+    const M=mul3(axisRot(ROLLAXIS,(PCX-x)/PR), ambP(INTRO));
     drawSolid(M, x, y, 1);
   } else {
     /* in place: keep tumbling on the ambient clock while faces fade */
     const fu=Math.min(1,(t-INTRO)/FADE);
-    drawSolid(ambM(t), PCX, PCY, 1-fu);
+    drawSolid(ambP(t), PCX, PCY, 1-fu);
     drawWire(t);           /* wireframe underneath takes over seamlessly */
   }
 }
