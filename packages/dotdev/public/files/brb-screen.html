@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BRB — Y2K</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --c0:#0A0F19; --c1:#ECE7E3; --c2:#123767; --c3:#F6A2C6; --c4:#1D69C9; }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#000;overflow:hidden}
+  #viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;width:1200px;height:675px;transform-origin:center;flex:none}
+  #stage > *{position:absolute;left:0;top:0}
+  #bg-linear{width:1200px;height:675px;background:linear-gradient(45deg,
+    var(--c0) 8.5%, var(--c2) 27.5%, var(--c4) 49%, var(--c3) 72%, var(--c1) 89.5%)}
+  body:not(.fluid) #bg-fluid{display:none}
+  body.fluid #bg-linear{display:none}
+  #cdclip{left:24px;top:24px;width:1152px;height:627px;border-radius:32px;overflow:hidden}
+  pre.cd{position:absolute;margin:0;white-space:pre;left:-100.0px;top:249.0px;
+    font-family:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
+    font-size:12px;line-height:16.1px}
+  pre.cd .k1{color:var(--c1)} pre.cd .k2{color:var(--c2)}
+  pre.cd .k3{color:var(--c3)} pre.cd .k4{color:var(--c4)}
+  #cd-glow{filter:blur(16px)}
+  /* headline: query-param text */
+  #headline{left:380px;top:24px;width:772px;height:627px;display:flex;
+    align-items:center;justify-content:center;text-align:center;pointer-events:none}
+  #headline span{font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;
+    font-weight:700;font-size:72px;line-height:1.05;letter-spacing:-0.02em;
+    color:#fff;white-space:pre-line;max-width:100%}
+  /* corner symbols */
+  .rot{transform-box:fill-box;transform-origin:50% 50%}
+  body.anim-squares #sym-squares .rot{animation:rot var(--p) linear infinite var(--d)}
+  @keyframes rot{to{transform:rotate(360deg)}}
+  #globe-anim{visibility:hidden}
+  body.anim-globe #globe-anim{visibility:visible}
+  body.anim-globe #globe-static{visibility:hidden}
+  #poly-anim{visibility:hidden}
+  body.anim-poly #poly-anim{visibility:visible}
+  body.anim-poly #poly-static{visibility:hidden}
+  @media (prefers-reduced-motion:reduce){
+    .rot{animation:none !important}
+  }
+  /* prototyping panel */
+  #panel{position:fixed;top:10px;right:10px;z-index:9;display:flex;flex-direction:column;gap:6px;
+    background:rgba(10,15,25,.88);border:1px solid #2a3550;border-radius:8px;padding:10px 12px;
+    font:12px/1.4 ui-monospace,monospace;color:#cdd6e4;min-width:210px}
+  #panel label{display:flex;align-items:center;gap:10px;justify-content:space-between;cursor:pointer}
+  #panel input[type=number]{width:60px;background:#0a0f19;color:#ece7e3;border:1px solid #2a3550;
+    border-radius:4px;padding:2px 6px;font:inherit}
+  #panel select{background:#0a0f19;color:#ece7e3;border:1px solid #2a3550;border-radius:4px;font:inherit}
+  #panel small{color:#5c6a85}
+  body.nopanel #panel{display:none}
+</style>
+</head>
+<body class="nopanel fluid anim-squares anim-globe anim-poly">
+<div id="viewport"><div id="stage">
+  <div id="bg-linear"></div>
+  <canvas id="bg-fluid" width="1200" height="675"></canvas>
+
+  <svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g filter="url(#filter0_d_6_3)"><rect x="24" y="24" width="1152" height="627" rx="32" fill="black"/></g>
+    <defs><filter id="filter0_d_6_3" x="12" y="12" width="1176" height="651" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="6"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_6_3"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_6_3" result="shape"/>
+</filter></defs>
+  </svg>
+
+  <div id="cdclip">
+    <pre class="cd" id="cd-glow" aria-hidden="true"></pre>
+    <pre class="cd" id="cd-main" aria-label="ASCII compact disc, spinning"></pre>
+  </div>
+
+  <div id="headline"><span id="headtext"></span></div>
+
+  <svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg" style="pointer-events:none">
+    <g clip-path="url(#cardclip)">
+      <g id="sym-squares">
+        <g><rect x="56.75" y="56.75" width="70.5" height="70.5" stroke="url(#paint5_radial_6_3)" stroke-width="1.5"/></g>
+        <g class="rot" style="--p:20s;--d:reverse"><rect x="56.3107" y="92" width="51" height="51" transform="rotate(-45 56.3107 92)" stroke="url(#paint4_radial_6_3)" stroke-width="1.5"/></g>
+        <g class="rot" style="--p:15s;--d:normal"><rect x="73.25" y="110.75" width="37.5" height="37.5" transform="rotate(-90 73.25 110.75)" stroke="url(#paint3_radial_6_3)" stroke-width="1.5"/></g>
+        <g class="rot" style="--p:11s;--d:reverse"><rect x="92" y="111.189" width="27.75" height="27.75" transform="rotate(-135 92 111.189)" stroke="url(#paint2_radial_6_3)" stroke-width="1.5"/></g>
+        <g class="rot" style="--p:8s;--d:normal"><rect x="102.5" y="101.75" width="21" height="21" transform="rotate(180 102.5 101.75)" stroke="url(#paint1_radial_6_3)" stroke-width="1.5"/></g>
+      </g>
+      <path id="globe-static" d="M1084 116C1110.51 116 1132 105.255 1132 92C1132 78.7452 1110.51 68 1084 68M1084 116C1057.49 116 1036 105.255 1036 92C1036 78.7452 1057.49 68 1084 68M1084 116C1103.88 116 1120 105.255 1120 92C1120 78.7452 1103.88 68 1084 68M1084 116C1064.12 116 1048 105.255 1048 92C1048 78.7452 1064.12 68 1084 68M1084 116C1097.25 116 1108 105.255 1108 92C1108 78.7452 1097.25 68 1084 68M1084 116C1070.75 116 1060 105.255 1060 92C1060 78.7452 1070.75 68 1084 68M1084 116C1090.63 116 1096 105.255 1096 92C1096 78.7452 1090.63 68 1084 68M1084 116C1077.37 116 1072 105.255 1072 92C1072 78.7452 1077.37 68 1084 68M1084 128V56M1024 91.25H1144" stroke="url(#paint6_radial_6_3)" stroke-width="1.5"/>
+      <g id="globe-anim" stroke="url(#paint6_radial_6_3)" stroke-width="1.5">
+        <path d="M1084 128V56"/><path d="M1024 91.25H1144"/>
+        <ellipse cx="1084" cy="92" rx="48" ry="24"/>
+      </g>
+      <g transform="translate(0 45)"><g id="sym-poly"><g id="poly-anim" stroke="url(#paint7_radial_6_3)" stroke-width="1.5" stroke-linecap="round"></g><path id="poly-static" d="M1097.57 556L1107.05 572.584L1078.32 556H1097.57ZM1109 572.558V572.471C1109.06 572.473 1109.11 572.469 1109.17 572.457L1109 572.558ZM1137.68 556L1109.59 572.214C1109.62 572.179 1109.65 572.141 1109.67 572.1L1118.96 556H1137.68ZM1107.44 556L1107.49 570.334L1099.3 556H1107.44ZM1117.23 556L1108.99 570.283L1108.94 556H1117.23ZM1135.43 554.5H1119.83L1123.76 547.69L1135.43 554.5ZM1122.46 546.935L1118.1 554.5H1108.93L1108.88 539.012L1122.46 546.935ZM1107.43 554.5H1098.44L1094.04 546.796L1107.38 539.143L1107.43 554.5ZM1096.71 554.5H1080.61L1092.74 547.543L1096.71 554.5ZM1087.05 537.583L1077.57 554.006V521.003L1087.05 537.583ZM1138.43 553.746L1129.32 538.049L1138.43 522.262V553.746ZM1136.48 553.374L1124.5 546.391L1128.45 539.547L1136.48 553.374ZM1091.99 546.24L1079.72 553.282L1087.91 539.092L1091.99 546.24ZM1127.59 538.05L1123.21 545.636L1109.75 537.783L1123.01 530.171L1127.59 538.05ZM1106.75 537.772L1093.3 545.494L1088.78 537.587L1093.22 529.88L1106.75 537.772ZM1117.69 521L1122.26 528.874L1108.87 536.559L1108.81 521H1117.69ZM1128.45 536.552L1124.32 529.425L1136.64 522.353L1128.45 536.552ZM1107.31 521L1107.37 536.395L1093.97 528.581L1098.35 521H1107.31ZM1091.93 529.124L1087.91 536.078L1079.95 522.137L1091.93 529.124ZM1135.99 521L1123.56 528.128L1119.43 521H1135.99ZM1096.62 521L1092.68 527.825L1080.98 521H1096.62ZM1136.81 519.5H1118.56L1109.36 503.652L1136.81 519.5ZM1116.82 519.5H1108.81L1108.76 505.6L1116.82 519.5ZM1107.31 519.5H1099.21L1107.26 505.554L1107.31 519.5ZM1097.48 519.5H1079.19L1106.62 503.664L1097.48 519.5Z" stroke="url(#paint7_radial_6_3)" stroke-width="1.5" stroke-linecap="round"/></g></g>
+    </g>
+    <defs>
+      <radialGradient id="paint1_radial_6_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(114.5 113) rotate(135) scale(52.3259)">
+<stop stop-color="#123767"/>
+<stop offset="0.33051" stop-color="#1D69C9"/>
+<stop offset="0.660885" stop-color="#F6A2C6"/>
+<stop offset="1" stop-color="#ECE7E3"/>
+</radialGradient><radialGradient id="paint2_radial_6_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(106.319 126.569) rotate(90) scale(52.3259)">
+<stop stop-color="#123767"/>
+<stop offset="0.33051" stop-color="#1D69C9"/>
+<stop offset="0.660885" stop-color="#F6A2C6"/>
+<stop offset="1" stop-color="#ECE7E3"/>
+</radialGradient><radialGradient id="paint3_radial_6_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(92 131) rotate(45) scale(52.3259)">
+<stop stop-color="#123767"/>
+<stop offset="0.33051" stop-color="#1D69C9"/>
+<stop offset="0.660885" stop-color="#F6A2C6"/>
+<stop offset="1" stop-color="#ECE7E3"/>
+</radialGradient><radialGradient id="paint4_radial_6_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(81.2362 117.986) scale(52.3259)">
+<stop stop-color="#123767"/>
+<stop offset="0.33051" stop-color="#1D69C9"/>
+<stop offset="0.660885" stop-color="#F6A2C6"/>
+<stop offset="1" stop-color="#ECE7E3"/>
+</radialGradient><radialGradient id="paint5_radial_6_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(92 92) rotate(-45) scale(50.9117)">
+<stop stop-color="#123767"/>
+<stop offset="0.33051" stop-color="#1D69C9"/>
+<stop offset="0.660885" stop-color="#F6A2C6"/>
+<stop offset="1" stop-color="#ECE7E3"/>
+</radialGradient><radialGradient id="paint6_radial_6_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1084 92) scale(84.5 36)">
+<stop stop-color="#ECE7E3"/>
+<stop offset="0.339115" stop-color="#F6A2C6"/>
+<stop offset="0.66949" stop-color="#1D69C9"/>
+<stop offset="1" stop-color="#123767"/>
+</radialGradient><radialGradient id="paint7_radial_6_3" cx="0" cy="0" r="1" gradientTransform="matrix(31.1769 -36 31.1769 36 1108 538)" gradientUnits="userSpaceOnUse">
+<stop stop-color="#123767"/>
+<stop offset="0.33051" stop-color="#1D69C9"/>
+<stop offset="0.660885" stop-color="#F6A2C6"/>
+<stop offset="1" stop-color="#ECE7E3"/>
+</radialGradient>
+      <clipPath id="cardclip"><rect x="24" y="24" width="1152" height="627" rx="32"/></clipPath>
+    </defs>
+  </svg>
+</div></div>
+
+<div id="panel">
+  <label>speed <span><input id="fps" type="number" min="1" max="60" step="1" value="12"> fps</span></label>
+  <label><span>playing</span><input id="play" type="checkbox" checked></label>
+  <label><span>lock hub + bevel</span><input id="lock" type="checkbox" checked></label>
+  <label><span>pin shading</span><input id="pin" type="checkbox" checked></label>
+  <label><span>paint</span>
+    <select id="paint">
+      <option value="fixed" selected>fixed to grid</option>
+      <option value="travel">travels with chars</option>
+    </select></label>
+  <label><span>fluid background</span><input id="fluid" type="checkbox" checked></label>
+  <label><span>squares anim</span><input id="sq" type="checkbox" checked></label>
+  <label><span>globe anim</span><input id="gl" type="checkbox" checked></label>
+  <label><span>polyhedron anim</span><input id="po" type="checkbox" checked></label>
+  <small>?text=... sets the headline · H toggles panel</small>
+</div>
+
+<script>
+const ART = ["              '!Lu5mhkwaoaZojY\\>;:`                              ", "          `^j#@@@QQQgDqP5yoP6KdDDRdhJ+,`                         ", "        'IQ@@@@@@@@QQQ8%qZymUKdDRRRRRRD6}+,                      ", "      `}Q@@@@@@@@@@@@QQQNDwoPqdDRRRRRRDDDDdPL,                   ", "     ~g@@@@@@@@@@@@@@@QQQBg6mUbDRRRRRRDDDDRgWgX<.                ", "    ;Q@@@@@@@@@@@@@@@@@@QQBWdXKDDRRRRDDDDRgW8NNNRz,              ", "   .Q@@@@@@@@@@@@@@@@@@@@QQ&WRKdRRDRRDDDRgW8NN####Wy,            ", "   mQ@@@@@@@@@@@@@@@@@@@@Q#%RRRDDgdSmKDRgWW888N888WWgs.          ", "  ^Q@@@@@@@@@@@@@@@@@@@@#8N%RDRDD%%bEUDRWWWWggggggggggD<         ", "  5QQQ@@@@@@@@@@@@@@@@@WQQQQQQQWDDRKDRW&Ng%%%%%gggggggg%y.       ", "  dQQQQQQQQQQQQQQ@@@@@BQQQQ@Qw*+*zmXDRR%%NQ%%%%%%%%%%%%%%6~      ", "  DQQQQQQQQQQQQQQQQQQQWQQ8QQ<      ~a#%dDRRBRR%%%RRRRRRRRR6~     ", "  68QQQQQQQQQQQBNWRdqUKUUP6A~        ,XDEkbqNDDDDDDDDRRRRRRU~    ", "  T%QQBNWg%RDKUEof}zs7yt7}h7\\.        'Rg%6Sm&KAKbddDDDDDDRRS'   ", "  'Rqkojf{IsJzz777zz7z7jz75X}o+`       bQ@#RqBWhPhXUAqKKbbdDdz   ", "   |Roszzzz7777z777z77vvffjkdDdqf*;,'~zQ@QQ@@QQQ8DqXhEPXUqqKKm~  ", "    kDytzzzzzzzzz77TczuakAbDR%%khbRQQQBN&Q@@QQ@@QQQ8Rb6XEwEkXU*  ", "    .qDonxtJJzz7777symXqdR%gQBRRg%WBRD8@@@QQQQ@@@@@QQQ8Rbq6XEw7  ", "     .URS{Jzz77JnyZEXAbDgggQ@@gDR%gQQQQ8Wg&Q@@@QQQ@@@@QQBWRDdKy  ", "      `ogXnzx}yZwkUAKD%g%RQ@@QgDRW%DQ@@QRKDWQQQQQQQQ@@@@QQQ#gR}  ", "        +DdwSwPXUqbD%WgD%QQ@@Q%D%g%D#@@@Q%66d%#QQQQQQQQ@@@@QQ%c  ", "         .jRbUUqbR%gW%D%QQ@@@NRD%g%DN@@@QQgqkXKDgNNBQQQQQQ@@@%.  ", "           ~aRDdD%ggDDgQQQ@@QWRD%W%D8Q@@QQQRqEEXAd%W8#QQQQQQW>   ", "             ~yDRDdbDNQQQ@@@BgRRgW%D8Q@@@QQNDKhwEXAbRgWNBQQW*    ", "               'iKDD%#&QQ@@QNgD%gW%DWQ@@@QQQ8RKXEwPX6bR%WWq_     ", "                  ;zqDDD#QQBW%D%gW%DWBQ@@QQQQWRdUhEwPXAbE^       ", "                     ~?jXAAXUKdRg8%Dg#Q@@QQQQBWRDAXkhSL_         ", "                        `,=zaEU6qddDgNQQ@QQQBBN%D6aL~            ", "                             `,;+LzjmEXU66XSfz*;,`               "];
+const KOL = ["..............223333333333333333333..............................", "..........223311133344444443333333333333.........................", "........23311111111333444444333333333333333......................", "......2231111111111113333344444333333333333333...................", ".....22111111111111111333344444333333333333333333................", "....23111111111111111111333344433333333333333333333..............", "...23111111111111111111113333334333333333333333333333............", "...2311111111111111111111333333334444444433333333333333..........", "..231111111111111111111133333333333133333333444444444433.........", "..33331111111111111111133333333333333333311111144444444333.......", "..333333333333333111113333313322222333311111111111111111133......", "..333333333333333333333333333......2211133333311133333333333.....", "..333333333333333333333333333........223333333333333333333333....", "..3333333333333344444444444444........233133333333333333333333...", "..244444444444444444444444444444.......23113333333333333333333...", "...244444444444444444444444444444444222313311333333333333333333..", "....24444444444444444444444444444433333333113311333333333333333..", "....22444444444444444444444433333333333111333311111333333333333..", ".....2444444444444444444444311333333333333331113331111333333333..", "......244444444444444433333113333333311333333333333311113333333..", "........2444444444443333333113333333311133333333333333311113333..", ".........244444444333333331113333333311133333333333333333111133..", "...........224443333333333113333333333113333333333333333333333...", ".............223333333333111333333333311133333333333333333333....", "...............223333333311333333333331113333333333333333333.....", "..................2223333333333333333331133333333333333333.......", ".....................22233333333333333311333333333333333.........", "........................22222333333333331133333333333............", ".............................222222222222222222333..............."];
+const PALETTE = [null,'k1','k2','k3','k4'];
+const DIM = ["00000000000000000000000000000000000000000000000000000000000000000", "00000000000000000000111111100000000000000000000000000000000000000", "00000000000000000000001111110000000000000000000000000000000000000", "00000000000000000000000000111110000000000000000000000000000000000", "00000000000000000000000000111110000000000000000000000000000000000", "00000000000000000000000000001110000000000000000000000000000000000", "00000000000000000000000000000001000000000000000000000000000000000", "00000000000000000000000000000000011111111000000000000000000000000", "00000000000000000000000000000000000000000000111111111100000000000", "00000000000000000000000000000000000000000000000111111110000000000", "00000000000000000000000000000000000000000000000000000000000000000", "00000000000000000000000000000000000000000000000000000000000000000", "00000000000000000000000000000000000000000000000000000000000000000", "00000000000000001111111111111100000000000000000000000000000000000", "00011111111111111111111111111111000000000000000000000000000000000", "00001111111111111111111111111111111100000000000000000000000000000", "00000111111111111111111111111111110000000000000000000000000000000", "00000011111111111111111111110000000000000000000000000000000000000", "00000011111111111111111111100000000000000000000000000000000000000", "00000001111111111111110000000000000000000000000000000000000000000", "00000000011111111111000000000000000000000000000000000000000000000", "00000000001111111100000000000000000000000000000000000000000000000", "00000000000001110000000000000000000000000000000000000000000000000", "00000000000000000000000000000000000000000000000000000000000000000", "00000000000000000000000000000000000000000000000000000000000000000", "00000000000000000000000000000000000000000000000000000000000000000", "00000000000000000000000000000000000000000000000000000000000000000", "00000000000000000000000000000000000000000000000000000000000000000", "00000000000000000000000000000000000000000000000000000000000000000"];
+const DEMOTE = {"~": "v", "Q": "q", "?": "z", "s": "z", "5": "7", "Y": "z", "I": "z", "U": "7", "B": "R", "o": "z", "W": "D", "\\": "z", "<": "z", ">": "z", ":": "c", "k": "z", "J": "z", "w": "z", "E": "7", "c": "z", "_": "j", "`": ".", "L": "z", "%": "z", "q": "7", "f": "z", "^": "j", "K": "t", "8": "k", "D": "u", "@": "g", "y": "z", "!": "j", "a": "7", "h": "z", "u": "z", "A": "7", ";": "j", "'": "*", "|": "z", "i": "z", "S": "7", "m": "7", "Z": "7", "+": "j", "j": "z", "X": "7", "&": "f", "6": "f", ".": ",", "g": "s", "*": "j", "}": "z", "P": "7", "7": "z", "#": "I", "N": "R", "T": "z", "z": "z", "b": "7", ",": "\\", "d": "7", "=": "z", "R": "%"};
+const PROMOTE = {"s": "g", "5": "8", "I": "#", "n": "D", "U": "@", "o": "R", "\\": ",", "k": "8", "J": "D", "w": "R", "E": "Q", "x": "K", "c": "~", "`": "`", "%": "R", "q": "Q", "f": "6", "K": "@", "8": "N", "D": "W", "v": "~", "y": "D", "a": "Q", "h": "R", "u": "D", "A": "Q", ";": ".", "S": "Q", "{": "D", "Z": "Q", "+": ",", "j": "!", "X": "Q", "m": "Q", "6": "@", ".": "`", "g": "@", "*": "'", "}": "D", "P": "Q", "7": "q", "T": "g", "z": "%", "b": "Q", ",": ".", "d": "@", "R": "B", "t": "K"};
+const RING = new Set([678, 679, 680, 681, 682, 683, 684, 685, 743, 750, 751, 752, 808, 817, 818, 873, 874, 883, 884, 939, 940, 941, 949, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014]);   /* frozen bevel cells around the hub */
+
+/* headline from query parameter (newlines via %0A) */
+document.getElementById('headtext').textContent =
+  new URLSearchParams(location.search).get('text') || "I\u2019ll be right back";
+
+/* ---- remap engine ---- */
+const H = ART.length, W = ART[0].length;
+const grid = ART.map(l => l.split(''));
+const CY = 14, CX = 31.5, S = 15/28, A = 30;
+const B = 14 / Math.sqrt(1 - (10.5/A)**2);
+const toUV  = (x,y) => { const v=(y-CY)/B; return [(x-CX-S*(y-CY))/A, v]; };
+const toCell= (u,v) => { const yy=CY+B*v, xx=CX+S*(yy-CY)+A*u; return [Math.round(xx), Math.round(yy)]; };
+const hubSet = new Set(); let hu=0, hv=0, hn=0;
+for (let y=0;y<H;y++) for (let x=0;x<W;x++){
+  const [u,v]=toUV(x,y);
+  if (grid[y][x]===' ' && Math.hypot(u,v)<0.4){ hubSet.add(y*W+x); hu+=u; hv+=v; hn++; }
+}
+hu/=hn; hv/=hn;
+const FROZEN = new Set([...hubSet, ...RING]);
+const inGrid = (x,y)=>y>=0&&y<H&&x>=0&&x<W;
+
+function sampleIdx(su, sv, lock){
+  let [xi,yi] = toCell(su,sv);
+  if (!inGrid(xi,yi)) return -1;
+  const blocked = lock ? FROZEN : hubSet;
+  if (blocked.has(yi*W+xi)){
+    if (!lock) return yi*W+xi;
+    let du=su-hu, dv=sv-hv; const n=Math.hypot(du,dv)||1e-9; du/=n; dv/=n;
+    for (let s=1;s<40;s++){
+      const [x2,y2]=toCell(su+du*0.02*s, sv+dv*0.02*s);
+      if (inGrid(x2,y2) && !FROZEN.has(y2*W+x2))
+        return grid[y2][x2]!==' ' ? y2*W+x2 : -1;
+    }
+    return -1;
+  }
+  if (grid[yi][xi]===' '){
+    for (let s=1;s<30;s++){
+      const f=1-0.02*s, c2=toCell(su*f, sv*f);
+      const ok = !(lock ? FROZEN : hubSet).has(c2[1]*W+c2[0]);
+      if (inGrid(c2[0],c2[1]) && grid[c2[1]][c2[0]]!==' ' && ok) return c2[1]*W+c2[0];
+    }
+    return -1;
+  }
+  return yi*W+xi;
+}
+function makeSrc(theta, lock){
+  const src = new Int32Array(H*W);
+  for (let y=0;y<H;y++) for (let x=0;x<W;x++){
+    const i=y*W+x; src[i]=i;
+    const [u,v]=toUV(x,y), r=Math.hypot(u,v);
+    if (r>0.995) continue;
+    if (lock && FROZEN.has(i)) continue;          /* hole + bevel pinned */
+    if (grid[y][x]===' ' && (lock || r>0.4)) continue;
+    const ct=Math.cos(-theta), st=Math.sin(-theta);
+    const s = sampleIdx(u*ct-v*st, u*st+v*ct, lock);
+    if (s>=0) src[i]=s;
+  }
+  return src;
+}
+const N = 24, srcCache = {};
+function srcFrames(lock){
+  const k = lock?'L':'F';
+  if (!srcCache[k]){
+    srcCache[k]=[];
+    for (let i=0;i<N;i++) srcCache[k].push(makeSrc(2*Math.PI*i/N, lock));
+  }
+  return srcCache[k];
+}
+const esc = c => c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':c;
+const htmlCache = {};
+function frameHTML(fi, lock, paint, pin){
+  const key=(lock?'L':'F')+(pin?'P':'-')+paint+fi;
+  if (htmlCache[key]) return htmlCache[key];
+  const src=srcFrames(lock)[fi];
+  let out='';
+  for (let y=0;y<H;y++){
+    let run='', cls=null;
+    const flush=()=>{ if(run){ out+=cls?'<span class="'+cls+'">'+run+'</span>':run; run=''; } };
+    for (let x=0;x<W;x++){
+      const i=y*W+x, s=src[i];
+      let ch=grid[(s/W)|0][s%W];
+      if (pin && ch!==' '){
+        const sd=DIM[(s/W)|0][s%W]==='1', dd=DIM[y][x]==='1';
+        if (!sd && dd) ch=DEMOTE[ch]||ch;
+        else if (sd && !dd) ch=PROMOTE[ch]||ch;
+      }
+      const ks=paint==='travel'?s:i;
+      const kd=KOL[(ks/W)|0][ks%W];
+      const c=ch===' '?null:PALETTE[kd==='.'?0:+kd];
+      if (c!==cls){ flush(); cls=c; }
+      run+=esc(ch);
+    }
+    flush(); out+='\n';
+  }
+  return htmlCache[key]=out;
+}
+
+/* ---- playback + controls ---- */
+const main=document.getElementById('cd-main'), glow=document.getElementById('cd-glow');
+const ui=id=>document.getElementById(id);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let fps=12, playing=!reduced, lock=true, paint='fixed', pin=true, fi=0, acc=0, last=null;
+if (reduced){ ui('play').checked=false; document.body.className='nopanel';
+  ['fluid','sq','gl','po'].forEach(i=>ui(i).checked=false); }
+
+/* ---- settings from query params (override defaults, incl. reduced-motion) ---- */
+const Q=new URLSearchParams(location.search);
+const qb=(k,cur)=>Q.has(k) ? Q.get(k)!=='0' : cur;
+if (Q.has('fps')) fps=Math.min(60,Math.max(1,parseInt(Q.get('fps'),10)||12));
+playing=qb('play',playing); lock=qb('lock',lock); pin=qb('pin',pin);
+if (Q.get('paint')==='travel') paint='travel'; else if (Q.get('paint')==='fixed') paint='fixed';
+const FLAGS={fluid:'fluid', sq:'anim-squares', gl:'anim-globe', po:'anim-poly'};
+for (const k in FLAGS){
+  const on=qb(k, ui(k).checked);
+  ui(k).checked=on; document.body.classList.toggle(FLAGS[k], on);
+}
+document.body.classList.toggle('nopanel', !qb('panel', false));
+ui('play').checked=playing; ui('lock').checked=lock; ui('pin').checked=pin;
+ui('paint').value=paint; ui('fps').value=fps;
+
+const DEFAULTS={fps:'12',play:'1',lock:'1',pin:'1',paint:'fixed',fluid:'1',sq:'1',gl:'1',po:'1',panel:'0'};
+function syncURL(){
+  const p=new URLSearchParams();
+  const t=Q.get('text'); if (t) p.set('text', t);
+  const cur={fps:String(fps), play:playing?'1':'0', lock:lock?'1':'0', pin:pin?'1':'0',
+    paint, fluid:ui('fluid').checked?'1':'0', sq:ui('sq').checked?'1':'0',
+    gl:ui('gl').checked?'1':'0', po:ui('po').checked?'1':'0',
+    panel:document.body.classList.contains('nopanel')?'0':'1'};
+  for (const k in cur) if (cur[k]!==DEFAULTS[k]) p.set(k, cur[k]);
+  const qs=p.toString();
+  try{ history.replaceState(null,'', qs ? '?'+qs : location.pathname); }catch(e){}
+}
+
+function draw(){ const h=frameHTML(fi,lock,paint,pin); main.innerHTML=h; glow.innerHTML=h; }
+
+(function(){  /* monospace advance must equal 7.325px */
+  const probe=document.createElement('span');
+  probe.style.cssText='position:absolute;visibility:hidden;white-space:pre';
+  probe.textContent='0'.repeat(100);
+  main.appendChild(probe);
+  const adv=probe.getBoundingClientRect().width/100;
+  probe.remove();
+  const ls=(7.325-adv).toFixed(3)+'px';
+  main.style.letterSpacing=ls; glow.style.letterSpacing=ls;
+})();
+draw();
+
+const stage=document.getElementById('stage');
+function fit(){ stage.style.transform='scale('+Math.min(innerWidth/1200,innerHeight/675)+')'; }
+addEventListener('resize',fit); fit();
+
+function loop(t){
+  if (last===null) last=t;
+  if (playing){
+    acc+=t-last;
+    const step=1000/fps;
+    while (acc>=step){ acc-=step; fi=(fi+1)%N; draw(); }
+  }
+  last=t;
+  fluidTick(t);
+  globeTick(t);
+  polyTick(t);
+  requestAnimationFrame(loop);
+}
+ui('fps').addEventListener('input',e=>{ const v=+e.target.value; if(v>=1&&v<=60) fps=v; syncURL(); });
+ui('play').addEventListener('change',e=>{ playing=e.target.checked; syncURL(); });
+ui('lock').addEventListener('change',e=>{ lock=e.target.checked; draw(); syncURL(); });
+ui('pin').addEventListener('change',e=>{ pin=e.target.checked; draw(); syncURL(); });
+ui('paint').addEventListener('change',e=>{ paint=e.target.value; draw(); syncURL(); });
+const tog=(id,c)=>ui(id).addEventListener('change',e=>{ document.body.classList.toggle(c,e.target.checked); syncURL(); });
+tog('fluid','fluid'); tog('sq','anim-squares'); tog('gl','anim-globe'); tog('po','anim-poly');
+addEventListener('keydown',e=>{ if(e.key==='h'||e.key==='H'){ document.body.classList.toggle('nopanel'); syncURL(); } });
+
+/* ---- globe: meridians sweep left to right (orthographic front arcs) ---- */
+const globeG=document.getElementById('globe-anim');
+const NM=16, meridians=[];
+for (let i=0;i<NM;i++){
+  const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  globeG.appendChild(p); meridians.push(p);
+}
+function globeTick(t){
+  if (!document.body.classList.contains('anim-globe')) return;
+  const phi = t*2*Math.PI/14000;
+  for (let i=0;i<NM;i++){
+    let th = (i*2*Math.PI/NM + phi) % (2*Math.PI);
+    if (th > Math.PI) th -= 2*Math.PI;
+    if (Math.cos(th) <= 0.02){ meridians[i].setAttribute('d',''); continue; }
+    const rx = 48*Math.sin(th);
+    const sweep = rx>0 ? 1 : 0;
+    const arx = Math.max(Math.abs(rx), 0.4);
+    meridians[i].setAttribute('d', 'M1084 68A'+arx.toFixed(2)+' 24 0 0 '+sweep+' 1084 116');
+  }
+}
+
+/* ---- fluid background: soft roaming vortices + wandering palette injectors ---- */
+const fcv=document.getElementById('bg-fluid'), fx=fcv.getContext('2d');
+const FLW=192, FLH=108, NPX=FLW*FLH;
+const small=document.createElement('canvas'); small.width=FLW; small.height=FLH;
+const sctx=small.getContext('2d');
+const idata=sctx.createImageData(FLW,FLH);
+let F=new Float32Array(NPX*3), G=new Float32Array(NPX*3);
+const EDGE=new Float32Array(NPX);
+(function init(){
+  const STOPS=[[.085,10,15,25],[.275,18,55,103],[.49,29,105,201],[.72,246,162,198],[.895,236,231,227]];
+  for (let y=0;y<FLH;y++) for (let x=0;x<FLW;x++){
+    const i=y*FLW+x;
+    const d=Math.min(Math.max((x/FLW+(1-y/FLH))/2,0),1);
+    let c=[STOPS[0][1],STOPS[0][2],STOPS[0][3]];
+    if (d>=STOPS[STOPS.length-1][0]) c=[STOPS[4][1],STOPS[4][2],STOPS[4][3]];
+    else for (let k=0;k<STOPS.length-1;k++){
+      if (d>=STOPS[k][0] && d<=STOPS[k+1][0]){
+        const f=(d-STOPS[k][0])/(STOPS[k+1][0]-STOPS[k][0]);
+        c=[STOPS[k][1]*(1-f)+STOPS[k+1][1]*f, STOPS[k][2]*(1-f)+STOPS[k+1][2]*f, STOPS[k][3]*(1-f)+STOPS[k+1][3]*f];
+      }
+    }
+    F[i*3]=c[0]; F[i*3+1]=c[1]; F[i*3+2]=c[2];
+    EDGE[i]=Math.min(Math.min(x,FLW-1-x)/14, Math.min(y,FLH-1-y)/14, 1);
+  }
+})();
+const INJ=[ /* color, speed, phase, radius, alpha, orbit index */
+  [10,15,25,   0.000031, 0.0, 40, .010],
+  [10,15,25,   0.000023, 2.1, 44, .009],
+  [18,55,103,  0.000027, 4.0, 36, .008],
+  [29,105,201, 0.000021, 1.2, 36, .008],
+  [246,162,198,0.000035, 3.3, 32, .007],
+  [236,231,227,0.000041, 5.1, 24, .006],
+];
+let fluidGate=false;
+function fluidTick(t){
+  if (!document.body.classList.contains('fluid')) return;
+  fluidGate=!fluidGate; if (fluidGate) return;      /* 30fps is plenty */
+  const w=t*0.00010;
+  const vor=[[96+80*Math.sin(w),        54+38*Math.cos(w*1.31),   40, 3.2],
+             [96+80*Math.cos(w*0.77),   54+38*Math.sin(w*1.09),   46,-3.4],
+             [96+64*Math.sin(w*0.53+2), 54+30*Math.cos(w*0.87+1), 34, 2.7]];
+  for (let y=0;y<FLH;y++) for (let x=0;x<FLW;x++){
+    const i=y*FLW+x;
+    let vx=0, vy=0;
+    for (const [cx,cy,R,s] of vor){
+      const dx=x-cx, dy=y-cy;
+      const k=s*Math.exp(-(dx*dx+dy*dy)/(R*R))*0.05;
+      vx+=-dy*k; vy+=dx*k;
+    }
+    let px=x-vx*EDGE[i], py=y-vy*EDGE[i];
+    px=Math.min(Math.max(px,0),FLW-1.001); py=Math.min(Math.max(py,0),FLH-1.001);
+    const x0=px|0, y0=py|0, fxr=px-x0, fyr=py-y0;
+    const i00=(y0*FLW+x0)*3, i10=i00+3, i01=i00+FLW*3, i11=i01+3;
+    for (let ch=0;ch<3;ch++){
+      G[i*3+ch]=F[i00+ch]*(1-fxr)*(1-fyr)+F[i10+ch]*fxr*(1-fyr)+
+                F[i01+ch]*(1-fxr)*fyr+F[i11+ch]*fxr*fyr;
+    }
+  }
+  const tmp=F; F=G; G=tmp;
+  for (let n=0;n<INJ.length;n++){
+    const [r,g,b,sp,ph,R,al]=INJ[n];
+    const cx=96+(84-6*n)*Math.sin(t*sp*6.28+ph);
+    const cy=54+(40-3*n)*Math.cos(t*sp*6.28*1.27+ph*1.7);
+    const x0=Math.max(0,(cx-2.2*R)|0), x1=Math.min(FLW-1,(cx+2.2*R)|0);
+    const y0=Math.max(0,(cy-2.2*R)|0), y1=Math.min(FLH-1,(cy+2.2*R)|0);
+    for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++){
+      const dx=x-cx, dy=y-cy;
+      const gq=Math.exp(-(dx*dx+dy*dy)/(R*R))*al;
+      const i3=(y*FLW+x)*3;
+      F[i3]  =F[i3]  *(1-gq)+r*gq;
+      F[i3+1]=F[i3+1]*(1-gq)+g*gq;
+      F[i3+2]=F[i3+2]*(1-gq)+b*gq;
+    }
+  }
+  const D=idata.data;
+  for (let i=0;i<NPX;i++){
+    D[i*4]=F[i*3]; D[i*4+1]=F[i*3+1]; D[i*4+2]=F[i*3+2]; D[i*4+3]=255;
+  }
+  sctx.putImageData(idata,0,0);
+  fx.imageSmoothingEnabled=true; fx.imageSmoothingQuality='high';
+  fx.filter='contrast(1.12) saturate(1.06)';
+  fx.drawImage(small,0,0,1200,675);
+  fx.filter='none';
+}
+
+/* ---- polyhedron: true 3D icosahedron, slow precessing tumble ---- */
+const polyG=document.getElementById('poly-anim');
+const ICO=(()=>{
+  const P=(1+Math.sqrt(5))/2, raw=[];
+  for (const s1 of [1,-1]) for (const s2 of [1,-1]){
+    raw.push([0, s1, s2*P]); raw.push([s1, s2*P, 0]); raw.push([s2*P, 0, s1]);
+  }
+  const n=Math.hypot(1,P);
+  const V=raw.map(p=>p.map(c=>c/n));
+  let dmin=1e9;
+  for (let i=0;i<12;i++) for (let j=i+1;j<12;j++){
+    const dd=Math.hypot(V[i][0]-V[j][0],V[i][1]-V[j][1],V[i][2]-V[j][2]);
+    if (dd<dmin) dmin=dd;
+  }
+  const E=[];
+  for (let i=0;i<12;i++) for (let j=i+1;j<12;j++){
+    const dd=Math.hypot(V[i][0]-V[j][0],V[i][1]-V[j][1],V[i][2]-V[j][2]);
+    if (dd<dmin*1.01) E.push([i,j]);
+  }
+  return {V, E};
+})();
+const polyLines=ICO.E.map(()=>{
+  const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+  polyG.appendChild(l); return l;
+});
+const PCX=1108, PCY=538, PR=36.5;
+function polyTick(t){
+  if (!document.body.classList.contains('anim-poly')) return;
+  const a=t*2*Math.PI/26000, b=t*2*Math.PI/17000;
+  const ca=Math.cos(a), sa=Math.sin(a), cb=Math.cos(b), sb=Math.sin(b);
+  const pts=ICO.V.map(([x,y,z])=>{
+    const x1=x*cb+z*sb, z1=-x*sb+z*cb;          /* Ry */
+    const y2=y*ca-z1*sa, z2=y*sa+z1*ca;          /* Rx */
+    return [PCX+PR*x1, PCY+PR*y2, z2];
+  });
+  for (let k=0;k<ICO.E.length;k++){
+    const [i,j]=ICO.E[k], p=pts[i], q=pts[j], l=polyLines[k];
+    l.setAttribute('x1',p[0].toFixed(2)); l.setAttribute('y1',p[1].toFixed(2));
+    l.setAttribute('x2',q[0].toFixed(2)); l.setAttribute('y2',q[1].toFixed(2));
+    l.setAttribute('stroke-opacity',(0.42+0.58*((p[2]+q[2])/4+0.5)).toFixed(3));
+  }
+}
+
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
