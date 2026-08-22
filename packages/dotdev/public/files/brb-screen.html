@@ -6,7 +6,20 @@
 <title>BRB — Y2K</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/marqy@1/dist/marqy.css">
+<script type="module">import 'https://esm.run/marqy@1/vanilla';</script>
+<script>
+/* ─── credentials ───────────────────────────────────────────────────────────
+   Kept out of the URL on purpose, so the panel never writes them into a
+   query string you might have on screen. ?user= and ?key= still override.
+   Key: https://www.last.fm/api/account/create */
+const CONFIG = {
+  user: '',            // Last.fm username
+  key : '',            // Last.fm API key
+  art : '/api/status', // endpoint supplying { image: "data:...", artists: "..." }
+};
+</script>
 <style>
   :root{ --c0:#0A0F19; --c1:#ECE7E3; --c2:#123767; --c3:#F6A2C6; --c4:#1D69C9; }
   *{box-sizing:border-box}
@@ -31,6 +44,33 @@
   #headline span{font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;
     font-weight:700;font-size:72px;line-height:1.05;letter-spacing:-0.02em;
     color:#fff;white-space:pre-line;max-width:100%}
+  /* now playing: bottom strip, art then meta, ending at the polyhedron */
+  pre.npart{position:absolute;margin:0;white-space:pre;transform-origin:0 0;
+    left:546px;top:504px;
+    font-family:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
+    letter-spacing:0;font-size:5px;line-height:5px}
+  #np-glow{filter:blur(10px)}
+  #np{position:absolute;left:676px;top:504px;width:340px;height:110px;
+    display:flex;flex-direction:column;justify-content:center;gap:7px;pointer-events:none}
+  #np-eyebrow{display:flex;align-items:center;gap:8px;
+    font-family:'Space Grotesk',system-ui,sans-serif;font-weight:500;font-size:11px;
+    letter-spacing:.28em;text-transform:uppercase;color:var(--c3)}
+  #tick{width:7px;height:7px;background:var(--c3);flex:none;
+    animation:blink 1.6s steps(1,end) infinite}
+  @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+  body.offline #tick{animation:none;opacity:.35}
+  /* marquee: marqy owns the loop. We only style the wrapper, the gap between
+     copies, and the edge mask — everything else comes from marqy.css */
+  .scroll{overflow:hidden}
+  .scroll marqy-loop{display:block}
+  .scroll span{white-space:nowrap}
+  .scroll.run span{padding-right:72px}
+  .scroll.run{-webkit-mask-image:linear-gradient(90deg,
+    transparent 0,#000 3%,#000 97%,transparent 100%)}
+  #np-title{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;font-size:24px;
+    line-height:1.12;letter-spacing:-0.02em;color:#fff}
+  #np-artists{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:500;font-size:14px;
+    line-height:1.3;letter-spacing:-0.01em;color:var(--c1);opacity:.72}
   /* corner symbols */
   .rot{transform-box:fill-box;transform-origin:50% 50%}
   body.anim-squares #sym-squares .rot{animation:rot var(--p) linear infinite var(--d)}
@@ -43,6 +83,7 @@
   body.anim-poly #poly-static{visibility:hidden}
   @media (prefers-reduced-motion:reduce){
     .rot{animation:none !important}
+    #tick{animation:none}
   }
   /* prototyping panel */
   #panel{position:fixed;top:10px;right:10px;z-index:9;display:flex;flex-direction:column;gap:6px;
@@ -78,6 +119,13 @@
   <div id="cdclip">
     <pre class="cd" id="cd-glow" aria-hidden="true"></pre>
     <pre class="cd" id="cd-main" aria-label="ASCII compact disc, spinning"></pre>
+    <pre class="npart" id="np-glow" aria-hidden="true"></pre>
+    <pre class="npart" id="np-main" aria-label="Album art, rendered as characters"></pre>
+    <div id="np">
+      <div id="np-eyebrow"><span id="tick"></span><span id="np-label">Now playing</span></div>
+      <div id="np-title" class="scroll"></div>
+      <div id="np-artists" class="scroll"></div>
+    </div>
   </div>
 
   <div id="headline"><span id="headtext"></span></div>
@@ -100,40 +148,40 @@
     </g>
     <defs>
       <radialGradient id="paint1_radial_6_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(114.5 113) rotate(135) scale(52.3259)">
-<stop stop-color="#123767"/>
-<stop offset="0.33051" stop-color="#1D69C9"/>
-<stop offset="0.660885" stop-color="#F6A2C6"/>
-<stop offset="1" stop-color="#ECE7E3"/>
+<stop stop-color="var(--c2)"/>
+<stop offset="0.33051" stop-color="var(--c4)"/>
+<stop offset="0.660885" stop-color="var(--c3)"/>
+<stop offset="1" stop-color="var(--c1)"/>
 </radialGradient><radialGradient id="paint2_radial_6_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(106.319 126.569) rotate(90) scale(52.3259)">
-<stop stop-color="#123767"/>
-<stop offset="0.33051" stop-color="#1D69C9"/>
-<stop offset="0.660885" stop-color="#F6A2C6"/>
-<stop offset="1" stop-color="#ECE7E3"/>
+<stop stop-color="var(--c2)"/>
+<stop offset="0.33051" stop-color="var(--c4)"/>
+<stop offset="0.660885" stop-color="var(--c3)"/>
+<stop offset="1" stop-color="var(--c1)"/>
 </radialGradient><radialGradient id="paint3_radial_6_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(92 131) rotate(45) scale(52.3259)">
-<stop stop-color="#123767"/>
-<stop offset="0.33051" stop-color="#1D69C9"/>
-<stop offset="0.660885" stop-color="#F6A2C6"/>
-<stop offset="1" stop-color="#ECE7E3"/>
+<stop stop-color="var(--c2)"/>
+<stop offset="0.33051" stop-color="var(--c4)"/>
+<stop offset="0.660885" stop-color="var(--c3)"/>
+<stop offset="1" stop-color="var(--c1)"/>
 </radialGradient><radialGradient id="paint4_radial_6_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(81.2362 117.986) scale(52.3259)">
-<stop stop-color="#123767"/>
-<stop offset="0.33051" stop-color="#1D69C9"/>
-<stop offset="0.660885" stop-color="#F6A2C6"/>
-<stop offset="1" stop-color="#ECE7E3"/>
+<stop stop-color="var(--c2)"/>
+<stop offset="0.33051" stop-color="var(--c4)"/>
+<stop offset="0.660885" stop-color="var(--c3)"/>
+<stop offset="1" stop-color="var(--c1)"/>
 </radialGradient><radialGradient id="paint5_radial_6_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(92 92) rotate(-45) scale(50.9117)">
-<stop stop-color="#123767"/>
-<stop offset="0.33051" stop-color="#1D69C9"/>
-<stop offset="0.660885" stop-color="#F6A2C6"/>
-<stop offset="1" stop-color="#ECE7E3"/>
+<stop stop-color="var(--c2)"/>
+<stop offset="0.33051" stop-color="var(--c4)"/>
+<stop offset="0.660885" stop-color="var(--c3)"/>
+<stop offset="1" stop-color="var(--c1)"/>
 </radialGradient><radialGradient id="paint6_radial_6_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1084 92) scale(84.5 36)">
-<stop stop-color="#ECE7E3"/>
-<stop offset="0.339115" stop-color="#F6A2C6"/>
-<stop offset="0.66949" stop-color="#1D69C9"/>
-<stop offset="1" stop-color="#123767"/>
+<stop stop-color="var(--c1)"/>
+<stop offset="0.339115" stop-color="var(--c3)"/>
+<stop offset="0.66949" stop-color="var(--c4)"/>
+<stop offset="1" stop-color="var(--c2)"/>
 </radialGradient><radialGradient id="paint7_radial_6_3" cx="0" cy="0" r="1" gradientTransform="matrix(31.1769 -36 31.1769 36 1108 538)" gradientUnits="userSpaceOnUse">
-<stop stop-color="#123767"/>
-<stop offset="0.33051" stop-color="#1D69C9"/>
-<stop offset="0.660885" stop-color="#F6A2C6"/>
-<stop offset="1" stop-color="#ECE7E3"/>
+<stop stop-color="var(--c2)"/>
+<stop offset="0.33051" stop-color="var(--c4)"/>
+<stop offset="0.660885" stop-color="var(--c3)"/>
+<stop offset="1" stop-color="var(--c1)"/>
 </radialGradient>
       <clipPath id="cardclip"><rect x="24" y="24" width="1152" height="627" rx="32"/></clipPath>
     </defs>
@@ -155,7 +203,7 @@
   <label><span>squares anim</span><input id="sq" type="checkbox" checked></label>
   <label><span>globe anim</span><input id="gl" type="checkbox" checked></label>
   <label><span>polyhedron anim</span><input id="po" type="checkbox" checked></label>
-  <small>?text=... sets the headline · H toggles panel</small>
+  <small>?text=... sets the headline · ?user= ?key= ?art= override credentials · H toggles panel</small>
 </div>
 
 <script>
@@ -295,6 +343,7 @@ const DEFAULTS={fps:'12',play:'1',lock:'1',pin:'1',paint:'fixed',fluid:'1',sq:'1
 function syncURL(){
   const p=new URLSearchParams();
   const t=Q.get('text'); if (t) p.set('text', t);
+  ['user','key','art'].forEach(k=>{ if (Q.get(k)) p.set(k, Q.get(k)); }); /* keep credentials */
   const cur={fps:String(fps), play:playing?'1':'0', lock:lock?'1':'0', pin:pin?'1':'0',
     paint, fluid:ui('fluid').checked?'1':'0', sq:ui('sq').checked?'1':'0',
     gl:ui('gl').checked?'1':'0', po:ui('po').checked?'1':'0',
@@ -306,27 +355,33 @@ function syncURL(){
 
 function draw(){ const h=frameHTML(fi,lock,paint,pin); main.innerHTML=h; glow.innerHTML=h; }
 
-(function(){  /* monospace advance must equal 7.325px */
+const stage=document.getElementById('stage');
+let stageScale=1;
+function fit(){
+  stageScale=Math.min(innerWidth/1200,innerHeight/675);
+  stage.style.transform='scale('+stageScale+')';
+}
+addEventListener('resize',()=>{ fit(); remeasure(); }); fit();
+
+function calibrate(){ /* monospace advance must equal 7.325px */
   const probe=document.createElement('span');
-  probe.style.cssText='position:absolute;visibility:hidden;white-space:pre';
+  probe.style.cssText='position:absolute;visibility:hidden;white-space:pre;letter-spacing:0';
   probe.textContent='0'.repeat(100);
   main.appendChild(probe);
-  const adv=probe.getBoundingClientRect().width/100;
+  const adv=probe.getBoundingClientRect().width/100/stageScale; /* rects are post-transform */
   probe.remove();
   const ls=(7.325-adv).toFixed(3)+'px';
   main.style.letterSpacing=ls; glow.style.letterSpacing=ls;
-})();
+}
+calibrate();
 draw();
-
-const stage=document.getElementById('stage');
-function fit(){ stage.style.transform='scale('+Math.min(innerWidth/1200,innerHeight/675)+')'; }
-addEventListener('resize',fit); fit();
 
 let epoch=null;
 function resetPhase(){ epoch=null; }
-addEventListener('obsSourceVisibleChanged', e=>{ if (!e || !e.detail || e.detail.visible) resetPhase(); });
+addEventListener('obsSourceVisibleChanged', e=>{ if (!e || !e.detail || e.detail.visible){ resetPhase(); npRefresh(); } });
+addEventListener('obsSourceActiveChanged', e=>{ if (!e || !e.detail || e.detail.active){ resetPhase(); npRefresh(); } });
 if (typeof document.addEventListener==='function')
-  document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) resetPhase(); });
+  document.addEventListener('visibilitychange', ()=>{ if (!document.hidden){ resetPhase(); npRefresh(); } });
 function loop(t){
   requestAnimationFrame(loop);          /* schedule first: one bad frame can't kill the chain */
   try{
@@ -377,6 +432,77 @@ function globeTick(t){
   }
 }
 
+/* ---- palette: extracted from the album cover, falls back to house colors ---- */
+function toHsl(r,g,b){
+  r/=255; g/=255; b/=255;
+  const mx=Math.max(r,g,b), mn=Math.min(r,g,b), l=(mx+mn)/2;
+  if (mx===mn) return [0,0,l];
+  const d=mx-mn, s = l>0.5 ? d/(2-mx-mn) : d/(mx+mn);
+  let h;
+  if (mx===r) h=((g-b)/d + (g<b?6:0))/6;
+  else if (mx===g) h=((b-r)/d + 2)/6;
+  else h=((r-g)/d + 4)/6;
+  return [h,s,l];
+}
+function toRgb(h,s,l){
+  const f = n => {
+    const k=(n+h*12)%12, a=s*Math.min(l,1-l);
+    const v=l - a*Math.max(-1, Math.min(k-3, Math.min(9-k, 1)));
+    return Math.round(Math.max(0,Math.min(1,v))*255);
+  };
+  return [f(0), f(8), f(4)];
+}
+const hex = (h,s,l) => '#' + toRgb(h,s,l).map(v=>v.toString(16).padStart(2,'0')).join('');
+const BASE = [ {h:.617,s:.43,l:.07}, {h:.588,s:.70,l:.24},
+               {h:.588,s:.75,l:.45}, {h:.925,s:.81,l:.80}, {h:.05,s:.19,l:.91} ];
+let CPAL = BASE.slice(); /* five stops, dark to light */
+function extract(px){
+  const bins = new Map();
+  for (let i=0; i<px.length; i+=4){
+    if (px[i+3] < 128) continue;
+    const key = (px[i]>>4)+','+(px[i+1]>>4)+','+(px[i+2]>>4);
+    const e = bins.get(key) || {n:0,r:0,g:0,b:0};
+    e.n++; e.r+=px[i]; e.g+=px[i+1]; e.b+=px[i+2]; bins.set(key,e);
+  }
+  const cand = [];
+  bins.forEach(e=>{
+    const c = toHsl(e.r/e.n, e.g/e.n, e.b/e.n);
+    cand.push({ h:c[0], s:c[1], l:c[2],
+      score: e.n * (0.35 + c[1]) * (c[2]>0.04 && c[2]<0.97 ? 1 : 0.15) });
+  });
+  cand.sort((a,b)=>b.score-a.score);
+  const picked = [];
+  for (let i=0; i<cand.length && picked.length<5; i++){
+    const c = cand[i];
+    const clash = picked.some(p=>{
+      let dh = Math.abs(p.h-c.h); dh = Math.min(dh, 1-dh);
+      return dh < 0.06 && Math.abs(p.l-c.l) < 0.14;
+    });
+    if (!clash) picked.push(c);
+  }
+  while (picked.length < 5) picked.push(picked[picked.length-1] || BASE[2]);
+  picked.sort((a,b)=>a.l-b.l);
+  const clamp = (v,lo,hi) => Math.min(hi, Math.max(lo, v));
+  return picked.map((c,i)=>{
+    let s=c.s, l=c.l;
+    if (i===0){ l=Math.min(l,0.10); s=Math.min(s,0.55); }
+    if (i===1){ l=clamp(l,0.16,0.34); }
+    if (i===2){ l=clamp(l,0.38,0.56); s=Math.max(s,0.35); }
+    if (i===3){ l=clamp(l,0.62,0.82); }
+    if (i===4){ l=Math.max(l,0.90); s=Math.min(s,0.22); }
+    return {h:c.h, s:s, l:l};
+  });
+}
+function applyPalette(){
+  const p = CPAL;
+  const r = document.documentElement.style;
+  /* ramp runs dark -> light, laid into c0 c2 c4 c3 c1 as the gradient walks it */
+  ['c0','c2','c4','c3','c1'].forEach((slot,i)=> r.setProperty('--'+slot, hex(p[i].h,p[i].s,p[i].l)));
+  const rp = p.map(c=>toRgb(c.h,c.s,c.l));
+  PPAL.dark = rp[0]; PPAL.blue = rp[2]; PPAL.pink = rp[3]; /* dice roll-in shading */
+  retintFluid();
+}
+
 /* ---- fluid background: soft roaming vortices + wandering palette injectors ---- */
 const fcv=document.getElementById('bg-fluid'), fx=fcv.getContext('2d');
 const FLW=192, FLH=108, NPX=FLW*FLH;
@@ -385,35 +511,46 @@ const sctx=small.getContext('2d');
 const idata=sctx.createImageData(FLW,FLH);
 let F=new Float32Array(NPX*3), G=new Float32Array(NPX*3);
 const EDGE=new Float32Array(NPX);
-(function init(){
-  const STOPS=[[.085,10,15,25],[.275,18,55,103],[.49,29,105,201],[.72,246,162,198],[.895,236,231,227]];
+let BASEF=new Float32Array(NPX*3);
+let INJ=[], retint=0;
+for (let y=0;y<FLH;y++) for (let x=0;x<FLW;x++){
+  EDGE[y*FLW+x]=Math.min(Math.min(x,FLW-1-x)/14, Math.min(y,FLH-1-y)/14, 1);
+}
+function buildBase(hard){
+  /* stops come from the palette: same diagonal ramp, retinted per cover */
+  const p=CPAL.map(c=>toRgb(c.h,c.s,c.l));
+  const AT=[0.085,0.275,0.49,0.72,0.895];
   for (let y=0;y<FLH;y++) for (let x=0;x<FLW;x++){
     const i=y*FLW+x;
     const d=Math.min(Math.max((x/FLW+(1-y/FLH))/2,0),1);
-    let c=[STOPS[0][1],STOPS[0][2],STOPS[0][3]];
-    if (d>=STOPS[STOPS.length-1][0]) c=[STOPS[4][1],STOPS[4][2],STOPS[4][3]];
-    else for (let k=0;k<STOPS.length-1;k++){
-      if (d>=STOPS[k][0] && d<=STOPS[k+1][0]){
-        const f=(d-STOPS[k][0])/(STOPS[k+1][0]-STOPS[k][0]);
-        c=[STOPS[k][1]*(1-f)+STOPS[k+1][1]*f, STOPS[k][2]*(1-f)+STOPS[k+1][2]*f, STOPS[k][3]*(1-f)+STOPS[k+1][3]*f];
+    let c=p[0];
+    if (d>=AT[4]) c=p[4];
+    else for (let k=0;k<4;k++){
+      if (d>=AT[k] && d<=AT[k+1]){
+        const f=(d-AT[k])/(AT[k+1]-AT[k]);
+        c=[p[k][0]*(1-f)+p[k+1][0]*f, p[k][1]*(1-f)+p[k+1][1]*f, p[k][2]*(1-f)+p[k+1][2]*f];
       }
     }
-    F[i*3]=c[0]; F[i*3+1]=c[1]; F[i*3+2]=c[2];
-    EDGE[i]=Math.min(Math.min(x,FLW-1-x)/14, Math.min(y,FLH-1-y)/14, 1);
+    BASEF[i*3]=c[0]; BASEF[i*3+1]=c[1]; BASEF[i*3+2]=c[2];
+    if (hard){ F[i*3]=c[0]; F[i*3+1]=c[1]; F[i*3+2]=c[2]; }
   }
-})();
-const INJ=[ /* color, speed, phase, radius, alpha, orbit index */
-  [10,15,25,   0.000031, 0.0, 40, .010],
-  [10,15,25,   0.000023, 2.1, 44, .009],
-  [18,55,103,  0.000027, 4.0, 36, .008],
-  [29,105,201, 0.000021, 1.2, 36, .008],
-  [246,162,198,0.000035, 3.3, 32, .007],
-  [236,231,227,0.000041, 5.1, 24, .006],
-];
+  INJ=[ /* colour, speed, phase, radius, alpha */
+    [p[0], 0.000031, 0.0, 40, .010], [p[0], 0.000023, 2.1, 44, .009],
+    [p[1], 0.000027, 4.0, 36, .008], [p[2], 0.000021, 1.2, 36, .008],
+    [p[3], 0.000035, 3.3, 32, .007], [p[4], 0.000041, 5.1, 24, .006],
+  ];
+}
+buildBase(true);
+function retintFluid(){ buildBase(false); retint=110; } /* bleed to the new stops */
 let fluidGate=false;
 function fluidTick(t){
   if (!document.body.classList.contains('fluid')) return;
   fluidGate=!fluidGate; if (fluidGate) return;      /* 30fps is plenty */
+  if (retint>0){
+    retint--;
+    const f=0.05;
+    for (let i=0;i<NPX*3;i++) F[i]+=(BASEF[i]-F[i])*f;
+  }
   const w=t*0.00010;
   const vor=[[96+80*Math.sin(w),        54+38*Math.cos(w*1.31),   40, 3.2],
              [96+80*Math.cos(w*0.77),   54+38*Math.sin(w*1.09),   46,-3.4],
@@ -437,7 +574,7 @@ function fluidTick(t){
   }
   const tmp=F; F=G; G=tmp;
   for (let n=0;n<INJ.length;n++){
-    const [r,g,b,sp,ph,R,al]=INJ[n];
+    const c=INJ[n][0], sp=INJ[n][1], ph=INJ[n][2], R=INJ[n][3], al=INJ[n][4];
     const cx=96+(84-6*n)*Math.sin(t*sp*6.28+ph);
     const cy=54+(40-3*n)*Math.cos(t*sp*6.28*1.27+ph*1.7);
     const x0=Math.max(0,(cx-2.2*R)|0), x1=Math.min(FLW-1,(cx+2.2*R)|0);
@@ -446,9 +583,9 @@ function fluidTick(t){
       const dx=x-cx, dy=y-cy;
       const gq=Math.exp(-(dx*dx+dy*dy)/(R*R))*al;
       const i3=(y*FLW+x)*3;
-      F[i3]  =F[i3]  *(1-gq)+r*gq;
-      F[i3+1]=F[i3+1]*(1-gq)+g*gq;
-      F[i3+2]=F[i3+2]*(1-gq)+b*gq;
+      F[i3]  =F[i3]  *(1-gq)+c[0]*gq;
+      F[i3+1]=F[i3+1]*(1-gq)+c[1]*gq;
+      F[i3+2]=F[i3+2]*(1-gq)+c[2]*gq;
     }
   }
   const D=idata.data;
@@ -521,7 +658,7 @@ const apply3=(M,v)=>[M[0]*v[0]+M[1]*v[1]+M[2]*v[2],
                      M[3]*v[0]+M[4]*v[1]+M[5]*v[2],
                      M[6]*v[0]+M[7]*v[1]+M[8]*v[2]];
 const ROLLAXIS=(()=>{ const w=[0.30,0.50,-0.81], n=Math.hypot(...w); return w.map(c=>c/n); })();
-const PAL={dark:[10,15,25], blue:[29,105,201], pink:[246,162,198]};
+const PPAL={dark:[10,15,25], blue:[29,105,201], pink:[246,162,198]}; /* retinted per cover */
 const mix=(a,b,f)=>a.map((v,i)=>Math.round(v*(1-f)+b[i]*f));
 const rgb=c=>'rgb('+c[0]+','+c[1]+','+c[2]+')';
 const easeOutCubic=u=>1-Math.pow(1-u,3);
@@ -545,8 +682,8 @@ function drawSolid(M, cx, cy, fillO){
     if (nx*cen[0]+ny*cen[1]+nz*cen[2]<0){ nx=-nx; ny=-ny; nz=-nz; }
     const nn=Math.hypot(nx,ny,nz);
     const l=Math.max(0,(nx*L[0]+ny*L[1]+nz*L[2])/nn);
-    let col=mix(PAL.dark, PAL.blue, Math.min(1,l*1.15));
-    if (l>0.82) col=mix(col, PAL.pink, (l-0.82)/0.18*0.65);
+    let col=mix(PPAL.dark, PPAL.blue, Math.min(1,l*1.15));
+    if (l>0.82) col=mix(col, PPAL.pink, (l-0.82)/0.18*0.65);
     el.setAttribute('d','M'+pts[i][0].toFixed(2)+' '+pts[i][1].toFixed(2)+
       'L'+pts[j][0].toFixed(2)+' '+pts[j][1].toFixed(2)+
       'L'+pts[m][0].toFixed(2)+' '+pts[m][1].toFixed(2)+'Z');
@@ -587,6 +724,173 @@ function polyTick(t){
     drawWire(t);           /* wireframe underneath takes over seamlessly */
   }
 }
+
+/* ---- now playing: character-grid album art + track meta, palette source ---- */
+const USER = Q.get('user') || CONFIG.user;
+const KEY  = Q.get('key')  || CONFIG.key;
+const ARTE = Q.get('art')  || CONFIG.art;
+/* fixed render settings: dense 70-step ramp, no knobs, no query params */
+const NP = { ramp:' .\'`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$',
+             size:110, cols:72, rows:48, gam:1, con:1.15, sat:1.2, lev:6 };
+const npMain=ui('np-main'), npGlow=ui('np-glow');
+function shape(r,g,b){
+  const gray = 0.299*r + 0.587*g + 0.114*b;
+  r = gray + (r-gray)*NP.sat; g = gray + (g-gray)*NP.sat; b = gray + (b-gray)*NP.sat;
+  const step = 255 / (NP.lev - 1);
+  const q = v => {
+    let n = Math.pow(Math.max(0, Math.min(1, v/255)), NP.gam);
+    n = (n - 0.5) * NP.con + 0.5;
+    n = Math.max(0, Math.min(1, n));
+    return Math.round(Math.round(n*255 / step) * step);
+  };
+  return [q(r), q(g), q(b)];
+}
+const lumOf = (r,g,b) => (0.299*r + 0.587*g + 0.114*b) / 255;
+const npcv = document.createElement('canvas');
+const npcx = npcv.getContext('2d', { willReadFrequently:true });
+let curImg = null;
+/* The grid is laid out at natural font metrics and then scaled to the block.
+   Nothing here depends on knowing the glyph advance up front, so a webfont
+   arriving late can't leave the whole thing squashed. */
+function npFit(){
+  npMain.style.transform='none'; npGlow.style.transform='none';
+  const w=npMain.scrollWidth, h=npMain.scrollHeight;
+  const t=(w>0 && h>0)
+    ? 'scale('+(NP.size/w).toFixed(5)+','+(NP.size/h).toFixed(5)+')'
+    : 'none';
+  npMain.style.transform=t; npGlow.style.transform=t;
+}
+function npRender(){
+  if (!curImg){ npMain.innerHTML=''; npGlow.innerHTML=''; return; }
+  const cols=NP.cols, rows=NP.rows;
+  npcv.width=cols; npcv.height=rows;
+  npcx.clearRect(0,0,cols,rows);
+  npcx.drawImage(curImg, 0, 0, cols, rows);
+  const px=npcx.getImageData(0,0,cols,rows).data;
+  const ramp=NP.ramp, RN=ramp.length-1;
+  const lines=[];
+  for (let y=0;y<rows;y++){
+    let out='', run='', style=null;
+    const flush=()=>{ if(run){ out += style ? '<span style="'+style+'">'+run+'</span>' : run; run=''; } };
+    for (let x=0;x<cols;x++){
+      const i=(y*cols+x)*4;
+      const c=shape(px[i],px[i+1],px[i+2]);
+      const f=lumOf(c[0],c[1],c[2]);
+      const chr=ramp[Math.min(RN, Math.max(0, Math.round(f*RN)))];
+      const st=chr===' ' ? null : 'color:rgb('+c+')';
+      if (st!==style){ flush(); style=st; }
+      run+=esc(chr);
+    }
+    flush(); lines.push(out);
+  }
+  const h=lines.join('\n'); /* no trailing newline: it would add a row */
+  npMain.innerHTML=h; npGlow.innerHTML=h;
+  npFit();
+}
+
+/* ---- marquee (marqy) ---- */
+/* getBoundingClientRect reports post-transform pixels and #stage is scaled,
+   so every measurement is divided back out to design units. */
+const widthOf = el => el.getBoundingClientRect().width / stageScale;
+/* marqy repeats its children to fill the track, so a line that already fits
+   would render as duplicates. Only wrap the ones that actually overflow. */
+function marquee(box){
+  const text = box.dataset.text || '';
+  box.innerHTML = '';
+  box.classList.remove('run');
+  const span = document.createElement('span');
+  span.textContent = text;
+  box.appendChild(span);
+  if (widthOf(span) <= widthOf(box) + 1) return; /* it fits: leave it still */
+  box.removeChild(span);
+  const l = document.createElement('marqy-loop');
+  l.setAttribute('speed', '1');
+  l.setAttribute('direction', 'left');
+  l.appendChild(span);
+  box.appendChild(l);
+  box.classList.add('run');
+}
+function setText(box, text){
+  if (box.dataset.text === text) return; /* don't restart an unchanged line */
+  box.dataset.text = text;
+  marquee(box);
+}
+function remeasure(){ marquee(ui('np-title')); marquee(ui('np-artists')); }
+
+/* ---- Last.fm ---- */
+const LFM = 'https://ws.audioscrobbler.com/2.0/?format=json&api_key=' + encodeURIComponent(KEY);
+const recentURL = () => LFM + '&method=user.getrecenttracks&limit=1&user=' + encodeURIComponent(USER);
+let trackKey = null, imgSrc = null, catchup = null;
+function loadImage(src){
+  return new Promise(res=>{
+    const img = new Image();
+    img.onload = ()=>{
+      curImg = img;
+      const c = document.createElement('canvas'); c.width = c.height = 40;
+      const g = c.getContext('2d', { willReadFrequently:true });
+      g.drawImage(img, 0, 0, 40, 40);
+      CPAL = extract(g.getImageData(0,0,40,40).data);
+      applyPalette(); npRender(); res(true);
+    };
+    img.onerror = ()=>res(false); /* load failed: keep the current colors */
+    img.src = src; /* data: URI — same origin, canvas stays clean */
+  });
+}
+async function fetchArt(){
+  if (!ARTE) return;
+  try{
+    const d = await (await fetch(ARTE, {cache:'no-store'})).json();
+    if (d.artists) setText(ui('np-artists'), d.artists);
+    if (d.image && d.image !== imgSrc){ imgSrc = d.image; await loadImage(d.image); }
+  }catch(e){}
+}
+async function npPoll(){
+  if (!USER || !KEY){
+    ui('np-label').textContent = 'Setup';
+    setText(ui('np-title'), 'Add a Last.fm user and key');
+    setText(ui('np-artists'), 'top of this file, or ?user= &key=');
+    document.body.classList.add('offline');
+    return;
+  }
+  try{
+    const d = await (await fetch(recentURL(), {cache:'no-store'})).json();
+    const t = d && d.recenttracks && d.recenttracks.track && d.recenttracks.track[0];
+    const live = !!(t && t['@attr'] && t['@attr'].nowplaying === 'true');
+    document.body.classList.toggle('offline', !live);
+    if (!live){
+      if (trackKey !== 'off'){
+        trackKey = 'off';
+        ui('np-label').textContent = 'Offline';
+        setText(ui('np-title'), 'Nothing playing');
+        setText(ui('np-artists'), '');
+      }
+      return;
+    }
+    const artist = t.artist['#text'] || t.artist.name || '';
+    const key = artist + '|' + t.name;
+    if (key === trackKey) return;
+    trackKey = key;
+    ui('np-label').textContent = 'Now playing';
+    setText(ui('np-title'), t.name);
+    setText(ui('np-artists'), artist);
+    fetchArt();
+    clearTimeout(catchup);
+    catchup = setTimeout(fetchArt, 6000); /* the art endpoint often lags a change */
+  }catch(e){ /* blip: hold the last good state */ }
+}
+let npTimer=null;
+function npRestart(){ clearInterval(npTimer); npTimer=setInterval(npPoll, 5000); }
+function npRefresh(){ trackKey=null; imgSrc=null; npPoll(); npRestart(); }
+
+/* webfonts land after first layout: recalibrate the disc, remeasure the grid */
+if (document.fonts && document.fonts.ready){
+  document.fonts.ready.then(()=>{ calibrate(); npRender(); remeasure(); });
+}
+/* marqy is a module and registers <marqy-loop> after this script runs */
+if (window.customElements && customElements.whenDefined){
+  customElements.whenDefined('marqy-loop').then(remeasure).catch(()=>{});
+}
+npPoll(); npRestart();
 
 requestAnimationFrame(loop);
 </script>
