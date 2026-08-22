@@ -48,7 +48,7 @@ body.nofluid #fluid{display:none}
 body.noglow #art-glow{display:none}
 body.nogrid .art{display:none}
 
-#meta{left:320px;top:0;width:520px;height:280px;display:flex;flex-direction:column;
+#meta{left:300px;top:0;width:540px;height:280px;display:flex;flex-direction:column;
   justify-content:center;gap:13px;pointer-events:none}
 #eyebrow{display:flex;align-items:center;gap:10px;
   font-family:'Space Grotesk',system-ui,sans-serif;font-weight:500;font-size:14px;
@@ -273,6 +273,7 @@ function fitArt(){
   main.style.transform = t; glow.style.transform = t;
   const top = Math.round((280 - S.size) / 2);
   main.style.top = top + 'px'; glow.style.top = top + 'px';
+  main.style.left = top + 'px'; glow.style.left = top + 'px';
 }
 
 function setMetrics(){
