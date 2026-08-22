@@ -7,34 +7,43 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+
+<script>
+/* ─── credentials ───────────────────────────────────────────────────────────
+   Kept out of the URL on purpose, so the panel never writes them into a
+   query string you might have on screen. ?user= and ?key= still override.
+   Key: https://www.last.fm/api/account/create                              */
+const CONFIG = {
+  user: '',                    // Last.fm username
+  key : '',                    // Last.fm API key
+  art : '/api/status',         // endpoint supplying { image: "data:...", artists: "..." }
+};
+</script>
+
 <style>
-:root{ --c0:#0A0F19; --c1:#ECE7E3; --c2:#123767; --c3:#F6A2C6; --c4:#1D69C9; }
+:root{
+  --c0:#0A0F19; --c1:#ECE7E3; --c2:#123767; --c3:#F6A2C6; --c4:#1D69C9;
+  --card:#0A0F19; --glow:16px;
+}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:transparent;overflow:hidden}
 #viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
 #stage{position:relative;width:1000px;height:320px;transform-origin:center;flex:none}
 #stage > *{position:absolute;left:0;top:0}
 
-/* hard background: the 45deg ramp with the smooth stops cut to hard ones */
-#bg{width:1000px;height:320px;background:linear-gradient(45deg,
-  var(--c0) 0 8.5%, var(--c2) 8.5% 27.5%, var(--c4) 27.5% 49%,
-  var(--c3) 49% 72%, var(--c1) 72% 100%)}
-
 #card{left:20px;top:20px;width:960px;height:280px;border-radius:28px;
-  background:#000;box-shadow:0 0 12px rgba(0,0,0,.5)}
+  background:var(--card);box-shadow:0 0 12px rgba(0,0,0,.5)}
 #clip{left:20px;top:20px;width:960px;height:280px;border-radius:28px;overflow:hidden}
 #clip > *{position:absolute}
 
-/* album art as a character grid — same mono treatment as the disc */
 .art{margin:0;white-space:pre;left:40px;top:20px;
-  font-family:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
-  font-size:9px;line-height:10px}
-#art-glow{filter:blur(16px)}
+  font-family:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace}
+#art-glow{filter:blur(var(--glow))}
 body.noglow #art-glow{display:none}
 body.nogrid .art{display:none}
 
-#meta{left:320px;top:0;width:600px;height:280px;display:flex;flex-direction:column;
-  justify-content:center;gap:14px;pointer-events:none}
+#meta{left:320px;top:0;width:520px;height:280px;display:flex;flex-direction:column;
+  justify-content:center;gap:13px;pointer-events:none}
 #eyebrow{display:flex;align-items:center;gap:10px;
   font-family:'Space Grotesk',system-ui,sans-serif;font-weight:500;font-size:14px;
   letter-spacing:.28em;text-transform:uppercase;color:var(--c3)}
@@ -42,35 +51,40 @@ body.nogrid .art{display:none}
   animation:blink 1.6s steps(1,end) infinite}
 @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
 body.offline #tick{animation:none;opacity:.35}
-#title{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;font-size:48px;
+#title{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;font-size:46px;
   line-height:1.05;letter-spacing:-0.02em;color:#fff;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#artists{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:500;font-size:21px;
+#artists{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:500;font-size:20px;
   line-height:1.25;letter-spacing:-0.01em;color:var(--c1);opacity:.72;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
-.rot{transform-box:fill-box;transform-origin:50% 50%}
-body.anim-squares #sym-squares .rot{animation:rot var(--p) linear infinite var(--d)}
-@keyframes rot{to{transform:rotate(360deg)}}
+#progwrap{display:flex;align-items:center;gap:12px;margin-top:3px}
+body.noprog #progwrap,body.offline #progwrap{display:none}
+#prog{position:relative;flex:1;height:6px;background:#000;opacity:.55}
+#progfill{position:absolute;left:0;top:0;height:100%;width:0;background:var(--c3);opacity:1}
+#times{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;
+  color:var(--c1);opacity:.6;flex:none;letter-spacing:.04em}
 
-@media (prefers-reduced-motion:reduce){
-  .rot{animation:none !important}
-  #tick{animation:none !important}
-}
+body.nopoly #sym-poly{visibility:hidden}
+
+@media (prefers-reduced-motion:reduce){ #tick{animation:none} }
 
 #panel{position:fixed;top:10px;right:10px;z-index:9;display:flex;flex-direction:column;gap:6px;
   background:rgba(10,15,25,.88);border:1px solid #2a3550;border-radius:8px;padding:10px 12px;
-  font:12px/1.4 ui-monospace,monospace;color:#cdd6e4;min-width:210px}
+  font:12px/1.4 ui-monospace,monospace;color:#cdd6e4;min-width:236px;
+  max-height:calc(100vh - 20px);overflow:auto}
 #panel label{display:flex;align-items:center;gap:10px;justify-content:space-between;cursor:pointer}
-#panel input[type=number]{width:60px;background:#0a0f19;color:#ece7e3;border:1px solid #2a3550;
+#panel input[type=number]{width:62px;background:#0a0f19;color:#ece7e3;border:1px solid #2a3550;
   border-radius:4px;padding:2px 6px;font:inherit}
+#panel select{background:#0a0f19;color:#ece7e3;border:1px solid #2a3550;border-radius:4px;font:inherit}
+#panel hr{border:0;border-top:1px solid #2a3550;margin:4px 0;width:100%}
 #panel small{color:#5c6a85}
+#panel b{color:#5c6a85;font-weight:400;letter-spacing:.14em;text-transform:uppercase;font-size:10px}
 body.nopanel #panel{display:none}
 </style>
 </head>
-<body class="nopanel anim-squares">
+<body class="nopanel">
 <div id="viewport"><div id="stage">
-  <div id="bg"></div>
   <div id="card"></div>
   <div id="clip">
     <pre class="art" id="art-glow" aria-hidden="true"></pre>
@@ -79,19 +93,17 @@ body.nopanel #panel{display:none}
       <div id="eyebrow"><span id="tick"></span><span id="label">Now playing</span></div>
       <div id="title"></div>
       <div id="artists"></div>
+      <div id="progwrap">
+        <div id="prog"><div id="progfill"></div></div>
+        <div id="times">0:00 / 0:00</div>
+      </div>
     </div>
     <svg width="960" height="280" viewBox="0 0 960 280" fill="none"
          xmlns="http://www.w3.org/2000/svg" style="pointer-events:none;left:0;top:0">
-      <g id="sym-squares" transform="translate(872 208) scale(0.5) translate(-92 -102)">
-        <g><rect x="56.75" y="56.75" width="70.5" height="70.5" stroke="url(#sweep)" stroke-width="3"/></g>
-        <g class="rot" style="--p:20s;--d:reverse"><rect x="56.3107" y="92" width="51" height="51" transform="rotate(-45 56.3107 92)" stroke="url(#sweep)" stroke-width="3"/></g>
-        <g class="rot" style="--p:15s;--d:normal"><rect x="73.25" y="110.75" width="37.5" height="37.5" transform="rotate(-90 73.25 110.75)" stroke="url(#sweep)" stroke-width="3"/></g>
-        <g class="rot" style="--p:11s;--d:reverse"><rect x="92" y="111.189" width="27.75" height="27.75" transform="rotate(-135 92 111.189)" stroke="url(#sweep)" stroke-width="3"/></g>
-        <g class="rot" style="--p:8s;--d:normal"><rect x="102.5" y="101.75" width="21" height="21" transform="rotate(180 102.5 101.75)" stroke="url(#sweep)" stroke-width="3"/></g>
-      </g>
+      <g id="sym-poly" stroke="url(#sweep)" stroke-width="1.5" stroke-linecap="round"></g>
       <defs>
         <radialGradient id="sweep" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
-          gradientTransform="translate(92 92) rotate(-45) scale(50.9117)">
+          gradientTransform="matrix(26 -30 26 30 888 210)">
           <stop stop-color="var(--c2)"/>
           <stop offset="0.33051" stop-color="var(--c4)"/>
           <stop offset="0.660885" stop-color="var(--c3)"/>
@@ -103,86 +115,194 @@ body.nopanel #panel{display:none}
 </div></div>
 
 <div id="panel">
-  <label>poll <span><input id="poll" type="number" min="3" max="120" step="1" value="10"> s</span></label>
+  <b>source</b>
+  <label>poll <span><input id="poll" type="number" min="2" max="60" step="1" value="5"> s</span></label>
+  <label><span>progress bar</span><input id="prog_" type="checkbox" checked></label>
+  <hr>
+  <b>art</b>
   <label><span>char grid</span><input id="grid" type="checkbox" checked></label>
+  <label>ramp <select id="ramp">
+    <option value="disc" selected>disc vocabulary</option>
+    <option value="dense">dense (70 step)</option>
+    <option value="blocks">shade blocks</option>
+    <option value="half">half block</option>
+  </select></label>
+  <label>block <span><input id="size" type="number" min="120" max="256" step="4" value="240"> px</span></label>
+  <label>cell w <span><input id="cw" type="number" min="2" max="12" step="0.5" value="4"> px</span></label>
+  <label>cell h <span><input id="ch" type="number" min="2" max="20" step="0.5" value="5"> px</span></label>
+  <label>font <span><input id="fs" type="number" min="3" max="18" step="0.5" value="6"> px</span></label>
+  <label>gamma <input id="gam" type="number" min="0.2" max="3" step="0.05" value="1"></label>
+  <label>contrast <input id="con" type="number" min="0.2" max="3" step="0.05" value="1.15"></label>
+  <label>saturation <input id="sat" type="number" min="0" max="3" step="0.05" value="1.2"></label>
+  <label>levels <input id="lev" type="number" min="2" max="32" step="1" value="6"></label>
+  <label><span>invert ramp</span><input id="inv" type="checkbox"></label>
   <label><span>grid glow</span><input id="glow" type="checkbox" checked></label>
-  <label><span>squares anim</span><input id="sq" type="checkbox" checked></label>
+  <label>glow <span><input id="gpx" type="number" min="0" max="40" step="1" value="16"> px</span></label>
+  <hr>
+  <b>card</b>
   <label><span>palette from art</span><input id="pal" type="checkbox" checked></label>
-  <small>?api=... sets the endpoint · H toggles panel</small>
+  <label>fill <select id="fill">
+    <option value="bands" selected>hard bands</option>
+    <option value="flat">flat</option>
+  </select></label>
+  <label>darkness <input id="dark" type="number" min="0" max="100" step="1" value="24"></label>
+  <hr>
+  <b>polyhedron</b>
+  <label><span>tumble</span><input id="po" type="checkbox" checked></label>
+  <label>phase <span><input id="phs" type="number" min="-30000" max="30000" step="50" value="0"> ms</span></label>
+  <small>?user= ?key= ?art= override credentials · H toggles panel</small>
 </div>
 
 <script>
-/* ---- config ---- */
+const ui = id => document.getElementById(id);
 const Q  = new URLSearchParams(location.search);
 const qb = (k,cur) => Q.has(k) ? Q.get(k)!=='0' : cur;
-const ui = id => document.getElementById(id);
+const qn = (k,cur,lo,hi) => Q.has(k) ? Math.min(hi,Math.max(lo, parseFloat(Q.get(k))||cur)) : cur;
 
-const API  = Q.get('api') || '/api/status';
-let POLL   = Math.min(120, Math.max(3, parseInt(Q.get('poll'),10) || 10));
-let usePal = qb('pal', true);
+const USER = Q.get('user') || CONFIG.user;
+const KEY  = Q.get('key')  || CONFIG.key;
+const ART  = Q.get('art')  || CONFIG.art;
 
-const FLAGS = { grid:'nogrid', glow:'noglow' };            /* inverted classes */
-document.body.classList.toggle('nogrid', !qb('grid', true));
-document.body.classList.toggle('noglow', !qb('glow', true));
-document.body.classList.toggle('anim-squares', qb('sq', true));
-document.body.classList.toggle('nopanel', !qb('panel', false));
-ui('poll').value = POLL;
-ui('grid').checked = qb('grid',true); ui('glow').checked = qb('glow',true);
-ui('sq').checked = qb('sq',true);     ui('pal').checked = usePal;
+/* ─── settings ───────────────────────────────────────────────────────────── */
+const S = {
+  poll : qn('poll',5,2,60),
+  prog : qb('prog',true),
+  grid : qb('grid',true),
+  ramp : ['disc','dense','blocks','half'].indexOf(Q.get('ramp'))>=0 ? Q.get('ramp') : 'disc',
+  size : qn('size',240,120,256),
+  cw   : qn('cw',4,2,12),
+  ch   : qn('ch',5,2,20),
+  fs   : qn('fs',6,3,18),
+  gam  : qn('gam',1,0.2,3),
+  con  : qn('con',1.15,0.2,3),
+  sat  : qn('sat',1.2,0,3),
+  lev  : qn('lev',6,2,32),
+  inv  : qb('inv',false),
+  glow : qb('glow',true),
+  gpx  : qn('gpx',16,0,40),
+  pal  : qb('pal',true),
+  fill : Q.get('fill')==='flat' ? 'flat' : 'bands',
+  dark : qn('dark',24,0,100),
+  po   : qb('po',true),
+  phs  : qn('phs',0,-30000,30000),
+  panel: qb('panel',false),
+};
+const DEFAULTS = { poll:5, prog:1, grid:1, ramp:'disc', size:240, cw:4, ch:5, fs:6,
+  gam:1, con:1.15, sat:1.2, lev:6, inv:0, glow:1, gpx:16, pal:1, fill:'bands',
+  dark:24, po:1, phs:0, panel:0 };
 
-const DEFAULTS = {poll:'10', grid:'1', glow:'1', sq:'1', pal:'1', panel:'0'};
 function syncURL(){
   const p = new URLSearchParams();
-  if (Q.get('api')) p.set('api', Q.get('api'));
-  const cur = { poll:String(POLL),
-    grid: ui('grid').checked?'1':'0', glow: ui('glow').checked?'1':'0',
-    sq: ui('sq').checked?'1':'0', pal: usePal?'1':'0',
-    panel: document.body.classList.contains('nopanel')?'0':'1' };
-  for (const k in cur) if (cur[k]!==DEFAULTS[k]) p.set(k, cur[k]);
+  if (Q.get('user')) p.set('user', Q.get('user'));
+  if (Q.get('key'))  p.set('key',  Q.get('key'));
+  if (Q.get('art'))  p.set('art',  Q.get('art'));
+  for (const k in DEFAULTS){
+    let v = S[k];
+    if (typeof v === 'boolean') v = v ? 1 : 0;
+    if (String(v) !== String(DEFAULTS[k])) p.set(k, v);
+  }
   const qs = p.toString();
   try{ history.replaceState(null,'', qs ? '?'+qs : location.pathname); }catch(e){}
 }
 
-/* ---- character grid ---- */
-/* density ramp drawn from the disc's own character vocabulary */
-const RAMP = " `.,:;!jz7tfsukhRDWQ@#";
-const COLS = 48, ROWS = 24, CELLW = 5, CELLH = 10;   /* 240 x 240 block */
+/* ─── ramps ──────────────────────────────────────────────────────────────── */
+const RAMPS = {
+  /* built from the disc's own DEMOTE/PROMOTE density chains */
+  disc  : " `.,:;!jz7tfsukhRDWQ@#",
+  dense : ' .\'`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$',
+  blocks: " \u2591\u2592\u2593\u2588",
+};
 
+/* ─── character grid ─────────────────────────────────────────────────────── */
 const main = ui('art-main'), glow = ui('art-glow');
-(function(){                       /* force the advance to CELLW, as the disc does to 7.325 */
-  const probe = document.createElement('span');
-  probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre';
-  probe.textContent = '0'.repeat(100);
-  main.appendChild(probe);
-  const adv = probe.getBoundingClientRect().width / 100;
-  probe.remove();
-  const ls = (CELLW - adv).toFixed(3) + 'px';
+const advCache = {};
+
+function setMetrics(){
+  for (const el of [main, glow]){
+    el.style.fontSize   = S.fs + 'px';
+    el.style.lineHeight = S.ch + 'px';
+    el.style.letterSpacing = '0px';
+  }
+  /* force the advance to cell width, the way the disc pins it to 7.325 */
+  const key = String(S.fs);
+  if (!(key in advCache)){
+    const probe = document.createElement('span');
+    probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre';
+    probe.textContent = '0'.repeat(100);
+    main.appendChild(probe);
+    advCache[key] = probe.getBoundingClientRect().width / 100;
+    probe.remove();
+  }
+  const ls = (S.cw - advCache[key]).toFixed(3) + 'px';
   main.style.letterSpacing = ls; glow.style.letterSpacing = ls;
-})();
+  document.documentElement.style.setProperty('--glow', S.gpx + 'px');
+}
 
 const esc = c => c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':c;
-const post = v => Math.round(v/64)*64;               /* 4 levels per channel: hard, blocky */
 
-function renderGrid(px){
+function shape(r,g,b){
+  /* saturation, then gamma + contrast, then posterise to `levels` per channel */
+  const gray = 0.299*r + 0.587*g + 0.114*b;
+  r = gray + (r-gray)*S.sat; g = gray + (g-gray)*S.sat; b = gray + (b-gray)*S.sat;
+  const step = 255 / (S.lev - 1);
+  const q = v => {
+    let n = Math.pow(Math.max(0, Math.min(1, v/255)), S.gam);
+    n = (n - 0.5) * S.con + 0.5;
+    n = Math.max(0, Math.min(1, n));
+    return Math.round(Math.round(n*255 / step) * step);
+  };
+  return [q(r), q(g), q(b)];
+}
+const lumOf = (r,g,b) => (0.299*r + 0.587*g + 0.114*b) / 255;
+
+const cv  = document.createElement('canvas');
+const cvx = cv.getContext('2d', { willReadFrequently:true });
+let curImg = null;
+
+function renderGrid(){
+  if (!curImg){ main.innerHTML = ''; glow.innerHTML = ''; return; }
+  const half = S.ramp === 'half';
+  const cols = Math.max(4, Math.round(S.size / S.cw));
+  const rows = Math.max(3, Math.round(S.size / S.ch));
+  const sh   = half ? rows*2 : rows;
+
+  cv.width = cols; cv.height = sh;
+  cvx.clearRect(0,0,cols,sh);
+  cvx.drawImage(curImg, 0, 0, cols, sh);
+  const px = cvx.getImageData(0,0,cols,sh).data;
+
+  const ramp = RAMPS[S.ramp] || RAMPS.disc;
+  const N = ramp.length - 1;
   let out = '';
-  for (let y=0; y<ROWS; y++){
-    let run='', col=null;
-    const flush = () => { if(run){ out += col ? '<span style="color:'+col+'">'+run+'</span>' : run; run=''; } };
-    for (let x=0; x<COLS; x++){
-      const i = (y*COLS + x) * 4;
-      const r = px[i], g = px[i+1], b = px[i+2];
-      const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
-      const ch  = RAMP[Math.min(RAMP.length-1, Math.round(lum * (RAMP.length-1)))];
-      const c   = ch===' ' ? null : 'rgb('+post(r)+','+post(g)+','+post(b)+')';
-      if (c !== col){ flush(); col = c; }
-      run += esc(ch);
+
+  for (let y=0; y<rows; y++){
+    let run='', style=null, pending=null;
+    const flush = () => { if(run){ out += style ? '<span style="'+style+'">'+run+'</span>' : run; run=''; } };
+
+    for (let x=0; x<cols; x++){
+      let st, chr;
+      if (half){
+        const a = ((y*2)*cols + x)*4, b = ((y*2+1)*cols + x)*4;
+        const t = shape(px[a],px[a+1],px[a+2]), u = shape(px[b],px[b+1],px[b+2]);
+        chr = '\u2580';
+        st  = 'color:rgb('+t+');background:rgb('+u+')';
+      } else {
+        const i = (y*cols + x)*4;
+        const c = shape(px[i],px[i+1],px[i+2]);
+        let f = lumOf(c[0],c[1],c[2]);
+        if (S.inv) f = 1 - f;
+        chr = ramp[Math.min(N, Math.max(0, Math.round(f*N)))];
+        st  = chr===' ' ? null : 'color:rgb('+c+')';
+      }
+      if (st !== style){ flush(); style = st; }
+      run += esc(chr);
     }
     flush(); out += '\n';
   }
   main.innerHTML = out; glow.innerHTML = out;
 }
 
-/* ---- palette extraction: five stops, dark to light, into the c0..c4 ramp ---- */
+/* ─── palette ────────────────────────────────────────────────────────────── */
 function toHsl(r,g,b){
   r/=255; g/=255; b/=255;
   const mx=Math.max(r,g,b), mn=Math.min(r,g,b), l=(mx+mn)/2;
@@ -194,165 +314,303 @@ function toHsl(r,g,b){
   else h=((r-g)/d + 4)/6;
   return [h,s,l];
 }
-function toHex(h,s,l){
+function hex(h,s,l){
   const f = n => {
     const k=(n+h*12)%12, a=s*Math.min(l,1-l);
     const v=l - a*Math.max(-1, Math.min(k-3, Math.min(9-k, 1)));
-    return Math.round(v*255).toString(16).padStart(2,'0');
+    return Math.round(Math.max(0,Math.min(1,v))*255).toString(16).padStart(2,'0');
   };
   return '#'+f(0)+f(8)+f(4);
 }
+
+const BASE = [ {h:.617,s:.43,l:.07}, {h:.588,s:.70,l:.24},
+               {h:.588,s:.75,l:.45}, {h:.925,s:.81,l:.80}, {h:.05,s:.19,l:.91} ];
+let PAL = BASE.slice();     /* five stops, dark to light */
 
 function extract(px){
   const bins = new Map();
   for (let i=0; i<px.length; i+=4){
     if (px[i+3] < 128) continue;
-    const r=px[i], g=px[i+1], b=px[i+2];
-    const key = (r>>4)+','+(g>>4)+','+(b>>4);
+    const key = (px[i]>>4)+','+(px[i+1]>>4)+','+(px[i+2]>>4);
     const e = bins.get(key) || {n:0,r:0,g:0,b:0};
-    e.n++; e.r+=r; e.g+=g; e.b+=b; bins.set(key,e);
+    e.n++; e.r+=px[i]; e.g+=px[i+1]; e.b+=px[i+2]; bins.set(key,e);
   }
-  const cand = [...bins.values()].map(e=>{
-    const r=e.r/e.n, g=e.g/e.n, b=e.b/e.n;
-    const [h,s,l] = toHsl(r,g,b);
-    return { h,s,l, score: e.n * (0.35 + s) * (l>0.04 && l<0.97 ? 1 : 0.15) };
-  }).sort((a,b)=>b.score-a.score);
+  const cand = [];
+  bins.forEach(e=>{
+    const c = toHsl(e.r/e.n, e.g/e.n, e.b/e.n);
+    cand.push({ h:c[0], s:c[1], l:c[2],
+      score: e.n * (0.35 + c[1]) * (c[2]>0.04 && c[2]<0.97 ? 1 : 0.15) });
+  });
+  cand.sort((a,b)=>b.score-a.score);
 
   const picked = [];
-  for (const c of cand){
-    if (picked.length === 5) break;
-    /* keep the five reasonably far apart in hue+lightness */
-    const clash = picked.some(p => {
+  for (let i=0; i<cand.length && picked.length<5; i++){
+    const c = cand[i];
+    const clash = picked.some(p=>{
       let dh = Math.abs(p.h-c.h); dh = Math.min(dh, 1-dh);
       return dh < 0.06 && Math.abs(p.l-c.l) < 0.14;
     });
     if (!clash) picked.push(c);
   }
-  while (picked.length < 5) picked.push(picked[picked.length-1] || {h:0.6,s:.3,l:.5});
+  while (picked.length < 5) picked.push(picked[picked.length-1] || BASE[2]);
 
   picked.sort((a,b)=>a.l-b.l);
-  /* anchor the ends so the ramp always has a real floor and ceiling, as c0/c1 do */
-  const stops = picked.map((c,i) => {
+  const clamp = (v,lo,hi) => Math.min(hi, Math.max(lo, v));
+  return picked.map((c,i)=>{
     let s=c.s, l=c.l;
     if (i===0){ l=Math.min(l,0.10); s=Math.min(s,0.55); }
+    if (i===1){ l=clamp(l,0.16,0.34); }
+    if (i===2){ l=clamp(l,0.38,0.56); s=Math.max(s,0.35); }
+    if (i===3){ l=clamp(l,0.62,0.82); }
     if (i===4){ l=Math.max(l,0.90); s=Math.min(s,0.22); }
-    if (i===1){ l=Math.min(Math.max(l,0.16),0.34); }
-    if (i===2){ l=Math.min(Math.max(l,0.38),0.56); s=Math.max(s,0.35); }
-    if (i===3){ l=Math.min(Math.max(l,0.62),0.82); }
-    return toHex(c.h, s, l);
+    return {h:c.h, s:s, l:l};
   });
-  /* gradient runs c0 -> c2 -> c4 -> c3 -> c1, dark to light */
-  return { c0:stops[0], c2:stops[1], c4:stops[2], c3:stops[3], c1:stops[4] };
 }
 
-function applyPalette(p){
+function applyPalette(){
+  const p = S.pal ? PAL : BASE;
   const r = document.documentElement.style;
-  for (const k in p) r.setProperty('--'+k, p[k]);
-}
-const BASE = { c0:'#0A0F19', c1:'#ECE7E3', c2:'#123767', c3:'#F6A2C6', c4:'#1D69C9' };
+  /* ramp runs dark -> light, laid into c0 c2 c4 c3 c1 as the gradient walks it */
+  const slot = ['c0','c2','c4','c3','c1'];
+  p.forEach((c,i)=> r.setProperty('--'+slot[i], hex(c.h,c.s,c.l)));
 
-/* ---- title fitting ---- */
-function fitTitle(){
-  const el = ui('title');
-  let size = 48;
-  el.style.fontSize = size + 'px';
-  while (el.scrollWidth > el.clientWidth && size > 24){
-    size -= 2; el.style.fontSize = size + 'px';
+  const d = S.dark / 100;
+  const dim = c => hex(c.h, Math.min(c.s, 0.6), c.l * d);
+  if (S.fill === 'flat'){
+    r.setProperty('--card', dim(p[0]));
+  } else {
+    r.setProperty('--card',
+      'linear-gradient(45deg,' +
+      dim(p[0]) + ' 0 8.5%,'    + dim(p[1]) + ' 8.5% 27.5%,' +
+      dim(p[2]) + ' 27.5% 49%,' + dim(p[3]) + ' 49% 72%,'    +
+      dim(p[4]) + ' 72% 100%)');
   }
 }
 
-/* ---- data ---- */
-const cv = document.createElement('canvas'); cv.width = COLS; cv.height = ROWS;
-const cx = cv.getContext('2d', { willReadFrequently:true });
-const pv = document.createElement('canvas'); pv.width = 40; pv.height = 40;
-const px2 = pv.getContext('2d', { willReadFrequently:true });
+/* ─── Last.fm ────────────────────────────────────────────────────────────── */
+const LFM = 'https://ws.audioscrobbler.com/2.0/?format=json&api_key=' + encodeURIComponent(KEY);
+const recentURL = () => LFM + '&method=user.getrecenttracks&limit=1&user=' + encodeURIComponent(USER);
+const infoURL = (a,t) => LFM + '&method=track.getInfo&autocorrect=1&artist=' +
+  encodeURIComponent(a) + '&track=' + encodeURIComponent(t);
 
-let lastKey = null, lastImg = null;
+let trackKey = null, startedAt = 0, duration = 0, imgSrc = null, catchup = null;
 
-function paintFrom(src){
-  return new Promise(res => {
+const mmss = ms => {
+  const s = Math.max(0, Math.round(ms/1000));
+  return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+};
+
+function fitTitle(){
+  const el = ui('title');
+  let size = 46;
+  el.style.fontSize = size + 'px';
+  while (el.scrollWidth > el.clientWidth && size > 22){ size -= 2; el.style.fontSize = size + 'px'; }
+}
+
+function loadImage(src){
+  return new Promise(res=>{
     const img = new Image();
-    img.onload = () => {
-      cx.drawImage(img, 0, 0, COLS, ROWS);
-      renderGrid(cx.getImageData(0, 0, COLS, ROWS).data);
-      if (usePal){
-        px2.drawImage(img, 0, 0, 40, 40);
-        applyPalette(extract(px2.getImageData(0, 0, 40, 40).data));
-      } else applyPalette(BASE);
-      res(true);
+    img.onload = ()=>{
+      curImg = img;
+      if (S.pal){
+        const c = document.createElement('canvas'); c.width = c.height = 40;
+        const g = c.getContext('2d', { willReadFrequently:true });
+        g.drawImage(img, 0, 0, 40, 40);
+        PAL = extract(g.getImageData(0,0,40,40).data);
+      }
+      applyPalette(); renderGrid(); res(true);
     };
-    img.onerror = () => res(false);
-    img.src = src;                       /* data: URI — same-origin, canvas stays clean */
+    img.onerror = ()=>res(false);
+    img.src = src;                     /* data: URI — same origin, canvas stays clean */
   });
+}
+
+async function fetchArt(){
+  if (!ART) return;
+  try{
+    const d = await (await fetch(ART, {cache:'no-store'})).json();
+    if (d.artists) ui('artists').textContent = d.artists;
+    if (d.image && d.image !== imgSrc){ imgSrc = d.image; await loadImage(d.image); }
+  }catch(e){}
+}
+
+async function fetchDuration(artist, track){
+  duration = 0;
+  try{
+    const d = await (await fetch(infoURL(artist, track), {cache:'no-store'})).json();
+    duration = parseInt(d && d.track && d.track.duration, 10) || 0;
+  }catch(e){}
 }
 
 async function poll(){
+  if (!USER || !KEY){
+    ui('label').textContent   = 'Setup';
+    ui('title').textContent   = 'Add a Last.fm user and key';
+    ui('artists').textContent = 'top of this file, or ?user= &key=';
+    fitTitle(); document.body.classList.add('offline');
+    return;
+  }
   try{
-    const res  = await fetch(API, { cache:'no-store' });
-    const data = await res.json();
+    const d = await (await fetch(recentURL(), {cache:'no-store'})).json();
+    const t = d && d.recenttracks && d.recenttracks.track && d.recenttracks.track[0];
+    const live = !!(t && t['@attr'] && t['@attr'].nowplaying === 'true');
 
-    const online = data.online !== false && !!data.song;
-    document.body.classList.toggle('offline', !online);
-
-    if (!online){
-      ui('label').textContent = 'Offline';
-      ui('title').textContent = 'Nothing playing';
-      ui('artists').textContent = '';
-      fitTitle();
-      lastKey = 'offline';
+    document.body.classList.toggle('offline', !live);
+    if (!live){
+      if (trackKey !== 'off'){
+        trackKey = 'off'; duration = 0;
+        ui('label').textContent   = 'Offline';
+        ui('title').textContent   = 'Nothing playing';
+        ui('artists').textContent = '';
+        fitTitle();
+      }
       return;
     }
 
-    const key = data.song + '|' + (data.artists || '');
-    if (key === lastKey && data.image === lastImg) return;
-    lastKey = key;
+    const artist = t.artist['#text'] || t.artist.name || '';
+    const key = artist + '|' + t.name;
+    if (key === trackKey) return;
 
+    trackKey  = key;
+    startedAt = Date.now();
     ui('label').textContent   = 'Now playing';
-    ui('title').textContent   = data.song;
-    ui('artists').textContent = data.artists || '';
+    ui('title').textContent   = t.name;
+    ui('artists').textContent = artist;
     fitTitle();
 
-    if (data.image && data.image !== lastImg){
-      lastImg = data.image;
-      const ok = await paintFrom(data.image);
-      if (!ok){ main.innerHTML = ''; glow.innerHTML = ''; applyPalette(BASE); }
-    }
-  } catch(e){
-    /* endpoint blipped: keep whatever is on screen and try again next tick */
+    fetchDuration(artist, t.name);
+    fetchArt();
+    clearTimeout(catchup);
+    catchup = setTimeout(fetchArt, 6000);   /* the art endpoint often lags a change */
+  }catch(e){ /* blip: hold the last good state */ }
+}
+
+/* ─── icosahedron: ambient tumble, same clock as the BRB screen ──────────── */
+const ICO = (function(){
+  const P=(1+Math.sqrt(5))/2, raw=[];
+  for (const a of [1,-1]) for (const b of [1,-1]){
+    raw.push([0,a,b*P]); raw.push([a,b*P,0]); raw.push([b*P,0,a]);
+  }
+  const n = Math.hypot(1,P);
+  const V = raw.map(p=>p.map(c=>c/n));
+  const dist=(i,j)=>Math.hypot(V[i][0]-V[j][0],V[i][1]-V[j][1],V[i][2]-V[j][2]);
+  let dmin=1e9;
+  for (let i=0;i<12;i++) for (let j=i+1;j<12;j++) dmin=Math.min(dmin,dist(i,j));
+  const E=[];
+  for (let i=0;i<12;i++) for (let j=i+1;j<12;j++) if (dist(i,j)<dmin*1.01) E.push([i,j]);
+  return {V:V, E:E};
+})();
+
+const polyG = ui('sym-poly');
+const polyLines = ICO.E.map(function(){
+  const l = document.createElementNS('http://www.w3.org/2000/svg','line');
+  polyG.appendChild(l); return l;
+});
+const PCX = 888, PCY = 210, PR = 30;
+
+function amb(t){
+  const a=t*2*Math.PI/26000, b=t*2*Math.PI/17000;
+  const ca=Math.cos(a), sa=Math.sin(a), cb=Math.cos(b), sb=Math.sin(b);
+  return [cb,0,sb, sa*sb,ca,-sa*cb, -ca*sb,sa,ca*cb];   /* Rx(a)Ry(b) */
+}
+const ap = (M,v)=>[M[0]*v[0]+M[1]*v[1]+M[2]*v[2],
+                   M[3]*v[0]+M[4]*v[1]+M[5]*v[2],
+                   M[6]*v[0]+M[7]*v[1]+M[8]*v[2]];
+
+function drawPoly(t){
+  const M = amb(t + S.phs);
+  const pts = ICO.V.map(function(v){ const p=ap(M,v); return [PCX+PR*p[0], PCY+PR*p[1], p[2]]; });
+  for (let k=0;k<ICO.E.length;k++){
+    const e=ICO.E[k], p=pts[e[0]], q=pts[e[1]], l=polyLines[k];
+    l.setAttribute('x1',p[0].toFixed(2)); l.setAttribute('y1',p[1].toFixed(2));
+    l.setAttribute('x2',q[0].toFixed(2)); l.setAttribute('y2',q[1].toFixed(2));
+    l.setAttribute('stroke-opacity',(0.42+0.58*((p[2]+q[2])/4+0.5)).toFixed(3));
   }
 }
 
-/* ---- controls ---- */
-ui('poll').addEventListener('input', e=>{
-  const v = +e.target.value;
-  if (v>=3 && v<=120){ POLL = v; restart(); syncURL(); }
-});
-ui('grid').addEventListener('change', e=>{ document.body.classList.toggle('nogrid', !e.target.checked); syncURL(); });
-ui('glow').addEventListener('change', e=>{ document.body.classList.toggle('noglow', !e.target.checked); syncURL(); });
-ui('sq').addEventListener('change',   e=>{ document.body.classList.toggle('anim-squares', e.target.checked); syncURL(); });
-ui('pal').addEventListener('change',  e=>{
-  usePal = e.target.checked;
-  if (!usePal) applyPalette(BASE); else { lastImg = null; lastKey = null; poll(); }
-  syncURL();
-});
-addEventListener('keydown', e=>{ if(e.key==='h'||e.key==='H'){ document.body.classList.toggle('nopanel'); syncURL(); } });
+/* ─── loop ───────────────────────────────────────────────────────────────── */
+let epoch = null;
+function loop(t){
+  requestAnimationFrame(loop);      /* schedule first: one bad frame can't kill the chain */
+  try{
+    if (epoch === null) epoch = t;
+    if (S.po) drawPoly(t - epoch);
 
-/* ---- stage fit + OBS lifecycle ---- */
+    if (S.prog){
+      if (duration > 0 && !document.body.classList.contains('offline')){
+        const el = Math.min(Date.now() - startedAt, duration);
+        ui('progfill').style.width = (el / duration * 100).toFixed(2) + '%';
+        ui('times').textContent = mmss(el) + ' / ' + mmss(duration);
+      } else {
+        ui('progfill').style.width = '0%';
+        ui('times').textContent = '0:00 / --:--';
+      }
+    }
+  }catch(e){}
+}
+
+/* ─── panel wiring ───────────────────────────────────────────────────────── */
+function applyFlags(){
+  document.body.classList.toggle('nogrid', !S.grid);
+  document.body.classList.toggle('noglow', !S.glow);
+  document.body.classList.toggle('noprog', !S.prog);
+  document.body.classList.toggle('nopoly', !S.po);
+  document.body.classList.toggle('nopanel', !S.panel);
+}
+
+const NUMS  = ['poll','size','cw','ch','fs','gam','con','sat','lev','gpx','dark','phs'];
+const BOOLS = { prog:'prog_', grid:'grid', inv:'inv', glow:'glow', pal:'pal', po:'po' };
+const SELS  = ['ramp','fill'];
+const ARTKEYS = ['size','cw','ch','fs','ramp','gam','con','sat','lev','inv','gpx'];
+
+function reflect(){
+  NUMS.forEach(k=>{ ui(k).value = S[k]; });
+  for (const k in BOOLS) ui(BOOLS[k]).checked = S[k];
+  SELS.forEach(k=>{ ui(k).value = S[k]; });
+}
+
+function changed(k){
+  if (ARTKEYS.indexOf(k) >= 0){ setMetrics(); renderGrid(); }
+  if (['pal','fill','dark'].indexOf(k) >= 0) applyPalette();
+  if (k === 'pal' && S.pal && curImg) loadImage(imgSrc || curImg.src);
+  if (k === 'poll') restart();
+  applyFlags(); syncURL();
+}
+
+NUMS.forEach(function(k){
+  ui(k).addEventListener('input', function(e){
+    const v = parseFloat(e.target.value);
+    if (!isNaN(v)){ S[k] = v; changed(k); }
+  });
+});
+for (const k in BOOLS){
+  (function(k){
+    ui(BOOLS[k]).addEventListener('change', function(e){ S[k] = e.target.checked; changed(k); });
+  })(k);
+}
+SELS.forEach(function(k){
+  ui(k).addEventListener('change', function(e){ S[k] = e.target.value; changed(k); });
+});
+addEventListener('keydown', function(e){
+  if (e.key==='h' || e.key==='H'){ S.panel = !S.panel; applyFlags(); syncURL(); }
+});
+
+/* ─── stage fit + OBS lifecycle ──────────────────────────────────────────── */
 const stage = ui('stage');
 function fit(){ stage.style.transform = 'scale(' + Math.min(innerWidth/1000, innerHeight/320) + ')'; }
 addEventListener('resize', fit); fit();
 
 let timer = null;
-function restart(){ clearInterval(timer); timer = setInterval(poll, POLL*1000); }
-function refresh(){ lastKey = null; lastImg = null; poll(); restart(); }
+function restart(){ clearInterval(timer); timer = setInterval(poll, S.poll*1000); }
+function refresh(){ trackKey = null; imgSrc = null; epoch = null; poll(); restart(); }
 
-addEventListener('obsSourceVisibleChanged', e=>{ if (!e || !e.detail || e.detail.visible) refresh(); });
-addEventListener('obsSourceActiveChanged',  e=>{ if (!e || !e.detail || e.detail.active)  refresh(); });
-document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) refresh(); });
+addEventListener('obsSourceVisibleChanged', function(e){ if(!e||!e.detail||e.detail.visible) refresh(); });
+addEventListener('obsSourceActiveChanged',  function(e){ if(!e||!e.detail||e.detail.active)  refresh(); });
+document.addEventListener('visibilitychange', function(){ if(!document.hidden) refresh(); });
 
-applyPalette(BASE);
-poll();
-restart();
+reflect(); applyFlags(); setMetrics(); applyPalette();
+poll(); restart();
+requestAnimationFrame(loop);
 </script>
 </body>
 </html>
