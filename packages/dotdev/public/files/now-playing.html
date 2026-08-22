@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Now Playing — Y2K</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{ --c0:#0A0F19; --c1:#ECE7E3; --c2:#123767; --c3:#F6A2C6; --c4:#1D69C9; }
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:transparent;overflow:hidden}
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{position:relative;width:1000px;height:320px;transform-origin:center;flex:none}
+#stage > *{position:absolute;left:0;top:0}
+
+/* hard background: the 45deg ramp with the smooth stops cut to hard ones */
+#bg{width:1000px;height:320px;background:linear-gradient(45deg,
+  var(--c0) 0 8.5%, var(--c2) 8.5% 27.5%, var(--c4) 27.5% 49%,
+  var(--c3) 49% 72%, var(--c1) 72% 100%)}
+
+#card{left:20px;top:20px;width:960px;height:280px;border-radius:28px;
+  background:#000;box-shadow:0 0 12px rgba(0,0,0,.5)}
+#clip{left:20px;top:20px;width:960px;height:280px;border-radius:28px;overflow:hidden}
+#clip > *{position:absolute}
+
+/* album art as a character grid — same mono treatment as the disc */
+.art{margin:0;white-space:pre;left:40px;top:20px;
+  font-family:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
+  font-size:9px;line-height:10px}
+#art-glow{filter:blur(16px)}
+body.noglow #art-glow{display:none}
+body.nogrid .art{display:none}
+
+#meta{left:320px;top:0;width:600px;height:280px;display:flex;flex-direction:column;
+  justify-content:center;gap:14px;pointer-events:none}
+#eyebrow{display:flex;align-items:center;gap:10px;
+  font-family:'Space Grotesk',system-ui,sans-serif;font-weight:500;font-size:14px;
+  letter-spacing:.28em;text-transform:uppercase;color:var(--c3)}
+#tick{width:9px;height:9px;background:var(--c3);flex:none;
+  animation:blink 1.6s steps(1,end) infinite}
+@keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+body.offline #tick{animation:none;opacity:.35}
+#title{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;font-size:48px;
+  line-height:1.05;letter-spacing:-0.02em;color:#fff;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#artists{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:500;font-size:21px;
+  line-height:1.25;letter-spacing:-0.01em;color:var(--c1);opacity:.72;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+.rot{transform-box:fill-box;transform-origin:50% 50%}
+body.anim-squares #sym-squares .rot{animation:rot var(--p) linear infinite var(--d)}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+@media (prefers-reduced-motion:reduce){
+  .rot{animation:none !important}
+  #tick{animation:none !important}
+}
+
+#panel{position:fixed;top:10px;right:10px;z-index:9;display:flex;flex-direction:column;gap:6px;
+  background:rgba(10,15,25,.88);border:1px solid #2a3550;border-radius:8px;padding:10px 12px;
+  font:12px/1.4 ui-monospace,monospace;color:#cdd6e4;min-width:210px}
+#panel label{display:flex;align-items:center;gap:10px;justify-content:space-between;cursor:pointer}
+#panel input[type=number]{width:60px;background:#0a0f19;color:#ece7e3;border:1px solid #2a3550;
+  border-radius:4px;padding:2px 6px;font:inherit}
+#panel small{color:#5c6a85}
+body.nopanel #panel{display:none}
+</style>
+</head>
+<body class="nopanel anim-squares">
+<div id="viewport"><div id="stage">
+  <div id="bg"></div>
+  <div id="card"></div>
+  <div id="clip">
+    <pre class="art" id="art-glow" aria-hidden="true"></pre>
+    <pre class="art" id="art-main" aria-label="Album art, rendered as characters"></pre>
+    <div id="meta">
+      <div id="eyebrow"><span id="tick"></span><span id="label">Now playing</span></div>
+      <div id="title"></div>
+      <div id="artists"></div>
+    </div>
+    <svg width="960" height="280" viewBox="0 0 960 280" fill="none"
+         xmlns="http://www.w3.org/2000/svg" style="pointer-events:none;left:0;top:0">
+      <g id="sym-squares" transform="translate(872 208) scale(0.5) translate(-92 -102)">
+        <g><rect x="56.75" y="56.75" width="70.5" height="70.5" stroke="url(#sweep)" stroke-width="3"/></g>
+        <g class="rot" style="--p:20s;--d:reverse"><rect x="56.3107" y="92" width="51" height="51" transform="rotate(-45 56.3107 92)" stroke="url(#sweep)" stroke-width="3"/></g>
+        <g class="rot" style="--p:15s;--d:normal"><rect x="73.25" y="110.75" width="37.5" height="37.5" transform="rotate(-90 73.25 110.75)" stroke="url(#sweep)" stroke-width="3"/></g>
+        <g class="rot" style="--p:11s;--d:reverse"><rect x="92" y="111.189" width="27.75" height="27.75" transform="rotate(-135 92 111.189)" stroke="url(#sweep)" stroke-width="3"/></g>
+        <g class="rot" style="--p:8s;--d:normal"><rect x="102.5" y="101.75" width="21" height="21" transform="rotate(180 102.5 101.75)" stroke="url(#sweep)" stroke-width="3"/></g>
+      </g>
+      <defs>
+        <radialGradient id="sweep" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+          gradientTransform="translate(92 92) rotate(-45) scale(50.9117)">
+          <stop stop-color="var(--c2)"/>
+          <stop offset="0.33051" stop-color="var(--c4)"/>
+          <stop offset="0.660885" stop-color="var(--c3)"/>
+          <stop offset="1" stop-color="var(--c1)"/>
+        </radialGradient>
+      </defs>
+    </svg>
+  </div>
+</div></div>
+
+<div id="panel">
+  <label>poll <span><input id="poll" type="number" min="3" max="120" step="1" value="10"> s</span></label>
+  <label><span>char grid</span><input id="grid" type="checkbox" checked></label>
+  <label><span>grid glow</span><input id="glow" type="checkbox" checked></label>
+  <label><span>squares anim</span><input id="sq" type="checkbox" checked></label>
+  <label><span>palette from art</span><input id="pal" type="checkbox" checked></label>
+  <small>?api=... sets the endpoint · H toggles panel</small>
+</div>
+
+<script>
+/* ---- config ---- */
+const Q  = new URLSearchParams(location.search);
+const qb = (k,cur) => Q.has(k) ? Q.get(k)!=='0' : cur;
+const ui = id => document.getElementById(id);
+
+const API  = Q.get('api') || '/api/status';
+let POLL   = Math.min(120, Math.max(3, parseInt(Q.get('poll'),10) || 10));
+let usePal = qb('pal', true);
+
+const FLAGS = { grid:'nogrid', glow:'noglow' };            /* inverted classes */
+document.body.classList.toggle('nogrid', !qb('grid', true));
+document.body.classList.toggle('noglow', !qb('glow', true));
+document.body.classList.toggle('anim-squares', qb('sq', true));
+document.body.classList.toggle('nopanel', !qb('panel', false));
+ui('poll').value = POLL;
+ui('grid').checked = qb('grid',true); ui('glow').checked = qb('glow',true);
+ui('sq').checked = qb('sq',true);     ui('pal').checked = usePal;
+
+const DEFAULTS = {poll:'10', grid:'1', glow:'1', sq:'1', pal:'1', panel:'0'};
+function syncURL(){
+  const p = new URLSearchParams();
+  if (Q.get('api')) p.set('api', Q.get('api'));
+  const cur = { poll:String(POLL),
+    grid: ui('grid').checked?'1':'0', glow: ui('glow').checked?'1':'0',
+    sq: ui('sq').checked?'1':'0', pal: usePal?'1':'0',
+    panel: document.body.classList.contains('nopanel')?'0':'1' };
+  for (const k in cur) if (cur[k]!==DEFAULTS[k]) p.set(k, cur[k]);
+  const qs = p.toString();
+  try{ history.replaceState(null,'', qs ? '?'+qs : location.pathname); }catch(e){}
+}
+
+/* ---- character grid ---- */
+/* density ramp drawn from the disc's own character vocabulary */
+const RAMP = " `.,:;!jz7tfsukhRDWQ@#";
+const COLS = 48, ROWS = 24, CELLW = 5, CELLH = 10;   /* 240 x 240 block */
+
+const main = ui('art-main'), glow = ui('art-glow');
+(function(){                       /* force the advance to CELLW, as the disc does to 7.325 */
+  const probe = document.createElement('span');
+  probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre';
+  probe.textContent = '0'.repeat(100);
+  main.appendChild(probe);
+  const adv = probe.getBoundingClientRect().width / 100;
+  probe.remove();
+  const ls = (CELLW - adv).toFixed(3) + 'px';
+  main.style.letterSpacing = ls; glow.style.letterSpacing = ls;
+})();
+
+const esc = c => c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':c;
+const post = v => Math.round(v/64)*64;               /* 4 levels per channel: hard, blocky */
+
+function renderGrid(px){
+  let out = '';
+  for (let y=0; y<ROWS; y++){
+    let run='', col=null;
+    const flush = () => { if(run){ out += col ? '<span style="color:'+col+'">'+run+'</span>' : run; run=''; } };
+    for (let x=0; x<COLS; x++){
+      const i = (y*COLS + x) * 4;
+      const r = px[i], g = px[i+1], b = px[i+2];
+      const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
+      const ch  = RAMP[Math.min(RAMP.length-1, Math.round(lum * (RAMP.length-1)))];
+      const c   = ch===' ' ? null : 'rgb('+post(r)+','+post(g)+','+post(b)+')';
+      if (c !== col){ flush(); col = c; }
+      run += esc(ch);
+    }
+    flush(); out += '\n';
+  }
+  main.innerHTML = out; glow.innerHTML = out;
+}
+
+/* ---- palette extraction: five stops, dark to light, into the c0..c4 ramp ---- */
+function toHsl(r,g,b){
+  r/=255; g/=255; b/=255;
+  const mx=Math.max(r,g,b), mn=Math.min(r,g,b), l=(mx+mn)/2;
+  if (mx===mn) return [0,0,l];
+  const d=mx-mn, s = l>0.5 ? d/(2-mx-mn) : d/(mx+mn);
+  let h;
+  if (mx===r) h=((g-b)/d + (g<b?6:0))/6;
+  else if (mx===g) h=((b-r)/d + 2)/6;
+  else h=((r-g)/d + 4)/6;
+  return [h,s,l];
+}
+function toHex(h,s,l){
+  const f = n => {
+    const k=(n+h*12)%12, a=s*Math.min(l,1-l);
+    const v=l - a*Math.max(-1, Math.min(k-3, Math.min(9-k, 1)));
+    return Math.round(v*255).toString(16).padStart(2,'0');
+  };
+  return '#'+f(0)+f(8)+f(4);
+}
+
+function extract(px){
+  const bins = new Map();
+  for (let i=0; i<px.length; i+=4){
+    if (px[i+3] < 128) continue;
+    const r=px[i], g=px[i+1], b=px[i+2];
+    const key = (r>>4)+','+(g>>4)+','+(b>>4);
+    const e = bins.get(key) || {n:0,r:0,g:0,b:0};
+    e.n++; e.r+=r; e.g+=g; e.b+=b; bins.set(key,e);
+  }
+  const cand = [...bins.values()].map(e=>{
+    const r=e.r/e.n, g=e.g/e.n, b=e.b/e.n;
+    const [h,s,l] = toHsl(r,g,b);
+    return { h,s,l, score: e.n * (0.35 + s) * (l>0.04 && l<0.97 ? 1 : 0.15) };
+  }).sort((a,b)=>b.score-a.score);
+
+  const picked = [];
+  for (const c of cand){
+    if (picked.length === 5) break;
+    /* keep the five reasonably far apart in hue+lightness */
+    const clash = picked.some(p => {
+      let dh = Math.abs(p.h-c.h); dh = Math.min(dh, 1-dh);
+      return dh < 0.06 && Math.abs(p.l-c.l) < 0.14;
+    });
+    if (!clash) picked.push(c);
+  }
+  while (picked.length < 5) picked.push(picked[picked.length-1] || {h:0.6,s:.3,l:.5});
+
+  picked.sort((a,b)=>a.l-b.l);
+  /* anchor the ends so the ramp always has a real floor and ceiling, as c0/c1 do */
+  const stops = picked.map((c,i) => {
+    let s=c.s, l=c.l;
+    if (i===0){ l=Math.min(l,0.10); s=Math.min(s,0.55); }
+    if (i===4){ l=Math.max(l,0.90); s=Math.min(s,0.22); }
+    if (i===1){ l=Math.min(Math.max(l,0.16),0.34); }
+    if (i===2){ l=Math.min(Math.max(l,0.38),0.56); s=Math.max(s,0.35); }
+    if (i===3){ l=Math.min(Math.max(l,0.62),0.82); }
+    return toHex(c.h, s, l);
+  });
+  /* gradient runs c0 -> c2 -> c4 -> c3 -> c1, dark to light */
+  return { c0:stops[0], c2:stops[1], c4:stops[2], c3:stops[3], c1:stops[4] };
+}
+
+function applyPalette(p){
+  const r = document.documentElement.style;
+  for (const k in p) r.setProperty('--'+k, p[k]);
+}
+const BASE = { c0:'#0A0F19', c1:'#ECE7E3', c2:'#123767', c3:'#F6A2C6', c4:'#1D69C9' };
+
+/* ---- title fitting ---- */
+function fitTitle(){
+  const el = ui('title');
+  let size = 48;
+  el.style.fontSize = size + 'px';
+  while (el.scrollWidth > el.clientWidth && size > 24){
+    size -= 2; el.style.fontSize = size + 'px';
+  }
+}
+
+/* ---- data ---- */
+const cv = document.createElement('canvas'); cv.width = COLS; cv.height = ROWS;
+const cx = cv.getContext('2d', { willReadFrequently:true });
+const pv = document.createElement('canvas'); pv.width = 40; pv.height = 40;
+const px2 = pv.getContext('2d', { willReadFrequently:true });
+
+let lastKey = null, lastImg = null;
+
+function paintFrom(src){
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => {
+      cx.drawImage(img, 0, 0, COLS, ROWS);
+      renderGrid(cx.getImageData(0, 0, COLS, ROWS).data);
+      if (usePal){
+        px2.drawImage(img, 0, 0, 40, 40);
+        applyPalette(extract(px2.getImageData(0, 0, 40, 40).data));
+      } else applyPalette(BASE);
+      res(true);
+    };
+    img.onerror = () => res(false);
+    img.src = src;                       /* data: URI — same-origin, canvas stays clean */
+  });
+}
+
+async function poll(){
+  try{
+    const res  = await fetch(API, { cache:'no-store' });
+    const data = await res.json();
+
+    const online = data.online !== false && !!data.song;
+    document.body.classList.toggle('offline', !online);
+
+    if (!online){
+      ui('label').textContent = 'Offline';
+      ui('title').textContent = 'Nothing playing';
+      ui('artists').textContent = '';
+      fitTitle();
+      lastKey = 'offline';
+      return;
+    }
+
+    const key = data.song + '|' + (data.artists || '');
+    if (key === lastKey && data.image === lastImg) return;
+    lastKey = key;
+
+    ui('label').textContent   = 'Now playing';
+    ui('title').textContent   = data.song;
+    ui('artists').textContent = data.artists || '';
+    fitTitle();
+
+    if (data.image && data.image !== lastImg){
+      lastImg = data.image;
+      const ok = await paintFrom(data.image);
+      if (!ok){ main.innerHTML = ''; glow.innerHTML = ''; applyPalette(BASE); }
+    }
+  } catch(e){
+    /* endpoint blipped: keep whatever is on screen and try again next tick */
+  }
+}
+
+/* ---- controls ---- */
+ui('poll').addEventListener('input', e=>{
+  const v = +e.target.value;
+  if (v>=3 && v<=120){ POLL = v; restart(); syncURL(); }
+});
+ui('grid').addEventListener('change', e=>{ document.body.classList.toggle('nogrid', !e.target.checked); syncURL(); });
+ui('glow').addEventListener('change', e=>{ document.body.classList.toggle('noglow', !e.target.checked); syncURL(); });
+ui('sq').addEventListener('change',   e=>{ document.body.classList.toggle('anim-squares', e.target.checked); syncURL(); });
+ui('pal').addEventListener('change',  e=>{
+  usePal = e.target.checked;
+  if (!usePal) applyPalette(BASE); else { lastImg = null; lastKey = null; poll(); }
+  syncURL();
+});
+addEventListener('keydown', e=>{ if(e.key==='h'||e.key==='H'){ document.body.classList.toggle('nopanel'); syncURL(); } });
+
+/* ---- stage fit + OBS lifecycle ---- */
+const stage = ui('stage');
+function fit(){ stage.style.transform = 'scale(' + Math.min(innerWidth/1000, innerHeight/320) + ')'; }
+addEventListener('resize', fit); fit();
+
+let timer = null;
+function restart(){ clearInterval(timer); timer = setInterval(poll, POLL*1000); }
+function refresh(){ lastKey = null; lastImg = null; poll(); restart(); }
+
+addEventListener('obsSourceVisibleChanged', e=>{ if (!e || !e.detail || e.detail.visible) refresh(); });
+addEventListener('obsSourceActiveChanged',  e=>{ if (!e || !e.detail || e.detail.active)  refresh(); });
+document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) refresh(); });
+
+applyPalette(BASE);
+poll();
+restart();
+</script>
+</body>
+</html>
