@@ -756,7 +756,11 @@ function npRender(){
   const cols=NP.cols, rows=NP.rows;
   npcv.width=cols; npcv.height=rows;
   npcx.clearRect(0,0,cols,rows);
-  npcx.drawImage(curImg, 0, 0, cols, rows);
+  /* covers may not be square: fill the grid from a centered square crop
+     instead of squashing the whole image into it */
+  const iw=curImg.naturalWidth||curImg.width, ih=curImg.naturalHeight||curImg.height;
+  const side=Math.min(iw,ih), sx=(iw-side)/2, sy=(ih-side)/2;
+  npcx.drawImage(curImg, sx, sy, side, side, 0, 0, cols, rows);
   const px=npcx.getImageData(0,0,cols,rows).data;
   const ramp=NP.ramp, RN=ramp.length-1;
   const lines=[];
@@ -819,7 +823,9 @@ function loadImage(src){
       curImg = img;
       const c = document.createElement('canvas'); c.width = c.height = 40;
       const g = c.getContext('2d', { willReadFrequently:true });
-      g.drawImage(img, 0, 0, 40, 40);
+      const pw=img.naturalWidth||img.width, ph=img.naturalHeight||img.height;
+      const ps=Math.min(pw,ph);
+      g.drawImage(img, (pw-ps)/2, (ph-ps)/2, ps, ps, 0, 0, 40, 40); /* same crop as the grid */
       CPAL = extract(g.getImageData(0,0,40,40).data);
       applyPalette(); npRender(); res(true);
     };
