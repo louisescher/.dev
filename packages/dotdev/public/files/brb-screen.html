@@ -9,17 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/marqy@1/dist/marqy.css">
 <script type="module">import 'https://esm.run/marqy@1/vanilla';</script>
-<script>
-/* ─── credentials ───────────────────────────────────────────────────────────
-   Kept out of the URL on purpose, so the panel never writes them into a
-   query string you might have on screen. ?user= and ?key= still override.
-   Key: https://www.last.fm/api/account/create */
-const CONFIG = {
-  user: '',            // Last.fm username
-  key : '',            // Last.fm API key
-  art : '/api/status', // endpoint supplying { image: "data:...", artists: "..." }
-};
-</script>
 <style>
   :root{ --c0:#0A0F19; --c1:#ECE7E3; --c2:#123767; --c3:#F6A2C6; --c4:#1D69C9; }
   *{box-sizing:border-box}
@@ -203,7 +192,7 @@ const CONFIG = {
   <label><span>squares anim</span><input id="sq" type="checkbox" checked></label>
   <label><span>globe anim</span><input id="gl" type="checkbox" checked></label>
   <label><span>polyhedron anim</span><input id="po" type="checkbox" checked></label>
-  <small>?text=... sets the headline · ?user= ?key= ?art= override credentials · H toggles panel</small>
+  <small>?text=... sets the headline · ?user= ?key= ?art= set the Last.fm source · H toggles panel</small>
 </div>
 
 <script>
@@ -726,9 +715,11 @@ function polyTick(t){
 }
 
 /* ---- now playing: character-grid album art + track meta, palette source ---- */
-const USER = Q.get('user') || CONFIG.user;
-const KEY  = Q.get('key')  || CONFIG.key;
-const ARTE = Q.get('art')  || CONFIG.art;
+/* credentials come from the URL — this file is public, nothing is baked in.
+   Key: https://www.last.fm/api/account/create */
+const USER = Q.get('user') || '';
+const KEY  = Q.get('key')  || '';
+const ARTE = Q.get('art')  || '/api/status'; /* { image: "data:...", artists: "..." } */
 /* fixed render settings: dense 70-step ramp, no knobs, no query params */
 const NP = { ramp:' .\'`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$',
              size:110, cols:72, rows:48, gam:1, con:1.15, sat:1.2, lev:6 };
@@ -848,7 +839,7 @@ async function npPoll(){
   if (!USER || !KEY){
     ui('np-label').textContent = 'Setup';
     setText(ui('np-title'), 'Add a Last.fm user and key');
-    setText(ui('np-artists'), 'top of this file, or ?user= &key=');
+    setText(ui('np-artists'), '?user= and ?key= in the URL');
     document.body.classList.add('offline');
     return;
   }
