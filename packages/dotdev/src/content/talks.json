@@ -1,0 +1,10 @@
+[
+	{
+		"id": "astro-compiler",
+		"title": "Astro's new Carapace",
+		"description": "A talk about the Astro Compiler and why we moved from Go to Rust. Originally held at Astro Toghether FRA x Seibert in Wiesbaden.",
+		"event": "Astro Together FRA x Seibert",
+		"location": "Wiesbaden",
+		"year": 2026
+	}
+]

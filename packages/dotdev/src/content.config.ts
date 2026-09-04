@@ -134,6 +134,19 @@ const music = defineCollection({
 		}),
 });
 
+const talks = defineCollection({
+	loader: file("src/content/talks.json"),
+	schema: z.object({
+		id: z.string(),
+		title: z.string(),
+		description: z.string(),
+		event: z.string(),
+		location: z.string(),
+		year: z.number(),
+		date: z.coerce.date().optional(),
+	}),
+});
+
 export const collections = {
 	tags,
 	posts,
@@ -144,4 +157,5 @@ export const collections = {
 	music,
 	reviews,
 	positions,
+	talks,
 };

@@ -8,7 +8,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["./packages/**"]
+		"includes": ["./packages/**", "!./packages/talks/**"]
 	},
 	"formatter": {
 		"enabled": true,

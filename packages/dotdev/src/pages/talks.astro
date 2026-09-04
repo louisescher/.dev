@@ -1,0 +1,104 @@
+---
+import "../styles/article-list.css";
+
+import { getCollection } from "astro:content";
+import Card from "../components/Card.astro";
+import Icon from "../components/Icon.astro";
+import Layout from "../layouts/Layout.astro";
+
+const talks = (await getCollection("talks")).sort(
+	(a, b) => sortKey(b.data) - sortKey(a.data),
+);
+
+const years = talks.map((talk) => talk.data.year);
+const span =
+	years.length === 0
+		? "None yet"
+		: Math.min(...years) === Math.max(...years)
+			? `${years[0]}`
+			: `${Math.min(...years)} to ${Math.max(...years)}`;
+
+function sortKey(talk: { year: number; date?: Date }) {
+	return talk.date?.getTime() ?? new Date(talk.year, 0, 1).getTime();
+}
+---
+
+<Layout
+	title={"Talks"}
+	description={"Slides from the talks I've held at events."}
+	pagefindIgnore
+>
+	<div class="layout-grid-left" slot="left">
+		<Card class="flex-col-card">
+			<h2 class="no-mt">About</h2>
+			<p>Every talk I've ever held! Click on an entry to see the slide deck.</p>
+			<hr />
+			<ul class="overview-list">
+				<li>
+					<Icon
+						type="lucide"
+						name="mic-vocal"
+						width={24}
+						height={24}
+						class="glow-icon"
+					/>
+					<span>{talks.length} {talks.length === 1 ? "talk" : "talks"}</span>
+				</li>
+				<li>
+					<Icon
+						type="lucide"
+						name="calendar-days"
+						width={24}
+						height={24}
+						class="glow-icon"
+					/>
+					<span>{span}</span>
+				</li>
+			</ul>
+		</Card>
+	</div>
+	<div class="layout-grid-right" slot="right">
+		<Card>
+			<div class="header-container">
+				<Icon
+					type="lucide"
+					name="presentation"
+					width={24}
+					height={24}
+					class="glow-icon"
+				/>
+				<h2>All Talks</h2>
+			</div>
+			<div class="content-container">
+				{talks.length === 0 && <p>No decks have been published yet.</p>}
+				{
+					talks.map(({ data: talk }) => (
+						<a href={`/talks/${talk.id}/`} class="post-container">
+							<div class="post-header">
+								<h3>{talk.title}</h3>
+								<span class="post-date">
+									{talk.date ? talk.date.toLocaleDateString() : talk.year}
+								</span>
+							</div>
+							<span>{talk.description}</span>
+							<span class="talk-meta">
+								{[talk.event, talk.location].filter(Boolean).join(" / ")}
+							</span>
+						</a>
+					))
+				}
+			</div>
+		</Card>
+	</div>
+</Layout>
+<style>
+	hr {
+		margin: 1.5rem 0;
+	}
+
+	.talk-meta {
+		color: #c7c7c7;
+		font-family: "Geist Mono", monospace;
+		font-size: 0.925rem;
+	}
+</style>
