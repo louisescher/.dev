@@ -31,7 +31,7 @@ function sortKey(talk: { year: number; date?: Date }) {
 	<div class="layout-grid-left" slot="left">
 		<Card class="flex-col-card">
 			<h2 class="no-mt">About</h2>
-			<p>Every talk I've ever held! Click on an entry to see the slide deck.</p>
+			<p>Every talk I've ever held!</p>
 			<hr />
 			<ul class="overview-list">
 				<li>
@@ -42,7 +42,9 @@ function sortKey(talk: { year: number; date?: Date }) {
 						height={24}
 						class="glow-icon"
 					/>
-					<span>{talks.length} {talks.length === 1 ? "talk" : "talks"}</span>
+					<span>
+						{talks.length} {talks.length === 1 ? "talk" : "talks"}
+					</span>
 				</li>
 				<li>
 					<Icon
@@ -71,27 +73,45 @@ function sortKey(talk: { year: number; date?: Date }) {
 			</div>
 			<div class="content-container">
 				{talks.length === 0 && <p>No decks have been published yet.</p>}
-				{
-					talks.map(({ data: talk }) => (
-						<a href={`/talks/${talk.id}/`} class="post-container">
-							<div class="post-header">
-								<h3>{talk.title}</h3>
-								<span class="post-date">
-									{talk.date ? talk.date.toLocaleDateString() : talk.year}
-								</span>
-							</div>
-							<span>{talk.description}</span>
-							<span class="talk-meta">
-								{[talk.event, talk.location].filter(Boolean).join(" / ")}
+				{talks.map(({ data: talk }) => (
+					<div class="talk-container">
+						<div class="post-header">
+							<h3>{talk.title}</h3>
+							<span class="post-date">
+								{talk.date ? talk.date.toLocaleDateString() : talk.year}
 							</span>
-						</a>
-					))
-				}
+						</div>
+						<span>{talk.description}</span>
+						<span class="talk-meta">
+							Originally held at {talk.event} in {talk.location}
+						</span>
+						<div class="talk-links">
+							<a href={`/talks/${talk.id}/`}>View Slides</a>
+							{talk.recording && <a href={talk.recording}>Watch Recording</a>}
+						</div>
+					</div>
+				))}
 			</div>
 		</Card>
 	</div>
 </Layout>
 <style>
+	.talk-container {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 1rem;
+		border: 1px solid #353535;
+		color: #ffffff;
+		text-decoration: none;
+	}
+
+	.talk-links {
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
+	}
+
 	hr {
 		margin: 1.5rem 0;
 	}

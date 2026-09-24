@@ -1,0 +1,121 @@
+---
+import "../styles/article.css";
+
+import type { CollectionEntry } from "astro:content";
+import { getCollection, render } from "astro:content";
+import { giscus } from "spectre:globals";
+import type { GetStaticPaths } from "astro";
+import Card from "../components/Card.astro";
+import Layout from "../layouts/Layout.astro";
+import { getEntry } from "astro:content";
+
+interface Props {
+	post: CollectionEntry<"posts">;
+}
+
+const statement = await getEntry("other", "ai-statement")!;
+
+const { Content, headings } = await render(statement);
+---
+
+<Layout title={statement.data.title} description={statement.data.description}>
+	<div class="left" slot="left">
+		<Card class="toc-card">
+			<h2 class="no-mt">Table of contents</h2>
+			<ol>
+				<li class="toc-li">
+					<a href={`#_top`} class="active">
+						{statement.data.title}
+					</a>
+				</li>
+				{headings.map((heading) => (
+					<li class="toc-li" data-depth={heading.depth}>
+						<a href={`#${heading.slug}`}>{heading.text}</a>
+					</li>
+				))}
+			</ol>
+		</Card>
+	</div>
+	<article slot="right" data-pagefind-body>
+		<Card>
+			<div class="article-header" id="_top" data-pagefind-ignore>
+				<div>
+					<div>
+						<h1 class="no-mt article-h1">{statement.data.title}</h1>
+					</div>
+					<div class="article-info">
+						<span>{statement.data.createdAt.toLocaleDateString()}</span>
+					</div>
+				</div>
+			</div>
+			<Content />
+			<hr class="end-of-hints" />
+			<a href="/blog" class="block-link" data-pagefind-ignore>
+				← Back to blog
+			</a>
+		</Card>
+	</article>
+</Layout>
+<script src="../scripts/toc.ts"></script>
+<style is:global>
+	.toc-card ol {
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin-bottom: 0;
+		list-style-type: none;
+		position: relative;
+	}
+
+	.toc-card ol li a {
+		color: #c7c7c7;
+		font-size: 0.925rem;
+		padding: 0.25rem 0.5rem;
+		box-decoration-break: clone;
+		-webkit-box-decoration-break: clone;
+	}
+
+	.toc-card ol li a:hover {
+		color: white;
+		text-decoration: none;
+	}
+
+	.toc-card ol li a.active {
+		color: white;
+		background: var(--primary);
+	}
+
+	.left {
+		height: 100%;
+		position: relative;
+	}
+
+	.toc-card {
+		position: sticky;
+		top: 2rem;
+	}
+
+	article {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	.comments * {
+		border-color: #353535 !important;
+	}
+
+	@media screen and (max-width: 768px) {
+		article {
+			gap: 1rem;
+		}
+	}
+
+	.hints {
+		display: flex;
+		gap: 1rem;
+		margin-top: 1rem;
+		flex-wrap: wrap;
+	}
+</style>

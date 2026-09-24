@@ -143,6 +143,7 @@ const talks = defineCollection({
 		event: z.string(),
 		location: z.string(),
 		year: z.number(),
+		recording: z.string().optional(),
 		date: z.coerce.date().optional(),
 	}),
 });

@@ -21,20 +21,22 @@ const tags = posts.flatMap((post) => post.data.tags.map((tag) => tag.id));
 		<Card class="flex-col-card">
 			<h2 class="no-mt">Filter</h2>
 			<ul class="tags-list">
-				{
-					Array.from(new Set(tags)).map((tag) => (
-						<li>
-							<a class="blog-tag" href="/blog" data-tag={tag}>
-								{tag}
-							</a>
-						</li>
-					))
-				}
+				{Array.from(new Set(tags)).map((tag) => (
+					<li>
+						<a class="blog-tag" href="/blog" data-tag={tag}>
+							{tag}
+						</a>
+					</li>
+				))}
 			</ul>
 		</Card>
 		<RSSHint card />
 	</div>
 	<div class="layout-grid-right" slot="right">
+		<div class="search-container">
+			<input id="search" type="text" placeholder="Search (Ctrl+K)" />
+			<div id="search-results"></div>
+		</div>
 		<Card>
 			<div class="header-container">
 				<Icon
@@ -47,31 +49,131 @@ const tags = posts.flatMap((post) => post.data.tags.map((tag) => tag.id));
 				<h2>Latest Posts</h2>
 			</div>
 			<div class="content-container">
-				{
-					posts
-						.sort(
-							(a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime(),
-						)
-						.map((post) => (
-							<a
-								href={`/blog/${post.id}`}
-								class="post-container"
-								data-tags={post.data.tags.map((tag) => tag.id).join(",")}
-							>
-								<div class="post-header">
-									<h3>{post.data.title}</h3>
-									<span class="post-date">
-										{post.data.createdAt.toLocaleDateString()}
-									</span>
-								</div>
-								<span>{post.data.description}</span>
-							</a>
-						))
-				}
+				{posts
+					.sort(
+						(a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime(),
+					)
+					.map((post) => (
+						<a
+							href={`/blog/${post.id}`}
+							class="post-container"
+							data-tags={post.data.tags.map((tag) => tag.id).join(",")}
+						>
+							<div class="post-header">
+								<h3>{post.data.title}</h3>
+								<span class="post-date">
+									{post.data.createdAt.toLocaleDateString()}
+								</span>
+							</div>
+							<span>{post.data.description}</span>
+						</a>
+					))}
 			</div>
 		</Card>
 	</div>
 </Layout>
+<script is:inline>
+	const searchElement = document.querySelector("#search");
+	const results = document.querySelector("#search-results");
+
+	let focusIndex = -1;
+
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "k" && e.ctrlKey) {
+			searchElement.focus();
+		}
+
+		if (e.key === "Escape") {
+			searchElement.blur();
+			results.classList.remove("active");
+			focusIndex = -1;
+		}
+
+		if (e.key === "ArrowDown") {
+			e.preventDefault();
+
+			focusIndex++;
+			const results = document.querySelectorAll("#search-results a");
+
+			if (focusIndex >= results.length) {
+				focusIndex = 0;
+			}
+
+			results[focusIndex]?.focus();
+		}
+
+		if (e.key === "ArrowUp") {
+			e.preventDefault();
+
+			focusIndex--;
+			const results = document.querySelectorAll("#search-results a");
+
+			if (focusIndex < 0) {
+				focusIndex = results.length - 1;
+			}
+
+			results[focusIndex]?.focus();
+		}
+	});
+
+	searchElement?.addEventListener("focus", () => {
+		searchElement.placeholder = "";
+		results.classList.add("active");
+	});
+
+	searchElement?.addEventListener("blur", () => {
+		searchElement.placeholder = "Search (Ctrl+K)";
+	});
+
+	searchElement?.addEventListener("blur", () => {
+		setTimeout(() => {
+			if (!document.activeElement?.closest("#search-results")) {
+				results.classList.remove("active");
+				focusIndex = -1;
+			}
+		}, 1);
+	});
+
+	results?.addEventListener("focusout", (e) => {
+		if (!e.relatedTarget?.closest("#search-results")) {
+			results.classList.remove("active");
+			focusIndex = -1;
+		}
+	});
+
+	searchElement?.addEventListener("input", async (e) => {
+		if (e.target.dataset.loaded !== "true") {
+			e.target.dataset.loaded = "true";
+
+			window.pagefind = await import("/pagefind/pagefind.js");
+		}
+
+		results.innerHTML = "";
+
+		const search = await window.pagefind.search(e.target.value);
+
+		let i = 0;
+		for (const result of search.results) {
+			i++;
+
+			const data = await result.data();
+
+			results.innerHTML += `
+				<a href="${data.url}">
+					<h3 class="no-mt">${data.meta.title}</h3>
+					<p>${data.excerpt}</p>
+				</a>
+				${i < search.results.length ? '<hr class="separator">' : ""}
+			`;
+		}
+
+		if (search.results.length === 0 && e.target.value.length > 0) {
+			results.innerHTML = '<p style="margin-top: 0;">No results found</p>';
+		}
+
+		results.classList.add("active");
+	});
+</script>
 <script>
 	const tags = document.querySelectorAll<HTMLAnchorElement>(".blog-tag");
 	const url = new URL(window.location.href);
@@ -116,3 +218,48 @@ const tags = posts.flatMap((post) => post.data.tags.map((tag) => tag.id));
 		}
 	});
 </script>
+<style>
+	.search-container {
+		position: relative;
+		width: 100%;
+	}
+
+	#search {
+		padding: 0.75rem 1.5rem;
+		width: 100%;
+		height: auto;
+		background-color: #121212;
+		border: 1px solid #353535;
+		overflow: hidden;
+		margin-bottom: 1rem;
+	}
+
+	#search::placeholder {
+		color: white;
+	}
+
+	#search:focus {
+		background-color: var(--primary);
+	}
+
+	#search-results {
+		position: absolute;
+		top: calc(100%);
+		right: 0;
+		background-color: #252525;
+		border: 1px solid var(--primary);
+		display: none;
+		width: 100%;
+		z-index: 10;
+		padding: 0.5rem;
+		overflow-x: hidden;
+		overflow-y: auto;
+		max-height: 50vh;
+		font-size: 0.825em;
+		box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+	}
+
+	#search-results.active:has(*) {
+		display: block;
+	}
+</style>
