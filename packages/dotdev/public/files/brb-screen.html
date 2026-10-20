@@ -225,7 +225,7 @@ const FROZEN = new Set([...hubSet, ...RING]);
 const inGrid = (x,y)=>y>=0&&y<H&&x>=0&&x<W;
 
 function sampleIdx(su, sv, lock){
-  let [xi,yi] = toCell(su,sv);
+  const [xi,yi] = toCell(su,sv);
   if (!inGrid(xi,yi)) return -1;
   const blocked = lock ? FROZEN : hubSet;
   if (blocked.has(yi*W+xi)){
@@ -500,7 +500,7 @@ const sctx=small.getContext('2d');
 const idata=sctx.createImageData(FLW,FLH);
 let F=new Float32Array(NPX*3), G=new Float32Array(NPX*3);
 const EDGE=new Float32Array(NPX);
-let BASEF=new Float32Array(NPX*3);
+const BASEF=new Float32Array(NPX*3);
 let INJ=[], retint=0;
 for (let y=0;y<FLH;y++) for (let x=0;x<FLW;x++){
   EDGE[y*FLW+x]=Math.min(Math.min(x,FLW-1-x)/14, Math.min(y,FLH-1-y)/14, 1);
@@ -650,7 +650,7 @@ const ROLLAXIS=(()=>{ const w=[0.30,0.50,-0.81], n=Math.hypot(...w); return w.ma
 const PPAL={dark:[10,15,25], blue:[29,105,201], pink:[246,162,198]}; /* retinted per cover */
 const mix=(a,b,f)=>a.map((v,i)=>Math.round(v*(1-f)+b[i]*f));
 const rgb=c=>'rgb('+c[0]+','+c[1]+','+c[2]+')';
-const easeOutCubic=u=>1-Math.pow(1-u,3);
+const easeOutCubic=u=>1-(1-u) ** 3;
 
 function drawSolid(M, cx, cy, fillO){
   /* project, painter-sort faces back to front, lambert shade */
@@ -703,7 +703,7 @@ function polyTick(t){
     /* dice roll: travel with ease-out, decaying bounces, spin coupled to distance */
     const u=Math.min(1, t/INTRO), e=easeOutCubic(u);
     const x=-80+(PCX+80)*e;
-    const y=PCY-120*Math.pow(1-u,1.7)*Math.abs(Math.sin(3*Math.PI*u));
+    const y=PCY-120*(1-u) ** 1.7*Math.abs(Math.sin(3*Math.PI*u));
     const M=mul3(axisRot(ROLLAXIS,(PCX-x)/PR), ambP(INTRO));
     drawSolid(M, x, y, 1);
   } else {
@@ -729,7 +729,7 @@ function shape(r,g,b){
   r = gray + (r-gray)*NP.sat; g = gray + (g-gray)*NP.sat; b = gray + (b-gray)*NP.sat;
   const step = 255 / (NP.lev - 1);
   const q = v => {
-    let n = Math.pow(Math.max(0, Math.min(1, v/255)), NP.gam);
+    let n = Math.max(0, Math.min(1, v/255)) ** NP.gam;
     n = (n - 0.5) * NP.con + 0.5;
     n = Math.max(0, Math.min(1, n));
     return Math.round(Math.round(n*255 / step) * step);

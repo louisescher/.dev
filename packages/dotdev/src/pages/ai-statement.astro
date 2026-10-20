@@ -2,12 +2,11 @@
 import "../styles/article.css";
 
 import type { CollectionEntry } from "astro:content";
-import { getCollection, render } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 import { giscus } from "spectre:globals";
 import type { GetStaticPaths } from "astro";
 import Card from "../components/Card.astro";
 import Layout from "../layouts/Layout.astro";
-import { getEntry } from "astro:content";
 
 interface Props {
 	post: CollectionEntry<"posts">;

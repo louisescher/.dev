@@ -656,7 +656,7 @@
 				b = gray + (b - gray) * S.sat;
 				const step = 255 / (S.lev - 1);
 				const q = (v) => {
-					let n = Math.pow(Math.max(0, Math.min(1, v / 255)), S.gam);
+					let n = Math.max(0, Math.min(1, v / 255)) ** S.gam;
 					n = (n - 0.5) * S.con + 0.5;
 					n = Math.max(0, Math.min(1, n));
 					return Math.round(Math.round((n * 255) / step) * step);
@@ -935,7 +935,7 @@
 			const EDGE = new Float32Array(NPX);
 			let F = new Float32Array(NPX * 3),
 				G = new Float32Array(NPX * 3);
-			let BASEF = new Float32Array(NPX * 3);
+			const BASEF = new Float32Array(NPX * 3);
 			let INJ = [],
 				retint = 0,
 				fluidGate = false;
@@ -1296,7 +1296,7 @@
 			}
 
 			/* ─── icosahedron: ambient tumble, same clock as the BRB screen ──────────── */
-			const ICO = (function () {
+			const ICO = (() => {
 				const P = (1 + Math.sqrt(5)) / 2,
 					raw = [];
 				for (const a of [1, -1])
@@ -1320,7 +1320,7 @@
 			})();
 
 			const polyG = ui("sym-poly");
-			const polyLines = ICO.E.map(function () {
+			const polyLines = ICO.E.map(() => {
 				const l = document.createElementNS(
 					"http://www.w3.org/2000/svg",
 					"line",
@@ -1359,7 +1359,7 @@
 
 			function drawPoly(t) {
 				const M = amb(t + S.phs);
-				const pts = ICO.V.map(function (v) {
+				const pts = ICO.V.map((v) => {
 					const p = ap(M, v);
 					return [PCX + PR * p[0], PCY + PR * p[1], p[2]];
 				});
@@ -1479,8 +1479,8 @@
 				syncURL();
 			}
 
-			NUMS.forEach(function (k) {
-				ui(k).addEventListener("input", function (e) {
+			NUMS.forEach((k) => {
+				ui(k).addEventListener("input", (e) => {
 					const v = parseFloat(e.target.value);
 					if (!isNaN(v)) {
 						S[k] =
@@ -1490,20 +1490,20 @@
 				});
 			});
 			for (const k in BOOLS) {
-				(function (k) {
-					ui(BOOLS[k]).addEventListener("change", function (e) {
+				((k) => {
+					ui(BOOLS[k]).addEventListener("change", (e) => {
 						S[k] = e.target.checked;
 						changed(k);
 					});
 				})(k);
 			}
-			SELS.forEach(function (k) {
-				ui(k).addEventListener("change", function (e) {
+			SELS.forEach((k) => {
+				ui(k).addEventListener("change", (e) => {
 					S[k] = e.target.value;
 					changed(k);
 				});
 			});
-			addEventListener("keydown", function (e) {
+			addEventListener("keydown", (e) => {
 				if (e.key === "h" || e.key === "H") {
 					S.panel = !S.panel;
 					applyFlags();
@@ -1517,7 +1517,7 @@
 				stageScale = Math.min(innerWidth / 1000, innerHeight / 320);
 				stage.style.transform = "scale(" + stageScale + ")";
 			}
-			addEventListener("resize", function () {
+			addEventListener("resize", () => {
 				fit();
 				remeasure();
 			});
@@ -1536,13 +1536,13 @@
 				restart();
 			}
 
-			addEventListener("obsSourceVisibleChanged", function (e) {
+			addEventListener("obsSourceVisibleChanged", (e) => {
 				if (!e || !e.detail || e.detail.visible) refresh();
 			});
-			addEventListener("obsSourceActiveChanged", function (e) {
+			addEventListener("obsSourceActiveChanged", (e) => {
 				if (!e || !e.detail || e.detail.active) refresh();
 			});
-			document.addEventListener("visibilitychange", function () {
+			document.addEventListener("visibilitychange", () => {
 				if (!document.hidden) refresh();
 			});
 
@@ -1555,7 +1555,7 @@
 
 			/* webfonts land after first layout: re-measure both the grid and the marquees */
 			if (document.fonts && document.fonts.ready) {
-				document.fonts.ready.then(function () {
+				document.fonts.ready.then(() => {
 					setMetrics();
 					renderGrid();
 					remeasure();
@@ -1566,7 +1566,7 @@
 				customElements
 					.whenDefined("marqy-loop")
 					.then(remeasure)
-					.catch(function () {});
+					.catch(() => {});
 			}
 
 			poll();
