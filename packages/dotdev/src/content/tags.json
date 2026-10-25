@@ -19,5 +19,11 @@
 	},
 	{
 		"id": "malware"
+	},
+	{
+		"id": "opinion"
+	},
+	{
+		"id": "AT Protocol"
 	}
 ]
