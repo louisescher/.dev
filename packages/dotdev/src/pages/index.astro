@@ -48,41 +48,37 @@ const track = music[music.length - 1].data;
 			/>
 			<h2>{name}</h2>
 			<ul class="overview-list">
-				{
-					quickInfo.map((info) => (
-						<li>
-							<Icon
-								type={info.data.icon.type}
-								name={info.data.icon.name as any}
-								width={24}
-								height={24}
-								class="glow-icon"
-							/>
-							<span>{info.data.text}</span>
-						</li>
-					))
-				}
+				{quickInfo.map((info) => (
+					<li>
+						<Icon
+							type={info.data.icon.type}
+							name={info.data.icon.name as any}
+							width={24}
+							height={24}
+							class="glow-icon"
+						/>
+						<span>{info.data.text}</span>
+					</li>
+				))}
 			</ul>
 		</Card>
 		<Card>
 			<h3 class="no-mt">Socials</h3>
 			<ul class="overview-list">
-				{
-					socials.map((item) => (
-						<li>
-							<a href={item.data.link} class="socials-link" target="_blank">
-								<Icon
-									type={item.data.icon.type}
-									name={item.data.icon.name as any}
-									width={24}
-									height={24}
-									class="glow-icon"
-								/>
-								<span>{item.data.text}</span>
-							</a>
-						</li>
-					))
-				}
+				{socials.map((item) => (
+					<li>
+						<a href={item.data.link} class="socials-link" target="_blank">
+							<Icon
+								type={item.data.icon.type}
+								name={item.data.icon.name as any}
+								width={24}
+								height={24}
+								class="glow-icon"
+							/>
+							<span>{item.data.text}</span>
+						</a>
+					</li>
+				))}
 			</ul>
 		</Card>
 		<Card>
@@ -163,24 +159,22 @@ const track = music[music.length - 1].data;
 				<h2>Latest Posts</h2>
 			</div>
 			<div class="content-container">
-				{
-					posts
-						.sort(
-							(a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime(),
-						)
-						.slice(0, 2)
-						.map((post) => (
-							<a href={`/blog/${post.id}`} class="post-container">
-								<div class="post-header">
-									<h3>{post.data.title}</h3>
-									<span class="post-date">
-										{post.data.createdAt.toLocaleDateString()}
-									</span>
-								</div>
-								<span>{post.data.description}</span>
-							</a>
-						))
-				}
+				{posts
+					.sort(
+						(a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime(),
+					)
+					.slice(0, 2)
+					.map((post) => (
+						<a href={`/blog/${post.id}`} class="post-container">
+							<div class="post-header">
+								<h3>{post.data.title}</h3>
+								<span class="post-date">
+									{post.data.createdAt.toLocaleDateString()}
+								</span>
+							</div>
+							<span>{post.data.description}</span>
+						</a>
+					))}
 			</div>
 		</Card>
 		<Card>
@@ -195,22 +189,20 @@ const track = music[music.length - 1].data;
 				<h2>Latest Projects</h2>
 			</div>
 			<div class="content-container">
-				{
-					projects
-						.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-						.slice(0, 2)
-						.map((project) => (
-							<a href={`/projects/${project.id}`} class="post-container">
-								<div class="post-header">
-									<h3>{project.data.title}</h3>
-									<span class="post-date">
-										{project.data.date.toLocaleDateString()}
-									</span>
-								</div>
-								<span>{project.data.description}</span>
-							</a>
-						))
-				}
+				{projects
+					.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+					.slice(0, 2)
+					.map((project) => (
+						<a href={`/projects/${project.id}`} class="post-container">
+							<div class="post-header">
+								<h3>{project.data.title}</h3>
+								<span class="post-date">
+									{project.data.date.toLocaleDateString()}
+								</span>
+							</div>
+							<span>{project.data.description}</span>
+						</a>
+					))}
 			</div>
 		</Card>
 		<Card>
@@ -244,23 +236,19 @@ const track = music[music.length - 1].data;
 						</div>
 						<hr />
 						<div class="track-metadata">
-							{
-								Object.entries(track.metadata).map(([key, value]) => {
-									const Tag = typeof value === "string" ? "span" : "a";
-									return (
-										<div class="metadata-entry">
-											<span class="metadata-category">{key}</span>
-											<Tag
-												href={
-													typeof value === "string" ? undefined : value.href
-												}
-											>
-												{typeof value === "string" ? value : value.text}
-											</Tag>
-										</div>
-									);
-								})
-							}
+							{Object.entries(track.metadata).map(([key, value]) => {
+								const Tag = typeof value === "string" ? "span" : "a";
+								return (
+									<div class="metadata-entry">
+										<span class="metadata-category">{key}</span>
+										<Tag
+											href={typeof value === "string" ? undefined : value.href}
+										>
+											{typeof value === "string" ? value : value.text}
+										</Tag>
+									</div>
+								);
+							})}
 						</div>
 						<hr />
 						<p class="track-desc">{track.description}</p>
@@ -281,52 +269,50 @@ const track = music[music.length - 1].data;
 				<h2>Work Experience</h2>
 			</div>
 			<div class="work-experience-container">
-				{
-					positions
-						.map(
-							(entry) =>
-								entry.data as {
-									title: string;
-									company: string;
-									startedAt: string;
-									endedAt?: string;
-									description: string;
-								},
-						)
-						.sort((a, b) => {
-							const t_a = new Date(a.startedAt).getTime();
-							const t_b = new Date(b.startedAt).getTime();
+				{positions
+					.map(
+						(entry) =>
+							entry.data as {
+								title: string;
+								company: string;
+								startedAt: string;
+								endedAt?: string;
+								description: string;
+							},
+					)
+					.sort((a, b) => {
+						const t_a = new Date(a.startedAt).getTime();
+						const t_b = new Date(b.startedAt).getTime();
 
-							return t_b - t_a;
-						})
-						.map((data) => {
-							const startedAt = new Date(data.startedAt).toLocaleDateString(
-								"en-US",
-								{
+						return t_b - t_a;
+					})
+					.map((data) => {
+						const startedAt = new Date(data.startedAt).toLocaleDateString(
+							"en-US",
+							{
+								month: "short",
+								year: "numeric",
+							},
+						);
+
+						const endedAt = data.endedAt
+							? new Date(data.endedAt).toLocaleDateString("en-US", {
 									month: "short",
 									year: "numeric",
-								},
-							);
+								})
+							: "current";
 
-							const endedAt = data.endedAt
-								? new Date(data.startedAt).toLocaleDateString("en-US", {
-										month: "short",
-										year: "numeric",
-									})
-								: "current";
-
-							return (
-								<div class="work-experience-entry">
-									<span class="work-experience-duration">
-										{startedAt} - {endedAt}
-									</span>
-									<h3 class="work-experience-company">{data.company}</h3>
-									<span class="work-experience-role">{data.title}</span>
-									<p class="work-experience-desc">{data.description}</p>
-								</div>
-							);
-						})
-				}
+						return (
+							<div class="work-experience-entry">
+								<span class="work-experience-duration">
+									{startedAt} - {endedAt}
+								</span>
+								<h3 class="work-experience-company">{data.company}</h3>
+								<span class="work-experience-role">{data.title}</span>
+								<p class="work-experience-desc">{data.description}</p>
+							</div>
+						);
+					})}
 			</div>
 		</Card>
 	</div>

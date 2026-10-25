@@ -1,0 +1,719 @@
+<title>Colibri Rooms</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:oklch(1 0 0); --fg:oklch(0.145 0 0); --muted:oklch(0.97 0 0); --mfg:oklch(0.556 0 0);
+  --bd:oklch(0.922 0 0); --side:oklch(0.985 0 0); --pri:oklch(0.541 0.281 293.009);
+  --hov:oklch(0.965 0 0); --good:oklch(0.55 0.13 155); --stage:oklch(0.955 0.006 293);
+  --shadow:0 18px 44px -20px oklch(0.2 0.02 293/.3);
+  --sans:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r:.625rem;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:oklch(0.145 0 0); --fg:oklch(0.985 0 0); --muted:oklch(0.269 0 0); --mfg:oklch(0.708 0 0);
+  --bd:oklch(1 0 0/10%); --side:oklch(0.205 0 0); --pri:oklch(0.606 0.25 292.717);
+  --hov:oklch(1 0 0/6%); --good:oklch(0.72 0.15 155); --stage:oklch(0.115 0.006 293);
+  --shadow:0 18px 44px -20px oklch(0 0 0/.65);
+}}
+:root[data-theme="dark"]{
+  --bg:oklch(0.145 0 0); --fg:oklch(0.985 0 0); --muted:oklch(0.269 0 0); --mfg:oklch(0.708 0 0);
+  --bd:oklch(1 0 0/10%); --side:oklch(0.205 0 0); --pri:oklch(0.606 0.25 292.717);
+  --hov:oklch(1 0 0/6%); --good:oklch(0.72 0.15 155); --stage:oklch(0.115 0.006 293);
+  --shadow:0 18px 44px -20px oklch(0 0 0/.65);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--stage);color:var(--fg);font-family:var(--sans);font-size:15px;
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px;border-radius:4px}
+
+.wrap{position:fixed;inset:0;display:grid;place-items:center;padding:0}
+#app{width:100%;height:100%;background:var(--bg);color:var(--fg);display:grid;
+  grid-template-columns:212px minmax(0,1fr);overflow:hidden}
+body[data-mode="mobile"] .wrap{padding:22px}
+body[data-mode="mobile"] #app{width:392px;max-width:100%;height:min(844px,100%);
+  grid-template-columns:1fr;border-radius:30px;border:1px solid var(--bd);box-shadow:var(--shadow)}
+
+/* controls */
+.bar{position:fixed;top:12px;right:12px;z-index:99;display:flex;gap:6px;align-items:center;
+  background:var(--bg);border:1px solid var(--bd);border-radius:999px;padding:4px;box-shadow:var(--shadow)}
+.bar button{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;padding:5px 11px;
+  border-radius:999px;color:var(--mfg);white-space:nowrap}
+.bar button:hover{color:var(--fg);background:var(--hov)}
+.bar button.on{background:var(--pri);color:#fff}
+.bar .sep{width:1px;align-self:stretch;background:var(--bd);margin:2px 3px}
+.bar .ico{display:grid;place-items:center;width:28px;height:28px;padding:0}
+
+/* rail */
+.rail{background:var(--side);border-right:1px solid var(--bd);display:flex;flex-direction:column;min-width:0}
+body[data-mode="mobile"] .rail{display:none}
+.rtop{display:flex;align-items:center;gap:9px;padding:13px 14px;border-bottom:1px solid var(--bd);min-width:0}
+.rtop b{font-size:13.5px;font-weight:650;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crest{width:20px;height:20px;border-radius:6px;background:var(--pri);flex:none}
+.rbody{flex:1;overflow-y:auto;overflow-x:hidden;padding:9px 8px;display:grid;gap:1px;align-content:start}
+.cat{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--mfg);padding:9px 8px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ch{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:7px;font-size:13px;
+  color:var(--mfg);width:100%;text-align:left;min-width:0}
+.ch:hover{background:var(--hov)}
+.ch.on{background:var(--hov);color:var(--fg);font-weight:600}
+.ch .gl{display:grid;flex:none;opacity:.7}
+.ch .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ch .cnt{flex:none;font-family:var(--mono);font-size:10px;color:var(--mfg)}
+.ch .cnt.hot{color:var(--pri);font-weight:600}
+.pip{flex:none;width:6px;height:6px;border-radius:999px;background:var(--pri)}
+.room{display:flex;align-items:center;gap:6px;padding:4px 8px 4px 19px;border-radius:7px;font-size:12.5px;
+  color:var(--mfg);width:100%;text-align:left;position:relative;min-width:0}
+.room::before{content:"";position:absolute;left:10px;top:1px;bottom:1px;border-left:1px solid var(--bd)}
+.room:hover{background:var(--hov)}
+.room.on{background:var(--hov);color:var(--fg);font-weight:600}
+.room .gl{display:grid;flex:none;opacity:.6}
+.room .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.room .rr{flex:none;display:flex;align-items:center;gap:4px}
+
+/* main */
+.main{display:flex;flex-direction:column;min-width:0;position:relative;overflow:hidden;background:var(--bg)}
+.top{height:46px;flex:none;display:flex;align-items:center;gap:9px;padding:0 12px;border-bottom:1px solid var(--bd);min-width:0}
+.top .gl{display:grid;flex:none;opacity:.7}
+.top b{font-size:14.5px;font-weight:650;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:0 1 auto;min-width:0}
+.crumb b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top .spacer{flex:1;min-width:0}
+.bk{display:grid;color:var(--pri);flex:none}
+.crumb{display:flex;align-items:center;gap:7px;min-width:0}
+.crumb .in{font-size:12px;color:var(--mfg);flex:none}
+.tabs{display:flex;gap:2px;flex:none;margin-left:6px}
+.tab{display:flex;align-items:center;gap:6px;padding:3px 10px;border-radius:7px;font-size:12.5px;color:var(--mfg)}
+.tab:hover{color:var(--fg)}
+.tab.on{background:var(--hov);color:var(--fg);font-weight:600}
+.tab .n{font-family:var(--mono);font-size:9.5px;opacity:.75}
+.mini{display:flex;align-items:center;gap:5px;flex:none;height:24px;padding:0 8px;border-radius:7px;
+  border:1px solid var(--bd);font-family:var(--mono);font-size:10px;color:var(--mfg)}
+.mini:hover{color:var(--fg);background:var(--hov)}
+.pres{display:flex;align-items:center;gap:5px;flex:none;font-size:11.5px;color:var(--mfg)}
+.live{width:6px;height:6px;border-radius:999px;background:var(--good);flex:none}
+.river{flex:1;overflow-y:auto;overflow-x:hidden;padding:10px 0 6px}
+.composer{flex:none;margin:0 12px 12px;border:1px solid var(--bd);border-radius:var(--r);padding:7px 8px 7px 11px;
+  font-size:13px;color:var(--mfg);display:flex;align-items:flex-end;gap:8px;cursor:text;min-width:0}
+.composer:focus-within{border-color:color-mix(in oklab,var(--pri) 55%,var(--bd))}
+.inp{flex:1;min-width:0;border:0;background:transparent;color:var(--fg);font:inherit;font-size:13.5px;
+  line-height:1.5;resize:none;outline:none;padding:3px 0;max-height:132px;overflow-y:auto;
+  font-family:var(--sans);display:block}
+.inp::placeholder{color:var(--mfg)}
+.composer .send{flex:none;width:26px;height:26px;border-radius:7px;background:var(--pri);color:#fff;
+  display:grid;place-items:center;opacity:.4;transition:opacity .12s}
+.composer .send.live{opacity:1}
+.composer .send:hover{opacity:1}
+.chip{align-self:center;display:flex;align-items:center;gap:5px;flex:none;max-width:45%;padding:3px 8px;border-radius:7px;
+  font-size:11.5px;font-weight:600;color:var(--fg);background:color-mix(in oklab,var(--pri) 15%,transparent);
+  border:1px solid color-mix(in oklab,var(--pri) 34%,transparent)}
+.chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* messages */
+.m{display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;padding:4px 14px;position:relative}
+.m:hover{background:var(--hov)}
+.m.pick{background:color-mix(in oklab,var(--pri) 11%,transparent);box-shadow:inset 2px 0 0 var(--pri)}
+.av{width:32px;height:32px;border-radius:999px;display:grid;place-items:center;font-size:12px;
+  font-weight:650;color:#fff;flex:none}
+.mh{display:flex;align-items:baseline;gap:7px;line-height:1.3;min-width:0}
+.mh b{font-size:13.5px;font-weight:650;letter-spacing:-.01em}
+.mh .role{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--pri);
+  border:1px solid color-mix(in oklab,var(--pri) 40%,transparent);border-radius:4px;padding:0 4px}
+.mh time{font-family:var(--mono);font-size:11px;color:var(--mfg)}
+.mt{font-size:13.5px;line-height:1.5;overflow-wrap:break-word}
+.mt .at{color:var(--pri);background:color-mix(in oklab,var(--pri) 14%,transparent);border-radius:4px;padding:0 3px}
+.acts{position:absolute;right:12px;top:-9px;display:flex;gap:2px;padding:2px;background:var(--bg);
+  border:1px solid var(--bd);border-radius:8px;opacity:0;pointer-events:none;transition:opacity .1s;z-index:3}
+.m:hover .acts{opacity:1;pointer-events:auto}
+body[data-mode="mobile"] .acts{display:none}
+.acts button{display:flex;align-items:center;gap:5px;height:24px;padding:0 7px;border-radius:6px;
+  font-size:11.5px;color:var(--mfg);white-space:nowrap}
+.acts button:hover{background:var(--hov);color:var(--fg)}
+.acts button.prim:hover{color:var(--pri)}
+.stackav{display:flex;flex:none}
+.stackav .av{width:17px;height:17px;font-size:8px;border:1.5px solid var(--bg)}
+.stackav .av+.av{margin-left:-5px}
+.rr .stackav .av{border-color:var(--side)}
+.day{display:flex;align-items:center;gap:10px;padding:8px 14px 6px}
+.day hr{flex:1;border:0;border-top:1px solid var(--bd);margin:0}
+.day span{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mfg)}
+
+/* seam */
+.seam{padding:2px 0 4px}
+.sys{display:flex;align-items:center;gap:7px;padding:4px 14px;font-size:11.5px;color:var(--mfg);min-width:0}
+.sys .gl{display:grid;flex:none;opacity:.6}
+.sys .lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;flex:none;opacity:.75}
+.sys button{color:var(--pri);font-size:11.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.sys .qt{font-family:var(--mono);font-size:9.5px;flex:none;opacity:.85}
+.sys .txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.echo{display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px;align-items:center;padding:3px 14px;
+  font-size:12px;color:var(--mfg)}
+.echo .tag{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--bd);border-radius:4px;padding:1px 5px;flex:none}
+.echo .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.echo em{font-style:normal;color:var(--fg);opacity:.85}
+.udot{width:7px;height:7px;border-radius:999px;background:var(--pri);flex:none}
+
+/* room view */
+.inroom{flex:1;display:flex;flex-direction:column;min-height:0;border-top:1px solid var(--bd);
+  background:color-mix(in oklab,var(--muted) 34%,transparent)}
+.cap{display:flex;align-items:center;gap:8px;padding:8px 14px 6px;flex:none;min-width:0}
+.cap .gl{display:grid;color:var(--pri);flex:none}
+.cap .t{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mfg);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.cap .mini{margin-left:auto}
+.outcome{display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px;align-items:start;margin:8px 14px;
+  padding:9px 11px;border-radius:var(--r);border:1px solid color-mix(in oklab,var(--good) 34%,var(--bd));
+  background:color-mix(in oklab,var(--good) 7%,var(--bg))}
+.outcome .gl{color:var(--good);display:grid;padding-top:1px}
+.outcome .tx{font-size:12.5px;line-height:1.5}
+.outcome .tx b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--mfg);font-weight:500;margin-bottom:2px}
+
+/* lists */
+.filters{display:flex;gap:5px;padding:10px 12px;flex:none;border-bottom:1px solid var(--bd);overflow-x:auto}
+.fb{display:flex;align-items:center;gap:6px;flex:none;padding:3px 10px;border-radius:999px;font-size:11.5px;
+  color:var(--mfg);border:1px solid var(--bd);text-transform:capitalize}
+.fb:hover{color:var(--fg)}
+.fb.on{background:var(--pri);border-color:transparent;color:#fff;font-weight:600}
+.fb .n{font-family:var(--mono);font-size:9.5px;opacity:.8}
+.fb.jump{margin-left:auto;color:var(--pri);border-color:color-mix(in oklab,var(--pri) 40%,transparent);
+  text-transform:none;font-weight:600}
+.trow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:11px;align-items:center;padding:10px 14px;
+  border-bottom:1px solid var(--bd);cursor:pointer;text-align:left;width:100%}
+.trow:hover{background:var(--hov)}
+.trow .ico{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;
+  background:color-mix(in oklab,var(--pri) 14%,transparent);color:var(--pri);flex:none}
+.trow .ico.done{background:color-mix(in oklab,var(--good) 16%,transparent);color:var(--good)}
+.trow .tt{display:flex;align-items:center;gap:7px;min-width:0}
+.trow .tt .nm{font-size:13.5px;font-weight:650;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trow .tl{font-size:12px;color:var(--mfg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+.trow .rt{display:flex;align-items:center;gap:8px;flex:none}
+.trow .n{font-family:var(--mono);font-size:10px;color:var(--mfg)}
+.state{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;padding:1px 5px;
+  border-radius:4px;border:1px solid currentColor;flex:none}
+.state.op{color:var(--pri)} .state.dn{color:var(--good)}
+.tag2{font-family:var(--mono);font-size:9.5px;color:var(--mfg);flex:none}
+.more{display:grid;place-items:center;width:22px;height:22px;border-radius:6px;color:var(--mfg);opacity:0;transition:opacity .12s}
+.trow:hover .more{opacity:1}
+body[data-mode="mobile"] .more{opacity:1}
+.more:hover{background:var(--hov);color:var(--fg)}
+.new{display:flex;align-items:center;gap:9px;padding:11px 14px;font-size:12.5px;color:var(--pri);
+  font-weight:600;width:100%;text-align:left;border-bottom:1px solid var(--bd)}
+.new:hover{background:var(--hov)}
+.empty{display:grid;gap:7px;justify-items:center;text-align:center;padding:44px 24px;color:var(--mfg)}
+.empty b{font-size:13.5px;color:var(--fg)}
+.empty p{margin:0;font-size:12.5px;max-width:32ch;line-height:1.5}
+
+/* menu + selection */
+.menu{position:absolute;z-index:9;min-width:216px;background:var(--bg);border:1px solid var(--bd);
+  border-radius:var(--r);box-shadow:var(--shadow);padding:5px;display:grid;gap:1px}
+.menu .k{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--mfg);
+  padding:5px 9px 3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:6px 9px;
+  border-radius:7px;font-size:12.5px;min-width:0}
+.menu button:hover{background:var(--hov)}
+.menu button .gl{display:grid;flex:none;opacity:.7}
+.menu button .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu .sep{height:1px;background:var(--bd);margin:4px 2px}
+.selbar{position:absolute;left:12px;right:12px;bottom:64px;z-index:6;background:var(--fg);color:var(--bg);
+  border-radius:999px;padding:7px 8px 7px 15px;display:flex;align-items:center;gap:10px;font-size:12.5px;
+  box-shadow:var(--shadow)}
+.selbar .go{margin-left:auto;background:var(--bg);color:var(--fg);padding:4px 11px;border-radius:999px;
+  font-size:12px;font-weight:650;flex:none}
+.selbar .x{opacity:.6;padding:0 4px;flex:none}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+<div class="bar">
+  <button data-mode="desk" class="on">Desktop</button>
+  <button data-mode="mobile">Mobile</button>
+  <span class="sep"></span>
+  <button data-act="tick">+5 min</button>
+  <button data-act="reset">Reset</button>
+  <span class="sep"></span>
+  <button class="ico" data-act="theme" aria-label="Switch theme">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+  </button>
+</div>
+<div class="wrap"><div id="app"></div></div>
+<script>
+(() => {
+  const P = {
+    sam:{n:'Sam',c:'oklch(0.58 0.17 28)'}, riley:{n:'Riley',c:'oklch(0.55 0.13 225)'},
+    mia:{n:'Mia',c:'oklch(0.52 0.13 158)'}, jo:{n:'Jo',c:'oklch(0.54 0.24 293)',role:1},
+    you:{n:'You',c:'oklch(0.45 0.04 293)'},
+  };
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const rich = s => esc(s).replace(/#(\w+)/g,'<span class="at">#$1</span>');
+  const av = (w,cls='') => `<div class="av ${cls}" style="background:${P[w].c}">${P[w].n[0]}</div>`;
+  const stack = (ws,cap=4) => {
+    const u=[...new Set(ws)].slice(0,cap);
+    return `<div class="stackav">${u.map(w=>av(w)).join('')}</div>`;
+  };
+  const I = {
+    hash:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 3L8 21M16 3l-2 18M3 9h18M2 15h18"/></svg>',
+    door:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v16"/><path d="M2 21h18"/><path d="M13 12h.01"/></svg>',
+    inbox:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.4 5.1L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.4-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.8 1.1z"/></svg>',
+    vol:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg>',
+    back:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+    reply:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17l-6-6 6-6"/><path d="M3 11h11a6 6 0 0 1 6 6v2"/></svg>',
+    check:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>',
+    plus:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+    more:'<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>',
+    arrow:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+    pen:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+    exit:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>',
+    bell:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/><path d="M3 3l18 18"/></svg>',
+    dot:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/></svg>',
+    sel:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+    up:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>',
+  };
+  const CH = [{id:'general',n:'general'},{id:'help',n:'help'},{id:'announcements',n:'announcements'},{id:'showcase',n:'showcase'}];
+  const MSGS = () => ({
+    general:[
+      {id:1,w:'sam',t:'Anyone else seeing lag on the EU servers?',at:'13:48'},
+      {id:2,w:'riley',t:'Yeah, since about 1:45',at:'13:49'},
+      {id:3,w:'mia',t:'Movie night poll closes tonight, last call',at:'13:50'},
+      {id:4,w:'riley',t:'Frankfurt ping is over 300ms for me',at:'13:51'},
+      {id:5,w:'jo',t:'Restarting the region now, give it 5 min',at:'13:52'},
+      {id:6,w:'mia',t:'I voted for the heist one, obviously',at:'13:53'},
+      {id:7,w:'sam',t:'Back to normal for me, thanks Jo',at:'13:58'},
+      {id:8,w:'mia',t:'Heist movie is winning by a landslide',at:'13:59'},
+      {id:9,w:'riley',t:'did the 2.4 patch notes ever go up?',at:'14:01'},
+      {id:10,w:'you',t:"link's in #announcements, pinned",at:'14:02'},
+      {id:11,w:'sam',t:'any update on this?',at:'14:05'}],
+    help:[
+      {id:31,w:'mia',t:'crashes on launch since 2.4, anyone else?',at:'13:20'},
+      {id:32,w:'you',t:'which GPU driver?',at:'13:31'},
+      {id:33,w:'mia',t:'566.36, rolling back now',at:'13:44'}],
+    announcements:[{id:41,w:'jo',t:'2.4 is live. Patch notes are pinned above.',at:'Mon'}],
+    showcase:[
+      {id:51,w:'riley',t:'Kestrel skin pack, six variants',at:'Tue'},
+      {id:52,w:'sam',t:'the copper one is gorgeous',at:'Tue'}],
+  });
+  const ROOMS = () => [
+    {id:'eu',ch:'general',ti:'EU server lag',seed:5,st:'open',member:1,unread:2,lastAct:1,
+     actives:['jo','riley','sam'],muted:0,moved:[],opener:'jo',
+     msgs:[{id:201,w:'jo',t:"region's back up, watching the graphs",at:'13:55'},
+           {id:202,w:'riley',t:'ping is 40ms again',at:'13:56'},
+           {id:203,w:'sam',t:'confirmed here too',at:'13:57'},
+           {id:204,w:'jo',t:'leaving this open in case it flaps tonight',at:'13:58'}]},
+    {id:'movie',ch:'general',ti:'Movie night poll',seed:3,st:'open',member:1,unread:0,lastAct:35,
+     actives:[],muted:0,moved:[],opener:'mia',
+     msgs:[{id:211,w:'mia',t:'heist 9, western 3, documentary 1',at:'14:00'},
+           {id:212,w:'you',t:'closing it at 20:00 then',at:'14:02'}]},
+    {id:'patch',ch:'general',ti:'2.4 patch notes',seed:9,st:'resolved',member:1,unread:0,lastAct:62,
+     out:'They were pinned in #announcements the whole time.',actives:[],muted:0,moved:[],opener:'you',
+     msgs:[{id:221,w:'riley',t:'found them, they were in the pinned post',at:'14:03'}]},
+    {id:'crash',ch:'help',ti:'Crash on 2.4 launch',seed:31,st:'open',member:1,unread:3,lastAct:2,
+     actives:['mia'],muted:0,moved:[],opener:'mia',
+     msgs:[{id:231,w:'mia',t:'rollback fixed it, 566.14 is fine',at:'14:04'},
+           {id:232,w:'jo',t:'adding it to known issues',at:'14:06'},
+           {id:233,w:'mia',t:'thanks, marking this as the answer',at:'14:07'}]},
+    {id:'skin',ch:'showcase',ti:'Kestrel skin pack',seed:51,st:'open',member:1,unread:0,lastAct:2880,
+     actives:[],muted:0,moved:[],opener:'riley',
+     msgs:[{id:241,w:'riley',t:'source files are in the repo now',at:'Tue'}]},
+  ];
+
+  const app = document.getElementById('app');
+  let S;
+  const reset = () => {
+    S = { mode:'desk', cur:'general', view:{k:'chat'}, clock:0, sel:[], menu:null, moveMenu:0,
+          filter:'all', ib:'unread', nid:900, rooms:ROOMS(), msgs:MSGS(), draft:{}, refocus:0 };
+  };
+  reset();
+
+  const room = id => S.rooms.find(r => r.id === id);
+  const chRooms = c => S.rooms.filter(r => r.ch === c);
+  const age = r => r.lastAct + S.clock;
+  const isLive = r => age(r) < 5 && r.actives.length > 0;
+  const mine = () => S.rooms.filter(r => r.member);
+  const unreadN = () => mine().filter(r => r.unread && !r.muted).length;
+  const chDot = c => chRooms(c).some(r => r.member && r.unread && !r.muted);
+  const last = r => r.msgs[r.msgs.length - 1] || { w:'you', t:'' };
+  const lastReal = r => {
+    for (let i = r.msgs.length - 1; i >= 0; i--) if (!r.msgs[i].sys) return r.msgs[i];
+    return last(r);
+  };
+  const chName = c => (CH.find(x => x.id === c) || {}).n || c;
+  const quiet = r => {
+    const a = age(r);
+    if (a < 60) return `quiet ${a}m`;
+    if (a < 1440) return `quiet ${Math.floor(a/60)}h`;
+    return `quiet ${Math.floor(a/1440)}d`;
+  };
+
+  const msgEl = (m, prev, acts='') => {
+    const cont = prev && prev.w === m.w, p = P[m.w];
+    return `<div class="m${S.sel.includes(m.id)?' pick':''}" data-id="${m.id}">
+      ${cont?'<div></div>':av(m.w)}
+      <div>${cont?'':`<div class="mh"><b>${p.n}</b>${p.role?'<span class="role">mod</span>':''}<time>${m.at}</time></div>`}
+      <div class="mt">${rich(m.t)}</div></div>
+      ${acts?`<div class="acts">${acts}</div>`:''}</div>`;
+  };
+  const sysEl = m => {
+    const to = m.to ? room(m.to) : null;
+    return `<div class="sys"><span class="gl">${I.arrow}</span><span class="txt">${esc(m.t)}</span>
+      ${to ? `<button data-open="${to.id}">${esc(to.ti)}</button>` : ''}</div>`;
+  };
+  const listEl = (ms, acts='') => ms.map((m,i) =>
+    m.sys ? sysEl(m) : msgEl(m, ms[i-1] && ms[i-1].sys ? null : ms[i-1], acts)).join('');
+
+  const seam = r => `<div class="seam">
+    <div class="sys"><span class="gl">${I.door}</span><span class="lbl">room</span>
+      <button data-open="${r.id}">${esc(r.ti)}</button>
+      ${isLive(r)?`<span class="pres"><i class="live"></i><span>${r.actives.length} talking</span></span>`
+        :`<span class="qt">${quiet(r)}</span>`}
+      ${r.unread && !r.muted?'<span class="udot"></span>':''}</div>
+    ${r.st==='resolved'?`<div class="echo"><span class="tag">outcome</span>
+      <span class="l"><em>${P[lastReal(r).w].n}:</em> ${esc(r.out)}</span></div>`:''}
+    ${r.moved.length?`<div class="sys"><span class="gl">${I.arrow}</span>
+      <span class="txt">${r.moved.length} message${r.moved.length>1?'s':''} moved to</span>
+      <button data-open="${r.id}">${esc(r.ti)}</button></div>`:''}</div>`;
+
+  const chat = () => {
+    const moved = {};
+    S.rooms.forEach(r => r.moved.forEach(id => { moved[id] = r.id; }));
+    const acts = `<button data-start>${I.door}<span>Open a room</span></button>
+      <button data-pick>${I.sel}</button><button class="prim">${I.reply}</button>`;
+    let out = '<div class="day"><hr><span>Today</span><hr></div>', prev = null;
+    S.msgs[S.cur].forEach(m => {
+      if (moved[m.id]) return;
+      out += msgEl(m, prev, acts);
+      prev = m;
+      const r = chRooms(S.cur).find(x => x.seed === m.id);
+      if (r) { out += seam(r); prev = null; }
+    });
+    return out;
+  };
+
+  const rowEl = (r, showCh) => `<div class="trow" data-open="${r.id}">
+    <div class="ico${r.st==='resolved'?' done':''}">${r.st==='resolved'?I.check:I.door}</div>
+    <div><div class="tt"><span class="nm">${esc(r.ti)}</span>
+        <i class="state ${r.st==='resolved'?'dn':'op'}">${r.st}</i>
+        ${showCh?`<i class="tag2">#${chName(r.ch)}</i>`:''}${r.muted?'<i class="tag2">muted</i>':''}</div>
+      <div class="tl">${P[lastReal(r).w].n}: ${esc(lastReal(r).t)}</div></div>
+    <div class="rt">${isLive(r)?`<span class="pres"><i class="live"></i><span>${r.actives.length}</span></span>`:stack(r.msgs.map(m=>m.w),3)}
+      ${r.unread && !r.muted?'<span class="udot"></span>':`<span class="n">${r.msgs.length}</span>`}
+      <span class="more" data-menu="${r.id}">${I.more}</span></div></div>`;
+
+  const drawer = () => {
+    const set = chRooms(S.cur).filter(r => S.filter==='all' || (S.filter==='open')===(r.st==='open'))
+      .slice().sort((a,b) => (b.unread?1:0)-(a.unread?1:0));
+    const fu = chRooms(S.cur).find(r => r.unread && !r.muted);
+    return `<div class="filters">
+        ${['all','open','resolved'].map(f=>`<button class="fb${S.filter===f?' on':''}" data-filter="${f}">
+          <span>${f}</span><span class="n">${f==='all'?chRooms(S.cur).length
+            :chRooms(S.cur).filter(r=>(f==='open')===(r.st==='open')).length}</span></button>`).join('')}
+        ${fu?`<button class="fb jump" data-open="${fu.id}"><span>Jump to unread</span></button>`:''}</div>
+      <div class="river"><button class="new" data-newroom>${I.plus}<span>Open a room</span></button>
+        ${set.map(r=>rowEl(r,0)).join('')}</div>`;
+  };
+
+  const inbox = () => {
+    const set = mine().filter(r => S.ib==='all' || (r.unread && !r.muted));
+    const by = {}; set.forEach(r => { (by[r.ch]=by[r.ch]||[]).push(r); });
+    const ks = Object.keys(by);
+    return `<div class="filters">
+        <button class="fb${S.ib==='unread'?' on':''}" data-ib="unread"><span>Unread</span><span class="n">${unreadN()}</span></button>
+        <button class="fb${S.ib==='all'?' on':''}" data-ib="all"><span>Everything</span><span class="n">${mine().length}</span></button></div>
+      <div class="river">${ks.length
+        ? ks.map(c=>`<div class="cat">#${chName(c)}</div>${by[c].map(r=>rowEl(r,0)).join('')}`).join('')
+        : `<div class="empty">${I.inbox}<b>Nothing waiting</b><p>Every room you are in shows up here, in any channel of this space.</p></div>`}</div>`;
+  };
+
+  const roomView = r => `<div class="inroom">
+    <div class="cap"><span class="gl">${I.door}</span><span class="t">${esc(r.ti)}</span>
+      ${r.seed?`<button class="mini" data-toseed>from #${chName(r.ch)}</button>`:`<button class="mini">in #${chName(r.ch)}</button>`}</div>
+    <div class="river">${r.st==='resolved'?`<div class="outcome"><span class="gl">${I.check}</span>
+        <span class="tx"><b>outcome, shown in #${chName(r.ch)}</b>${esc(r.out)}</span></div>`:''}
+      ${listEl(r.msgs, `<button data-pick>${I.sel}<span>Select</span></button><button class="prim">${I.reply}</button>`)}</div></div>`;
+
+  const listScreen = () => `<div class="river" style="padding:0">
+      <div class="cat">Direct</div>
+      <button class="ch${S.view.k==='inbox'?' on':''}" data-go="inbox"><span class="gl">${I.inbox}</span>
+        <span class="nm">Inbox</span>${unreadN()?`<span class="cnt hot">${unreadN()}</span>`:''}</button>
+      <div class="cat">Text</div>
+      ${CH.map(c=>`<button class="ch" data-ch="${c.id}"><span class="gl">${I.hash}</span>
+        <span class="nm">${c.n}</span>${chDot(c.id)?'<i class="pip"></i>':''}</button>
+        ${chRooms(c.id).filter(isLive).map(r=>`<button class="room" data-open="${r.id}">
+          <span class="gl">${I.door}</span><span class="nm">${esc(r.ti)}</span>
+          <span class="rr"><i class="live"></i>${stack(r.actives,3)}</span></button>`).join('')}`).join('')}
+      <div class="cat">Voice</div>
+      <button class="ch"><span class="gl">${I.vol}</span><span class="nm">hangout</span><span class="cnt">3</span></button>
+    </div>`;
+
+  const menuEl = () => {
+    const r = room(S.menu);
+    if (!r) return '';
+    return `<div class="menu" style="top:52px;right:12px">
+      <div class="k">${esc(r.ti)}</div>
+      <button data-do="unread"><span class="gl">${I.dot}</span><span class="l">Mark unread</span></button>
+      <button data-do="mute"><span class="gl">${I.bell}</span><span class="l">${r.muted?'Unmute':'Mute'} this room</span></button>
+      <button data-do="rename"><span class="gl">${I.pen}</span><span class="l">Rename</span></button>
+      <div class="sep"></div>
+      <button data-do="leave"><span class="gl">${I.exit}</span><span class="l">Leave</span></button></div>`;
+  };
+  const moveMenu = () => {
+    const inRoom = S.view.k === 'room';
+    const opts = chRooms(S.cur).filter(r => !inRoom || r.id !== S.view.id);
+    return `<div class="menu" style="bottom:96px;left:12px">
+      <div class="k">Move ${S.sel.length} message${S.sel.length>1?'s':''} into</div>
+      ${opts.length ? opts.map(r=>`<button data-into="${r.id}"><span class="gl">${I.door}</span>
+        <span class="l">${esc(r.ti)}</span></button>`).join('')
+        : `<div class="k" style="opacity:.7">No other room in #${chName(S.cur)}</div>`}
+      ${inRoom ? '' : `<div class="sep"></div>
+        <button data-into="__new"><span class="gl">${I.plus}</span><span class="l">A new room</span></button>`}</div>`;
+  };
+
+  const rail = () => `<div class="rail">
+    <div class="rtop"><div class="crest"></div><b>Kestrel Modding</b></div>
+    <div class="rbody">
+      <button class="ch${S.view.k==='inbox'?' on':''}" data-go="inbox"><span class="gl">${I.inbox}</span>
+        <span class="nm">Inbox</span>${unreadN()?`<span class="cnt hot">${unreadN()}</span>`:''}</button>
+      <div class="cat">Text</div>
+      ${CH.map(c=>`<button class="ch${S.cur===c.id && S.view.k!=='inbox'?' on':''}" data-ch="${c.id}">
+          <span class="gl">${I.hash}</span><span class="nm">${c.n}</span>${chDot(c.id)?'<i class="pip"></i>':''}</button>
+        ${chRooms(c.id).filter(isLive).map(r=>`<button class="room${S.view.k==='room'&&S.view.id===r.id?' on':''}" data-open="${r.id}">
+          <span class="gl">${I.door}</span><span class="nm">${esc(r.ti)}</span>
+          <span class="rr"><i class="live"></i>${stack(r.actives,3)}</span></button>`).join('')}`).join('')}
+      <div class="cat">Voice</div>
+      <button class="ch"><span class="gl">${I.vol}</span><span class="nm">hangout</span><span class="cnt">3</span></button>
+    </div></div>`;
+
+  const dkey = () => S.view.k === 'room' ? 'r:' + S.view.id : 'c:' + S.cur;
+  const composerEl = (chip, ph) => {
+    const has = (S.draft[dkey()] || '').trim().length > 0;
+    return `<div class="composer" data-focus>${chip}
+      <textarea class="inp" rows="1" placeholder="${ph}"></textarea>
+      <button class="send${has ? ' live' : ''}" data-send aria-label="Send">${I.up}</button></div>`;
+  };
+
+  const draw = () => {
+    document.body.dataset.mode = S.mode;
+    const mob = S.mode === 'mobile';
+    const r = S.view.k === 'room' ? room(S.view.id) : null;
+    const unreadHere = chRooms(S.cur).filter(x => x.unread && !x.muted).length;
+    let head, body, comp = '';
+    if (S.view.k === 'list') {
+      head = `<div class="crest"></div><b>Kestrel Modding</b>`;
+      body = listScreen();
+    } else if (r) {
+      head = `<div class="crumb"><button class="bk" data-back>${I.back}</button><b>${esc(r.ti)}</b>
+          <span class="in">in #${chName(r.ch)}</span></div><div class="spacer"></div>
+        ${isLive(r)?`<span class="pres"><i class="live"></i><span>${r.actives.length} talking</span></span>${stack(r.actives,3)}`
+          :`<span class="pres">${quiet(r)}</span>`}
+        <button class="mini" data-resolve>${r.st==='resolved'?'reopen':'resolve'}</button>
+        <button class="mini" data-menu="${r.id}">${I.more}</button>`;
+      body = roomView(r);
+      comp = composerEl(`<span class="chip"><span>${esc(r.ti)}</span></span>`, 'Message this room');
+    } else if (S.view.k === 'inbox') {
+      head = `<div class="crumb"><button class="bk" data-go="${mob?'list':'chat'}">${I.back}</button><b>Inbox</b>
+        <span class="in">every room you are in</span></div>`;
+      body = inbox();
+    } else {
+      head = `${mob?`<button class="bk" data-go="list">${I.back}</button>`:`<span class="gl">${I.hash}</span>`}
+        <b>${chName(S.cur)}</b>
+        <div class="tabs">
+          <button class="tab${S.view.k==='chat'?' on':''}" data-go="chat"><span>Chat</span></button>
+          <button class="tab${S.view.k==='drawer'?' on':''}" data-go="drawer"><span>Rooms</span>
+            <span class="n">${chRooms(S.cur).length}</span>${unreadHere?'<span class="udot"></span>':''}</button></div>
+        <div class="spacer"></div>
+        ${mob?`<button class="mini" data-go="inbox">${I.inbox}<span>${unreadN()}</span></button>`:''}`;
+      body = S.view.k==='drawer' ? drawer() : `<div class="river">${chat()}</div>`;
+      if (S.view.k === 'chat') comp = composerEl('', 'Message #' + chName(S.cur));
+    }
+    const bar = S.sel.length ? `<div class="selbar"><span>${S.sel.length} selected</span>
+      <button class="go" data-movemenu>${S.view.k==='room'?'Move to another room':'Move to a room'}</button>
+      <span class="x" data-clearsel>&times;</span></div>` : '';
+    app.innerHTML = (mob ? '' : rail()) +
+      `<div class="main"><div class="top">${head}</div>${body}${bar}${menuEl()}${S.moveMenu?moveMenu():''}${comp}</div>`;
+    const ta = app.querySelector('.inp');
+    if (ta) {
+      ta.value = S.draft[dkey()] || '';
+      grow(ta);
+      if (S.refocus) { ta.focus(); ta.selectionStart = ta.selectionEnd = ta.value.length; }
+    }
+    S.refocus = 0;
+  };
+
+  const grow = ta => { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 132) + 'px'; };
+
+  const send = () => {
+    const k = dkey();
+    const text = (S.draft[k] || '').trim();
+    if (!text) return;
+    const m = { id: ++S.nid, w:'you', t:text, at:'now' };
+    if (S.view.k === 'room') {
+      const r = room(S.view.id);
+      r.msgs = r.msgs.concat([m]);
+      r.lastAct = -S.clock;
+      if (!r.actives.includes('you')) r.actives = r.actives.concat(['you']);
+    } else {
+      S.msgs[S.cur] = S.msgs[S.cur].concat([m]);
+    }
+    S.draft[k] = '';
+    S.refocus = 1;
+    draw();
+    const riv = app.querySelector('.river');
+    if (riv) riv.scrollTop = riv.scrollHeight;
+  };
+
+  const openRoom = id => {
+    const r = room(id);
+    if (!r) return;
+    r.unread = 0;
+    if (r.ch !== S.cur) S.cur = r.ch;
+    S.view = { k:'room', id, from: S.view.k === 'room' ? 'chat' : S.view.k };
+    S.menu = null; S.sel = []; S.moveMenu = 0;
+  };
+
+  app.addEventListener('click', e => {
+    const t = e.target;
+    const hit = s => t.closest(s);
+    const open = hit('[data-open]');
+    if (open && !hit('.more')) { openRoom(open.dataset.open); return draw(); }
+    const rm = hit('[data-menu]');
+    if (rm) { S.menu = S.menu === rm.dataset.menu ? null : rm.dataset.menu; return draw(); }
+    const go = hit('[data-go]');
+    if (go) { S.view = { k: go.dataset.go }; S.menu = null; S.sel = []; S.moveMenu = 0; return draw(); }
+    const ch = hit('[data-ch]');
+    if (ch) { S.cur = ch.dataset.ch; S.view = { k:'chat' }; S.menu = null; S.sel = []; return draw(); }
+    if (hit('[data-back]')) {
+      const f = S.view.from;
+      S.view = { k: f === 'inbox' ? 'inbox' : f === 'drawer' ? 'drawer' : 'chat' };
+      return draw();
+    }
+    const f = hit('[data-filter]'); if (f) { S.filter = f.dataset.filter; return draw(); }
+    const ib = hit('[data-ib]'); if (ib) { S.ib = ib.dataset.ib; return draw(); }
+    if (hit('[data-toseed]')) { S.view = { k:'chat' }; return draw(); }
+    if (hit('[data-resolve]')) {
+      const r = room(S.view.id);
+      if (r.st === 'resolved') r.st = 'open';
+      else { const lr = lastReal(r); r.st = 'resolved'; r.out = r.out || (lr.t ? lr.t[0].toUpperCase() + lr.t.slice(1) + '.' : 'Closed.'); r.actives = []; }
+      return draw();
+    }
+    const d = hit('[data-do]');
+    if (d) {
+      const r = room(S.menu), a = d.dataset.do;
+      if (a === 'unread') r.unread = 1;
+      if (a === 'mute') r.muted = !r.muted;
+      if (a === 'rename') {
+        r.ti = r.ti.replace(/ \(renamed\)$/,'') + ' (renamed)';
+        r.msgs = r.msgs.concat([{ id: ++S.nid, w:'you', sys:1, t:'You renamed this room' }]);
+      }
+      if (a === 'leave') { r.member = 0; r.unread = 0; if (S.view.id === r.id) S.view = { k:'chat' }; }
+      S.menu = null; return draw();
+    }
+    const pk = hit('[data-pick]');
+    if (pk) {
+      const id = +pk.closest('.m').dataset.id;
+      S.sel = S.sel.includes(id) ? S.sel.filter(x => x !== id) : S.sel.concat(id);
+      return draw();
+    }
+    if (hit('[data-clearsel]')) { S.sel = []; S.moveMenu = 0; return draw(); }
+    if (hit('[data-movemenu]')) { S.moveMenu = !S.moveMenu; return draw(); }
+    const into = hit('[data-into]');
+    if (into) {
+      const fromRoom = S.view.k === 'room' ? room(S.view.id) : null;
+      const pool = fromRoom ? fromRoom.msgs : S.msgs[S.cur];
+      const ids = S.sel.slice().sort((a,b)=>a-b);
+      let r;
+      if (into.dataset.into === '__new') {
+        const src = pool.find(m => m.id === ids[0]);
+        r = { id:'r'+(++S.nid), ch:S.cur, ti: src.t.replace(/[?.!,]/g,'').split(' ').slice(0,4).join(' '),
+          seed:null, st:'open', member:1, unread:0, lastAct:-S.clock, actives:['you'], muted:0, moved:[], msgs:[], opener:'you' };
+        S.rooms = S.rooms.concat([r]);
+      } else r = room(into.dataset.into);
+      ids.forEach(id => {
+        const m = pool.find(x => x.id === id);
+        if (!m) return;
+        r.msgs = r.msgs.concat([m]);
+        if (fromRoom) fromRoom.msgs = fromRoom.msgs.filter(x => x.id !== id);
+        else r.moved = r.moved.concat([id]);
+      });
+      if (fromRoom) {
+        fromRoom.msgs = fromRoom.msgs.concat([{ id: ++S.nid, w:'you', sys:1, to:r.id,
+          t:`${ids.length} message${ids.length>1?'s':''} moved to` }]);
+      }
+      r.lastAct = -S.clock;
+      if (!r.actives.includes('you')) r.actives = r.actives.concat(['you']);
+      S.sel = []; S.moveMenu = 0;
+      S.view = { k:'room', id:r.id, from: fromRoom ? 'chat' : 'chat' };
+      return draw();
+    }
+    const st = hit('[data-start]');
+    if (st) {
+      const id = +st.closest('.m').dataset.id;
+      const found = chRooms(S.cur).find(r => r.seed === id);
+      if (found) { openRoom(found.id); return draw(); }
+      const m = S.msgs[S.cur].find(x => x.id === id);
+      const r = { id:'r'+(++S.nid), ch:S.cur, ti: m.t.replace(/[?.!,]/g,'').split(' ').slice(0,4).join(' '),
+        seed:id, st:'open', member:1, unread:0, lastAct:-S.clock, actives:['you'], muted:0, moved:[],
+        msgs:[Object.assign({}, m)], opener:'you' };
+      S.rooms = S.rooms.concat([r]);
+      S.view = { k:'room', id:r.id, from:'chat' };
+      return draw();
+    }
+    if (hit('[data-newroom]')) {
+      const r = { id:'r'+(++S.nid), ch:S.cur, ti:'Untitled room', seed:null, st:'open', member:1, unread:0,
+        lastAct:-S.clock, actives:['you'], muted:0, moved:[], opener:'you',
+        msgs:[{ id: ++S.nid, w:'you', t:'Starting this one from scratch', at:'now' }] };
+      S.rooms = S.rooms.concat([r]);
+      S.view = { k:'room', id:r.id, from:'drawer' };
+      return draw();
+    }
+    if (hit('[data-send]')) { send(); return; }
+    if (hit('[data-focus]')) {
+      const ta = app.querySelector('.inp');
+      if (ta) ta.focus();
+      return;
+    }
+    if (S.menu || S.moveMenu) { S.menu = null; S.moveMenu = 0; return draw(); }
+  });
+
+  app.addEventListener('input', e => {
+    const ta = e.target.closest('.inp');
+    if (!ta) return;
+    S.draft[dkey()] = ta.value;
+    grow(ta);
+    const btn = app.querySelector('.composer .send');
+    if (btn) btn.classList.toggle('live', ta.value.trim().length > 0);
+    if (S.view.k === 'room' && ta.value.trim()) {
+      const r = room(S.view.id);
+      if (!r.actives.includes('you') || age(r) >= 5) {
+        r.lastAct = -S.clock;
+        if (!r.actives.includes('you')) r.actives = r.actives.concat(['you']);
+        S.refocus = 1;
+        draw();
+      }
+    }
+  });
+  app.addEventListener('keydown', e => {
+    if (!e.target.closest('.inp')) return;
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+  });
+
+  document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => {
+    S.mode = b.dataset.mode;
+    document.querySelectorAll('[data-mode]').forEach(x => x.classList.toggle('on', x === b));
+    if (S.mode === 'mobile' && (S.view.k === 'chat' || S.view.k === 'drawer')) S.view = { k:'list' };
+    if (S.mode === 'desk' && S.view.k === 'list') S.view = { k:'chat' };
+    draw();
+  }));
+  document.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', () => {
+    const a = b.dataset.act;
+    if (a === 'tick') { S.clock += 5; S.rooms.forEach(r => { if (age(r) >= 5) r.actives = []; }); draw(); }
+    if (a === 'reset') { const m = S.mode; reset(); S.mode = m; draw(); }
+    if (a === 'theme') {
+      const R = document.documentElement;
+      const dark = R.getAttribute('data-theme') === 'dark'
+        || (!R.hasAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
+      R.setAttribute('data-theme', dark ? 'light' : 'dark');
+    }
+  }));
+  draw();
+})();
+</script>

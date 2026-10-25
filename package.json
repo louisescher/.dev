@@ -7,7 +7,11 @@
   },
   "scripts": {
     "dev": "turbo run dev",
-    "build": "pnpm --filter dotdev build",
+    "build": "node scripts/build-talks.mjs && pnpm --filter dotdev build",
+    "talks:build": "node scripts/build-talks.mjs",
+    "talk:dev": "node scripts/dev-talk.mjs",
+    "talk:export": "node scripts/export-talk.mjs",
+    "talk:new": "node scripts/new-talk.mjs",
     "start": "turbo run start",
     "lint": "biome check .",
     "lint:fix": "biome check . --write",

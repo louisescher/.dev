@@ -1,0 +1,11 @@
+[
+	{
+		"id": "astro-compiler",
+		"title": "Astro's new Carapace",
+		"description": "A talk about the Astro Compiler and why we moved from Go to Rust.",
+		"event": "Astro Together FRA x Seibert",
+		"location": "Wiesbaden",
+		"recording": "https://youtu.be/cD4H28f8oxY",
+		"year": 2026
+	}
+]

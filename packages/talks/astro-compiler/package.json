@@ -1,0 +1,13 @@
+{
+	"name": "@talks/astro-compiler",
+	"type": "module",
+	"private": true,
+	"dependencies": {
+		"@iconify-json/solar": "^1.2.10",
+		"@slidev/cli": "catalog:",
+		"@slidev/theme-default": "catalog:",
+		"@slidev/theme-seriph": "catalog:",
+		"slidev-theme-astro": "^0.1.0",
+		"vue": "catalog:"
+	}
+}

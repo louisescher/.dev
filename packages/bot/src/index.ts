@@ -8,7 +8,7 @@ const GUILD_ID = process.env.GUILD_ID!;
 const USER_ID = process.env.USER_ID!;
 
 const client = new Client({ intents: [GatewayIntentBits.GuildPresences] });
-const MUSIC_SERVICE_NAME = "YouTube Music".toLowerCase();
+const MUSIC_SERVICE_NAME = "Spotify".toLowerCase();
 
 interface ListeningStatus {
 	song: string;

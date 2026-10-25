@@ -18,6 +18,10 @@ This directory contains the code for the website itself. To find out more, head 
 
 The `shared/` package contains database-related code that is used by the other packages. All it does is re-export drizzle and initialize a database connection.
 
+### `packages/talks/`
+
+This directory holds one Slidev deck per talk, each served under `lou.gg/talks/<id>/`. To find out more, head to [its own README](packages/talks/README.md).
+
 ## Deploying
 
 The easiest way of deploying this project is by simply building and running the Dockerfile from the root directory, like this:
@@ -25,3 +29,5 @@ The easiest way of deploying this project is by simply building and running the 
 ```bash
 pnpm docker:build && pnpm docker:start
 ```
+
+`pnpm build` builds the talk decks into `packages/dotdev/public/talks/` before it builds the site, so a deploy needs no extra step for them.

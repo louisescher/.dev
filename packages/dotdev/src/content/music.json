@@ -46,5 +46,21 @@
 			"Year": "2025",
 			"Genre": "Retro"
 		}
+	},
+	{
+		"id": "4",
+		"path": "/music/flower-man.mp3",
+		"duration": 192,
+		"cover": "./assets/music/covers/flower-man.png",
+		"title": "Flower Man (Cover)",
+		"description": "From Toby Fox's Deltarune Chapter 5 OST. Deltarune tomorrow?",
+		"metadata": {
+			"Original Artist": {
+				"text": "Toby Fox",
+				"href": "https://toby.fangamer.com/"
+			},
+			"Year": "2026",
+			"Genre": "Rock (I think)"
+		}
 	}
 ]
