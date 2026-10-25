@@ -1,0 +1,285 @@
+---
+import BlueskyLogo from "./BlueskyLogo.astro";
+import MuLogo from "./MuLogo.astro";
+---
+
+<figure class="journey" data-step="1">
+	<div class="toolbar">
+		<span class="toolbar-label" data-counter>Step 1 of 3</span>
+		<div class="toolbar-actions">
+			<button type="button" class="control" data-back disabled>Back</button>
+			<button type="button" class="control" data-next>Next</button>
+		</div>
+	</div>
+	<svg class="diagram" viewBox="0 0 640 420" role="img" aria-labelledby="journey-title">
+		<title id="journey-title">Alice, the app she uses (Bluesky or Mu Social), and her account host (PDS), which is either Bluesky in the USA or Eurosky in the EU!</title>
+		<defs>
+			<symbol id="journey-person" viewBox="-26 -26 52 52">
+				<circle r="25" fill="#0b0b0b" stroke="currentColor" stroke-width="1.5" />
+				<circle cy="-6" r="8" fill="none" stroke="currentColor" stroke-width="1.5" />
+				<path d="M-14 16 a14 13 0 0 1 28 0" fill="none" stroke="currentColor" stroke-width="1.5" />
+			</symbol>
+			<symbol id="journey-post" viewBox="0 0 22 16">
+				<rect width="22" height="16" fill="currentColor" />
+				<rect x="4" y="4.5" width="14" height="1.6" fill="#0b0b0b" />
+				<rect x="4" y="9.5" width="9" height="1.6" fill="#0b0b0b" />
+			</symbol>
+		</defs>
+		<text class="heading" x="280" y="24" text-anchor="middle">The app Alice uses</text>
+		<text class="heading" x="520" y="24" text-anchor="middle">Her account host (PDS)</text>
+		<g class="edges">
+			<line class="edge edge-alice-bluesky" x1="88.7" y1="218.3" x2="205.4" y2="170.5" />
+			<line class="edge edge-alice-mu" x1="88.7" y1="241.7" x2="205.4" y2="289.5" />
+			<line class="edge edge-bluesky-bpds" x1="355" y1="140" x2="455" y2="140" />
+			<line class="edge edge-mu-bpds" x1="334.7" y1="279" x2="481.7" y2="168.7" />
+			<line class="edge edge-mu-epds" x1="355" y1="320" x2="455" y2="320" />
+		</g>
+		<g class="alice">
+			<use class="person" href="#journey-person" x="34" y="204" width="52" height="52" />
+			<text class="label" x="60" y="282" text-anchor="middle">Alice</text>
+		</g>
+		<g class="node app-bluesky">
+			<rect class="node-shape" x="210" y="102" width="140" height="76" />
+			<g class="logo">
+				<BlueskyLogo x="266" y="112" width="28" height="28" />
+				<text class="app-name" x="280" y="164" text-anchor="middle">Bluesky</text>
+			</g>
+		</g>
+		<g class="node app-mu">
+			<rect class="node-shape" x="210" y="282" width="140" height="76" />
+			<g class="logo">
+				<MuLogo x="257" y="290" width="46" height="33" />
+				<text class="app-name" x="280" y="344" text-anchor="middle">Mu Social</text>
+			</g>
+		</g>
+		<g class="node host-bluesky">
+			<polygon class="node-shape" points="520,80 580,140 520,200 460,140" />
+			<text class="caption" x="520" y="224" text-anchor="middle">Bluesky, USA</text>
+		</g>
+		<g class="node host-eurosky">
+			<polygon class="node-shape" points="520,260 580,320 520,380 460,320" />
+			<text class="caption" x="520" y="404" text-anchor="middle">Eurosky, EU</text>
+		</g>
+		<g class="posts">
+			<use class="post" href="#journey-post" style="--i: 0" x="483" y="132" width="22" height="16" />
+			<use class="post" href="#journey-post" style="--i: 1" x="509" y="132" width="22" height="16" />
+			<use class="post" href="#journey-post" style="--i: 2" x="535" y="132" width="22" height="16" />
+		</g>
+	</svg>
+	<figcaption class="status" aria-live="polite">
+		<span data-caption="1">Alice signs up through the Bluesky app. Her account and posts live with Bluesky's account host in the USA.</span>
+		<span data-caption="2" hidden>Alice switches to Mu Social and logs in with the same account. Her posts show up right away, because they never moved!</span>
+		<span data-caption="3" hidden>Alice moves her account to Eurosky, an account host in the EU. Her posts move with her, and Mu Social shows them from there!</span>
+	</figcaption>
+</figure>
+
+<style>
+	.journey {
+		--diagram-line: #353535;
+		--diagram-stroke: #c7c7c7;
+		--diagram-muted: #4f4f4f;
+		--diagram-accent: var(--primary, #8c5cf5);
+		margin: 1.5rem 0;
+		border: 1px solid var(--diagram-line);
+		background-color: #0b0b0b;
+		color: #ffffff;
+	}
+
+	.toolbar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		padding: 0.625rem 0.75rem;
+		border-bottom: 1px solid var(--diagram-line);
+	}
+
+	.toolbar-label {
+		font-family: "Geist Mono", monospace;
+		font-size: 0.8125rem;
+		color: var(--diagram-stroke);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.toolbar-actions {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.control {
+		font-family: "Geist Mono", monospace;
+		font-size: 0.8125rem;
+		color: #ffffff;
+		background-color: transparent;
+		border: 1px solid var(--diagram-line);
+		padding: 0.375rem 0.75rem;
+		cursor: pointer;
+		transition:
+			background-color 0.15s ease,
+			border-color 0.15s ease,
+			opacity 0.15s ease;
+	}
+
+	.control:hover:not(:disabled) {
+		background-color: rgba(140, 92, 245, 0.125);
+		border-color: var(--diagram-accent);
+	}
+
+	.control:focus-visible {
+		outline: 2px solid var(--diagram-accent);
+		outline-offset: 2px;
+	}
+
+	.control:disabled {
+		opacity: 0.4;
+		cursor: default;
+	}
+
+	.diagram {
+		display: block;
+		width: 100%;
+		height: auto;
+		padding: 1rem;
+	}
+
+	.heading {
+		font-family: "Geist Mono", monospace;
+		font-size: 14px;
+		fill: var(--diagram-stroke);
+	}
+
+	.edge {
+		stroke: var(--diagram-stroke);
+		stroke-width: 1.5;
+		opacity: 0;
+		transition: opacity 0.5s ease;
+	}
+
+	.person {
+		color: var(--diagram-stroke);
+	}
+
+	.label {
+		font-family: "Geist", sans-serif;
+		font-size: 17px;
+		fill: #ffffff;
+	}
+
+	.node-shape {
+		fill: #111111;
+		stroke: var(--diagram-muted);
+		stroke-width: 1.5;
+		stroke-linejoin: round;
+		transition: stroke 0.5s ease;
+	}
+
+	.logo {
+		opacity: 0.35;
+		transition: opacity 0.5s ease;
+	}
+
+	.app-name {
+		font-family: "Geist", sans-serif;
+		font-size: 13px;
+		fill: #ffffff;
+	}
+
+	.caption {
+		font-family: "Geist", sans-serif;
+		font-size: 15px;
+		fill: #8a8a8a;
+		transition: fill 0.5s ease;
+	}
+
+	.post {
+		color: var(--diagram-accent);
+		filter: drop-shadow(0 0 4px var(--diagram-accent));
+		transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1) calc(var(--i) * 120ms);
+	}
+
+	.status {
+		padding: 0.625rem 0.75rem;
+		border-top: 1px solid var(--diagram-line);
+		font-size: 0.875rem;
+		color: var(--diagram-stroke);
+		min-height: 3.25rem;
+	}
+
+	[data-step="1"] .edge-alice-bluesky,
+	[data-step="1"] .edge-bluesky-bpds,
+	[data-step="2"] .edge-alice-mu,
+	[data-step="2"] .edge-mu-bpds,
+	[data-step="3"] .edge-alice-mu,
+	[data-step="3"] .edge-mu-epds {
+		opacity: 1;
+	}
+
+	[data-step="3"] .edge-mu-bpds,
+	[data-step="3"] .edge-mu-epds {
+		transition-delay: 1.1s;
+	}
+
+	[data-step="1"] :is(.app-bluesky, .host-bluesky) .node-shape,
+	[data-step="2"] :is(.app-mu, .host-bluesky) .node-shape,
+	[data-step="3"] :is(.app-mu, .host-eurosky) .node-shape {
+		stroke: var(--diagram-stroke);
+	}
+
+	[data-step="1"] .host-bluesky .caption,
+	[data-step="2"] .host-bluesky .caption,
+	[data-step="3"] .host-eurosky .caption {
+		fill: #ffffff;
+	}
+
+	[data-step="1"] .app-bluesky .logo,
+	[data-step="2"] .app-mu .logo,
+	[data-step="3"] .app-mu .logo {
+		opacity: 1;
+	}
+
+	[data-step="3"] .host-eurosky :is(.node-shape, .caption) {
+		transition-delay: 1.1s;
+	}
+
+	[data-step="3"] .post {
+		transform: translateY(180px);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.edge,
+		.node-shape,
+		.logo,
+		.caption,
+		.post {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	const lastStep = 3;
+
+	document.querySelectorAll<HTMLElement>(".journey").forEach((diagram) => {
+		const back = diagram.querySelector<HTMLButtonElement>("[data-back]")!;
+		const next = diagram.querySelector<HTMLButtonElement>("[data-next]")!;
+		const counter = diagram.querySelector<HTMLElement>("[data-counter]")!;
+		const captions = diagram.querySelectorAll<HTMLElement>("[data-caption]");
+
+		const show = (step: number) => {
+			diagram.dataset.step = String(step);
+			counter.textContent = `Step ${step} of ${lastStep}`;
+			back.disabled = step === 1;
+			next.textContent = step === lastStep ? "Start over" : "Next";
+			captions.forEach((caption) => {
+				caption.hidden = caption.dataset.caption !== String(step);
+			});
+		};
+
+		back.addEventListener("click", () => show(Number(diagram.dataset.step) - 1));
+		next.addEventListener("click", () => {
+			const step = Number(diagram.dataset.step);
+			show(step === lastStep ? 1 : step + 1);
+		});
+	});
+</script>
