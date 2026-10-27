@@ -11,6 +11,6 @@
 	},
 	"publishContent": true,
 	"bluesky": {
-		"enabled": true
+		"enabled": false
 	}
 }
