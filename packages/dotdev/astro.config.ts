@@ -15,6 +15,9 @@ export default defineConfig({
 		host: "0.0.0.0",
 		port: 4321,
 	},
+	redirects: {
+		"/you-dont-have-a-bluesky-account": "/blog/you-dont-have-a-bluesky-account"
+	},
 	vite: {
 		server: {
 			host: "0.0.0.0",
