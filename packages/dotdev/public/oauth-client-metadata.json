@@ -1,0 +1,12 @@
+{
+	"client_id": "https://lou.gg/oauth-client-metadata.json",
+	"client_name": "lou.gg",
+	"client_uri": "https://lou.gg",
+	"redirect_uris": ["https://lou.gg/oauth/callback"],
+	"scope": "atproto repo:pub.leaflet.comment",
+	"grant_types": ["authorization_code", "refresh_token"],
+	"response_types": ["code"],
+	"token_endpoint_auth_method": "none",
+	"application_type": "web",
+	"dpop_bound_access_tokens": true
+}

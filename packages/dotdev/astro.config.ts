@@ -44,18 +44,6 @@ export default defineConfig({
 					title: "Projects",
 				},
 			},
-			giscus: {
-				repository: "louisescher/.dev",
-				repositoryId: "R_kgDONmSE_w",
-				category: "General",
-				categoryId: "DIC_kwDONmSE_84Cl0fT",
-				mapping: "pathname",
-				strict: true,
-				reactionsEnabled: true,
-				emitMetadata: false,
-				commentsInput: "top",
-				lang: "en",
-			},
 		}),
 	],
 	adapter: node({

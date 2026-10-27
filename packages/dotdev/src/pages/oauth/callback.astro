@@ -1,0 +1,32 @@
+---
+import { strings } from "../../comments/strings";
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title={strings.callbackTitle} pagefindIgnore>
+	<div class="callback-container" slot="404">
+		<p data-callback-status role="status">{strings.callbackPending}</p>
+	</div>
+</Layout>
+<script>
+	import { strings } from "../../comments/strings";
+	import { finishSignIn } from "../../scripts/comments/oauth";
+
+	const status = document.querySelector("[data-callback-status]");
+
+	finishSignIn()
+		.then((returnTo) => location.replace(returnTo))
+		.catch(() => {
+			if (status) status.textContent = strings.signInError;
+		});
+</script>
+<style>
+	.callback-container {
+		display: flex;
+		height: 80vh;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		text-align: center;
+	}
+</style>

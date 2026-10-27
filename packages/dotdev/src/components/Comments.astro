@@ -1,0 +1,247 @@
+---
+import { strings } from "../comments/strings";
+
+interface Props {
+	subject: string;
+}
+
+const { subject } = Astro.props;
+---
+
+<section
+	class="comments"
+	data-comments
+	data-subject={subject}
+	data-pagefind-ignore
+>
+	<h2 class="no-mt">{strings.heading}</h2>
+	<form class="comments-signin" data-signin hidden>
+		<label for="comments-handle">{strings.signInLabel}</label>
+		<div class="comments-row">
+			<input
+				id="comments-handle"
+				name="handle"
+				type="text"
+				autocomplete="username"
+				autocapitalize="off"
+				spellcheck="false"
+				placeholder={strings.handlePlaceholder}
+				required
+			/>
+			<button type="submit" class="comments-button primary">
+				{strings.signInButton}
+			</button>
+		</div>
+		<p class="comments-error" data-signin-error role="alert"></p>
+	</form>
+	<div class="comments-session" data-session hidden>
+		<span data-session-label></span>
+		<button type="button" class="comments-button" data-signout>
+			{strings.signOutButton}
+		</button>
+	</div>
+	<div data-compose-slot></div>
+	<p class="comments-status" data-status role="status">{strings.loading}</p>
+	<ol class="comments-list" data-list></ol>
+</section>
+<script src="../scripts/comments/index.ts"></script>
+<style is:global>
+	.comments {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.comments h2 {
+		margin-bottom: 0;
+	}
+
+	.comments [hidden] {
+		display: none !important;
+	}
+
+	.comments-row {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.comments-signin {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.comments-signin input,
+	.comments-compose textarea {
+		flex: 1;
+		min-width: 0;
+		background-color: #0a0a0a;
+		border: 1px solid #353535;
+		color: white;
+		font: inherit;
+		padding: 0.5rem;
+		transition: border-color 0.15s ease;
+	}
+
+	.comments-signin input:focus,
+	.comments-compose textarea:focus {
+		outline: none;
+		border-color: var(--primary);
+	}
+
+	.comments-compose {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.comments-compose textarea {
+		resize: vertical;
+		min-height: 5rem;
+	}
+
+	.comments-compose .comments-row {
+		justify-content: space-between;
+	}
+
+	.comments-counter {
+		color: #8a8a8a;
+		font-size: 0.875rem;
+	}
+
+	.comments-session {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
+		color: #c7c7c7;
+	}
+
+	.comments-button {
+		background: none;
+		border: 1px solid #353535;
+		color: #c7c7c7;
+		font: inherit;
+		font-size: 0.875rem;
+		padding: 0.25rem 0.75rem;
+		cursor: pointer;
+		transition:
+			color 0.15s ease,
+			border-color 0.15s ease;
+	}
+
+	.comments-button:hover {
+		color: white;
+		border-color: var(--primary);
+	}
+
+	.comments-button.primary {
+		background-color: var(--primary);
+		border-color: var(--primary);
+		color: white;
+		padding: 0.5rem 1rem;
+	}
+
+	.comments-button:disabled {
+		opacity: 0.6;
+		cursor: default;
+	}
+
+	.comments-status {
+		color: #8a8a8a;
+		margin: 0;
+	}
+
+	.comments-status:empty {
+		display: none;
+	}
+
+	.comments-list,
+	.comment-replies {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.comment-replies {
+		margin-top: 1rem;
+		padding-left: 1rem;
+		border-left: 1px solid #353535;
+	}
+
+	.comment-header {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+		font-size: 0.875rem;
+	}
+
+	.comment-avatar {
+		width: 2rem;
+		height: 2rem;
+		object-fit: cover;
+		background-color: #252525;
+		flex-shrink: 0;
+	}
+
+	.comment-name {
+		color: white;
+		font-weight: 600;
+	}
+
+	.comment-handle,
+	.comment-date {
+		color: #8a8a8a;
+	}
+
+	.comment-body {
+		margin: 0.5rem 0 0;
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+	}
+
+	.comment-mention {
+		color: var(--primary-light);
+	}
+
+	.comment-actions {
+		display: flex;
+		gap: 0.5rem;
+		margin-top: 0.5rem;
+	}
+
+	.comment-actions .comments-button {
+		border: none;
+		padding: 0;
+		color: #8a8a8a;
+	}
+
+	.comment-actions .comments-button:hover {
+		color: white;
+	}
+
+	.comment-replies.flat {
+		padding-left: 0;
+		border-left: none;
+	}
+
+	.comments-error {
+		color: #ff8a8a;
+		font-size: 0.875rem;
+		margin: 0;
+	}
+
+	.comments-error:empty {
+		display: none;
+	}
+
+	.comment-reply-form {
+		margin-top: 0.75rem;
+	}
+</style>

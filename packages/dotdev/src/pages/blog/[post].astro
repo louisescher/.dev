@@ -3,10 +3,10 @@ import "../../styles/article.css";
 
 import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
-import { giscus } from "spectre:globals";
 import type { GetStaticPaths } from "astro";
 import BuyMeACoffee from "../../components/BuyMeACoffee.astro";
 import Card from "../../components/Card.astro";
+import Comments from "../../components/Comments.astro";
 import ImageGlow from "../../components/ImageGlow.astro";
 import RSSHint from "../../components/RSSHint.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -121,36 +121,9 @@ const { Content, headings } = await render(post);
 			<hr class="end-of-hints" />
 			<a href="/blog" class="block-link" data-pagefind-ignore>← Back to blog</a>
 		</Card>
-		{
-			giscus && (
-				<Card>
-					<div class="comments" data-pagefind-ignore>
-						<script
-							is:inline
-							src="https://giscus.app/client.js"
-							data-repo={giscus.repository}
-							data-repo-id={giscus.repositoryId}
-							data-category={giscus.category}
-							data-category-id={giscus.categoryId}
-							data-mapping={giscus.mapping}
-							data-strict={giscus.strict === true ? "1" : "0"}
-							data-reactions-enabled={
-								giscus.reactionsEnabled === true ? "1" : "0"
-							}
-							data-emit-metadata={giscus.emitMetadata === true ? "1" : "0"}
-							data-input-position={giscus.commentsInput}
-							data-theme={
-								giscus.theme || "https://spectre.lou.gg/styles/giscus"
-							}
-							data-lang={giscus.lang}
-							data-loading="lazy"
-							crossorigin="anonymous"
-							async
-						/>
-					</div>
-				</Card>
-			)
-		}
+		<Card>
+			<Comments subject={post.data.atUri} />
+		</Card>
 	</article>
 </Layout>
 <script src="../../scripts/toc.ts"></script>
@@ -197,10 +170,6 @@ const { Content, headings } = await render(post);
 		display: flex;
 		flex-direction: column;
 		gap: 2rem;
-	}
-
-	.comments * {
-		border-color: #353535 !important;
 	}
 
 	@media screen and (max-width: 768px) {
