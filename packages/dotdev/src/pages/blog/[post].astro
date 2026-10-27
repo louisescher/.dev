@@ -127,6 +127,7 @@ const { Content, headings } = await render(post);
 	</article>
 </Layout>
 <script src="../../scripts/toc.ts"></script>
+<script src="../../scripts/header-click.ts"></script>
 <style is:global>
 	.toc-card ol {
 		padding: 0;
@@ -183,5 +184,11 @@ const { Content, headings } = await render(post);
 		gap: 1rem;
 		margin-top: 1rem;
 		flex-wrap: wrap;
+	}
+
+	article {
+		h2, h3, h4, h5 {
+			cursor: pointer;
+		}
 	}
 </style>

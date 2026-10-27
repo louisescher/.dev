@@ -2,6 +2,9 @@
 	"name": "dotdev",
 	"type": "module",
 	"version": "1.0.0",
+	"engines": {
+		"node": "^24"
+	},
 	"scripts": {
 		"dev": "astro dev",
 		"build": "astro build",
@@ -11,10 +14,10 @@
 		"postbuild": "pagefind --site dist/client"
 	},
 	"dependencies": {
-		"@astrojs/mdx": "7.0.0",
-		"@astrojs/node": "11.0.0",
-		"@astrojs/rss": "4.0.18",
-		"@astrojs/sitemap": "3.7.3",
+		"@astrojs/mdx": "8.1.1",
+		"@astrojs/node": "11.1.9",
+		"@astrojs/rss": "4.0.19",
+		"@astrojs/sitemap": "3.7.4",
 		"@atcute/atproto": "^4.0.4",
 		"@atcute/client": "^5.1.2",
 		"@atcute/identity-resolver": "^2.0.3",
@@ -26,7 +29,7 @@
 		"@iconify-json/simple-icons": "^1.2.18",
 		"@iconify/utils": "^2.2.1",
 		"@libsql/client": "^0.14.0",
-		"astro": "7.0.0",
+		"astro": "7.4.2",
 		"astro-embed": "0.13.0",
 		"astro-expressive-code": "^0.43.1",
 		"chart.js": "^4.5.0",
