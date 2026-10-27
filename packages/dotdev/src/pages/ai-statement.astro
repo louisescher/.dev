@@ -2,9 +2,7 @@
 import "../styles/article.css";
 
 import type { CollectionEntry } from "astro:content";
-import { getCollection, getEntry, render } from "astro:content";
-import { giscus } from "spectre:globals";
-import type { GetStaticPaths } from "astro";
+import { getEntry, render } from "astro:content";
 import Card from "../components/Card.astro";
 import Layout from "../layouts/Layout.astro";
 
@@ -12,7 +10,11 @@ interface Props {
 	post: CollectionEntry<"posts">;
 }
 
-const statement = await getEntry("other", "ai-statement")!;
+const statement = await getEntry("other", "ai-statement");
+
+if (!statement) {
+	throw new Error("How");
+}
 
 const { Content, headings } = await render(statement);
 ---

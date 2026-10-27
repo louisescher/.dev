@@ -7,7 +7,9 @@ import spectre from "./package/src";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://lou.gg",
+	site: process.env.DOKPLOY_DEPLOY_URL
+		? `https://${process.env.DOKPLOY_DEPLOY_URL}`
+		: "https://lou.gg",
 	output: "static",
 	server: {
 		host: "0.0.0.0",

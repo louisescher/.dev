@@ -20,6 +20,8 @@ interface Props {
 }
 
 const { title, description, image, pagefindIgnore, article } = Astro.props;
+
+const ogImage = new URL(image?.src ?? "/img/og.png", Astro.site);
 ---
 
 <!DOCTYPE html>
@@ -44,8 +46,8 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 
 		<meta property="og:title" content={title} />
 		{description && <meta property="og:description" content={description} />}
-		<meta property="og:image" content={new URL((image ? image.src : '') ?? '/img/og.png', Astro.site)} />
-		<meta property="og:url" content={Astro.site} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:url" content={Astro.url} />
 		{!article && <meta property="og:type" content="website" />}
 		<meta property="og:locale" content="en" />
 
@@ -67,7 +69,7 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 		)}
 		<meta name="twitter:title" content={title} />
 		{description && <meta name="twitter:description" content={description} />}
-		<meta name="twitter:image" content={image?.src || '/img/og.png'} />
+		<meta name="twitter:image" content={ogImage} />
 
 		<link rel="me" href="https://sifa.id/p/lou.gg">
 	</head>

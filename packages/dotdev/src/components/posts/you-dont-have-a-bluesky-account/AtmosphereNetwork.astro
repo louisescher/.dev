@@ -1,0 +1,317 @@
+---
+import BlueskyLogo from "./BlueskyLogo.astro";
+import MuLogo from "./MuLogo.astro";
+---
+
+<figure class="atmosphere" data-bluesky="on" data-mu="on">
+	<div class="toolbar">
+		<span class="toolbar-label">Your posts live with your host</span>
+		<div class="toolbar-actions">
+			<span class="legend">
+				<svg class="legend-post" viewBox="0 0 22 16" aria-hidden="true">
+					<rect width="22" height="16" fill="currentColor" />
+					<rect x="4" y="4.5" width="14" height="1.6" fill="#0b0b0b" />
+					<rect x="4" y="9.5" width="9" height="1.6" fill="#0b0b0b" />
+				</svg>
+				Your posts
+			</span>
+			<button type="button" class="toggle" aria-pressed="false" data-app="bluesky">Shut down Bluesky</button>
+			<button type="button" class="toggle" aria-pressed="false" data-app="mu">Shut down Mu Social</button>
+		</div>
+	</div>
+	<svg class="diagram" viewBox="0 0 640 475" role="img" aria-labelledby="atmosphere-title">
+		<title id="atmosphere-title">Alice and Bob keep their posts on one account host (PDS), and Charlie and Peter on another. The Bluesky and Mu Social apps both show posts from both account hosts.</title>
+		<defs>
+			<symbol id="atmosphere-person" viewBox="-26 -26 52 52">
+				<circle r="25" fill="#0b0b0b" stroke="currentColor" stroke-width="1.5" />
+				<circle cy="-6" r="8" fill="none" stroke="currentColor" stroke-width="1.5" />
+				<path d="M-14 16 a14 13 0 0 1 28 0" fill="none" stroke="currentColor" stroke-width="1.5" />
+			</symbol>
+			<symbol id="atmosphere-post" viewBox="0 0 22 16">
+				<rect width="22" height="16" fill="currentColor" />
+				<rect x="4" y="4.5" width="14" height="1.6" fill="#0b0b0b" />
+				<rect x="4" y="9.5" width="9" height="1.6" fill="#0b0b0b" />
+			</symbol>
+		</defs>
+		<g class="edges">
+			<line class="edge" x1="93.2" y1="108" x2="129.1" y2="184.3" />
+			<line class="edge" x1="226.8" y1="108" x2="190.9" y2="184.3" />
+			<line class="edge" x1="413.2" y1="108" x2="449.1" y2="184.3" />
+			<line class="edge" x1="546.8" y1="108" x2="510.9" y2="184.3" />
+			<line class="edge edge-bluesky" x1="204.9" y1="377.3" x2="185.1" y2="321.2" />
+			<line class="edge edge-bluesky" x1="282.3" y1="379.3" x2="421.4" y2="288.3" />
+			<line class="edge edge-mu" x1="357.7" y1="379.3" x2="218.6" y2="288.3" />
+			<line class="edge edge-mu" x1="435.1" y1="377.3" x2="454.9" y2="321.2" />
+		</g>
+		<g class="people">
+			<use class="person" href="#atmosphere-person" x="54" y="54" width="52" height="52" />
+			<text class="label" x="80" y="42" text-anchor="middle">Alice</text>
+			<use class="person" href="#atmosphere-person" x="214" y="54" width="52" height="52" />
+			<text class="label" x="240" y="42" text-anchor="middle">Bob</text>
+			<use class="person" href="#atmosphere-person" x="374" y="54" width="52" height="52" />
+			<text class="label" x="400" y="42" text-anchor="middle">Charlie</text>
+			<use class="person" href="#atmosphere-person" x="534" y="54" width="52" height="52" />
+			<text class="label" x="560" y="42" text-anchor="middle">Peter</text>
+		</g>
+		<g class="hosts">
+			<polygon class="host" points="160,160 250,250 160,340 70,250" />
+			<text class="host-label" x="160" y="224" text-anchor="middle">Account host</text>
+			<text class="host-label" x="160" y="242" text-anchor="middle">(PDS)</text>
+			<use class="post" href="#atmosphere-post" x="127" y="252" width="22" height="16" />
+			<text class="post-owner" x="138" y="286" text-anchor="middle">Alice</text>
+			<use class="post" href="#atmosphere-post" x="171" y="252" width="22" height="16" />
+			<text class="post-owner" x="182" y="286" text-anchor="middle">Bob</text>
+			<polygon class="host" points="480,160 570,250 480,340 390,250" />
+			<text class="host-label" x="480" y="224" text-anchor="middle">Account host</text>
+			<text class="host-label" x="480" y="242" text-anchor="middle">(PDS)</text>
+			<use class="post" href="#atmosphere-post" x="447" y="252" width="22" height="16" />
+			<text class="post-owner" x="458" y="286" text-anchor="middle">Charlie</text>
+			<use class="post" href="#atmosphere-post" x="491" y="252" width="22" height="16" />
+			<text class="post-owner" x="502" y="286" text-anchor="middle">Peter</text>
+		</g>
+		<g class="app app-bluesky">
+			<rect class="app-box" x="145" y="382" width="150" height="76" />
+			<g class="app-logo">
+				<BlueskyLogo x="206" y="392" width="28" height="28" />
+			</g>
+			<text class="app-name" x="220" y="446" text-anchor="middle">Bluesky</text>
+			<text class="app-offline" x="220" y="414" text-anchor="middle">offline</text>
+		</g>
+		<g class="app app-mu">
+			<rect class="app-box" x="345" y="382" width="150" height="76" />
+			<g class="app-logo">
+				<MuLogo x="397" y="389" width="46" height="33" />
+			</g>
+			<text class="app-name" x="420" y="446" text-anchor="middle">Mu Social</text>
+			<text class="app-offline" x="420" y="414" text-anchor="middle">offline</text>
+		</g>
+	</svg>
+	<figcaption class="status" aria-live="polite">
+		<span data-status="on-on">Both apps show posts from both account hosts. Everyone's posts live with the host they picked.</span>
+		<span data-status="off-on" hidden>Bluesky is offline. Everyone's posts are still with their account host, and Mu Social still shows all of them.</span>
+		<span data-status="on-off" hidden>Mu Social is offline. No posts are lost, and Bluesky still shows all of them.</span>
+		<span data-status="off-off" hidden>Both apps are offline, and every post is still with its account host. Any new app can show them.</span>
+	</figcaption>
+</figure>
+
+<style>
+	.atmosphere {
+		--diagram-line: #353535;
+		--diagram-stroke: #c7c7c7;
+		--diagram-muted: #6b6b6b;
+		--diagram-accent: var(--primary, #8c5cf5);
+		margin: 1.5rem 0;
+		border: 1px solid var(--diagram-line);
+		background-color: #0b0b0b;
+		color: #ffffff;
+	}
+
+	.toolbar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		padding: 0.625rem 0.75rem;
+		border-bottom: 1px solid var(--diagram-line);
+	}
+
+	.toolbar-label,
+	.legend {
+		font-family: "Geist Mono", monospace;
+		font-size: 0.8125rem;
+		color: var(--diagram-stroke);
+	}
+
+	.toolbar-actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.legend {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.legend-post {
+		width: 1.125rem;
+		height: auto;
+		color: var(--diagram-accent);
+		filter: drop-shadow(0 0 4px var(--diagram-accent));
+	}
+
+	.toggle {
+		font-family: "Geist Mono", monospace;
+		font-size: 0.8125rem;
+		color: #ffffff;
+		background-color: transparent;
+		border: 1px solid var(--diagram-line);
+		padding: 0.375rem 0.75rem;
+		cursor: pointer;
+		transition:
+			background-color 0.15s ease,
+			border-color 0.15s ease;
+	}
+
+	.toggle:hover {
+		background-color: rgba(140, 92, 245, 0.125);
+		border-color: var(--diagram-accent);
+	}
+
+	.toggle:focus-visible {
+		outline: 2px solid var(--diagram-accent);
+		outline-offset: 2px;
+	}
+
+	.toggle[aria-pressed="true"] {
+		background-color: var(--diagram-accent);
+		border-color: var(--diagram-accent);
+	}
+
+	.diagram {
+		display: block;
+		width: 100%;
+		height: auto;
+		padding: 1rem;
+	}
+
+	.edge {
+		stroke: var(--diagram-stroke);
+		stroke-width: 1.5;
+		transition: opacity 0.5s ease;
+	}
+
+	.person {
+		color: var(--diagram-stroke);
+	}
+
+	.label {
+		font-family: "Geist", sans-serif;
+		font-size: 17px;
+		fill: #ffffff;
+	}
+
+	.host {
+		fill: #111111;
+		stroke: var(--diagram-stroke);
+		stroke-width: 1.5;
+		stroke-linejoin: round;
+	}
+
+	.host-label {
+		font-family: "Geist", sans-serif;
+		font-size: 14px;
+		fill: #ffffff;
+	}
+
+	.post {
+		color: var(--diagram-accent);
+		filter: drop-shadow(0 0 4px var(--diagram-accent));
+	}
+
+	.post-owner {
+		font-family: "Geist", sans-serif;
+		font-size: 11px;
+		fill: var(--diagram-stroke);
+	}
+
+	.app-box {
+		fill: #111111;
+		stroke: var(--diagram-stroke);
+		stroke-width: 1.5;
+		transition: stroke 0.5s ease;
+	}
+
+	.app-logo {
+		transition: opacity 0.4s ease;
+	}
+
+	.app-name {
+		font-family: "Geist", sans-serif;
+		font-size: 13px;
+		fill: #ffffff;
+		transition: fill 0.4s ease;
+	}
+
+	.app-offline {
+		font-family: "Geist Mono", monospace;
+		font-size: 15px;
+		fill: var(--diagram-muted);
+		opacity: 0;
+		transition: opacity 0.4s ease;
+	}
+
+	.status {
+		padding: 0.625rem 0.75rem;
+		border-top: 1px solid var(--diagram-line);
+		font-size: 0.875rem;
+		color: var(--diagram-stroke);
+		min-height: 3.25rem;
+	}
+
+	[data-bluesky="off"] .edge-bluesky,
+	[data-mu="off"] .edge-mu {
+		opacity: 0.1;
+	}
+
+	[data-bluesky="off"] .app-bluesky .app-box,
+	[data-mu="off"] .app-mu .app-box {
+		stroke: var(--diagram-muted);
+		stroke-dasharray: 6 6;
+	}
+
+	[data-bluesky="off"] .app-bluesky .app-logo,
+	[data-mu="off"] .app-mu .app-logo {
+		opacity: 0;
+	}
+
+	[data-bluesky="off"] .app-bluesky .app-name,
+	[data-mu="off"] .app-mu .app-name {
+		fill: var(--diagram-muted);
+	}
+
+	[data-bluesky="off"] .app-bluesky .app-offline,
+	[data-mu="off"] .app-mu .app-offline {
+		opacity: 1;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.edge,
+		.app-box,
+		.app-logo,
+		.app-name,
+		.app-offline {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	const appNames = new Map([
+		["bluesky", "Bluesky"],
+		["mu", "Mu Social"],
+	]);
+
+	document.querySelectorAll<HTMLElement>(".atmosphere").forEach((diagram) => {
+		const statuses = diagram.querySelectorAll<HTMLElement>("[data-status]");
+
+		diagram.querySelectorAll<HTMLButtonElement>("[data-app]").forEach((toggle) => {
+			const app = toggle.dataset.app!;
+
+			toggle.addEventListener("click", () => {
+				const offline = diagram.dataset[app] !== "off";
+				diagram.dataset[app] = offline ? "off" : "on";
+				toggle.setAttribute("aria-pressed", String(offline));
+				toggle.textContent = `${offline ? "Restart" : "Shut down"} ${appNames.get(app)}`;
+
+				const state = `${diagram.dataset.bluesky}-${diagram.dataset.mu}`;
+				statuses.forEach((status) => {
+					status.hidden = status.dataset.status !== state;
+				});
+			});
+		});
+	});
+</script>
