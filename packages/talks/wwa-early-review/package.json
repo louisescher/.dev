@@ -1,0 +1,11 @@
+{
+	"name": "@talks/wwa-early-review",
+	"type": "module",
+	"private": true,
+	"dependencies": {
+		"@slidev/cli": "catalog:",
+		"@slidev/theme-default": "catalog:",
+		"@slidev/theme-seriph": "catalog:",
+		"vue": "catalog:"
+	}
+}

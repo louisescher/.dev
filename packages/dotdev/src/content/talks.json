@@ -7,5 +7,13 @@
 		"location": "Wiesbaden",
 		"recording": "https://youtu.be/cD4H28f8oxY",
 		"year": 2026
+	},
+	{
+		"id": "wwa-early-review",
+		"title": "An Early Review of Where We're AT",
+		"description": "",
+		"event": "atproto.london",
+		"location": "London",
+		"year": 2026
 	}
 ]

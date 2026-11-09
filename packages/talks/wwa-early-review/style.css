@@ -1,0 +1,394 @@
+html.dark {
+	--sky-1: #0c0e2e;
+	--sky-2: #241a52;
+	--sky-3: #5c2f66;
+	--sky-4: #b94e69;
+	--sky-5: #ff8a4c;
+
+	--cloud-alpha: 0.13;
+	--star-alpha: 0.9;
+
+	--sky-stop-2: 48%;
+	--sky-stop-3: 76%;
+	--sky-stop-4: 91%;
+	--horizon-height: 22%;
+	--horizon-alpha: 0.4;
+
+	--deck: #17123d;
+	--deck-2: #1f1a4e;
+	--line: #3a3178;
+	--line-soft: #2a2360;
+
+	--ink: #f2eefc;
+	--ink-dim: #b9b0dd;
+
+	--ember: #ff7a45;
+	--btn-ring: #2a0f04;
+	--glow: #ffc46b;
+	--cyan: #6fd6e8;
+	--on-ember: #2a0f04;
+
+	--rise: #6fe0bd;
+	--fall: #ff92ab;
+
+	--lift: 0 18px 50px -12px rgb(6 4 24 / 0.55);
+}
+
+html:not(.dark) {
+	--sky-1: #4fb2ec;
+	--sky-2: #86cff3;
+	--sky-3: #bce6f7;
+	--sky-4: #ffe0b8;
+	--sky-5: #ffc98a;
+
+	--cloud-alpha: 0.72;
+	--star-alpha: 0;
+
+	--sky-stop-2: 30%;
+	--sky-stop-3: 56%;
+	--sky-stop-4: 79%;
+	--horizon-height: 42%;
+	--horizon-alpha: 0.55;
+
+	--deck: #fffaf2;
+	--deck-2: #fff3e2;
+	--line: #e8c9a3;
+	--line-soft: #f4e3cd;
+
+	--ink: #1a1440;
+	--ink-dim: #6b6191;
+
+	--ember: #e0491f;
+	--btn-ring: transparent;
+	--glow: #c97b12;
+	--cyan: #1a7f96;
+	--on-ember: #fff6ef;
+
+	--rise: #0c6d4c;
+	--fall: #b3193c;
+
+	--lift: 0 18px 44px -14px rgb(40 24 8 / 0.3);
+}
+
+:root {
+	--radius-card: 28px;
+	--radius-field: 18px;
+	--radius-chip: 10px;
+
+	--slidev-theme-primary: var(--ember);
+	--slidev-code-foreground: var(--ink);
+	--slidev-code-radius: var(--radius-field);
+	--slidev-code-padding: 16px 20px;
+	--slidev-code-font-size: 13px;
+	--slidev-code-line-height: 21px;
+}
+
+#slide-content {
+	background-color: var(--sky-1);
+}
+
+.slidev-layout {
+	color: var(--ink);
+	font-variant-numeric: tabular-nums;
+	line-height: 1.62;
+}
+
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3 {
+	font-weight: 800 !important;
+	letter-spacing: -0.035em;
+	line-height: 1;
+	text-wrap: balance;
+}
+
+.slidev-layout h1 {
+	font-size: 2.75rem;
+	margin-bottom: 1.25rem;
+}
+
+.slidev-layout h1 + p {
+	opacity: 1;
+	margin-top: 0;
+	color: var(--ink-dim);
+}
+
+.slidev-layout p {
+	text-wrap: pretty;
+}
+
+.slidev-layout a {
+	color: var(--ink);
+	border-bottom: 0;
+	text-decoration: underline;
+	text-decoration-color: var(--ember);
+	text-underline-offset: 4px;
+}
+
+.slidev-layout ul > li::marker {
+	color: var(--ember);
+}
+
+.slidev-layout code:not(pre code) {
+	font-size: 0.85em;
+	padding: 0.1em 0.4em;
+	border-radius: 6px;
+	background: var(--deck-2);
+	box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.slidev-layout pre.shiki {
+	background-color: color-mix(in oklab, var(--deck) 92%, transparent) !important;
+	box-shadow: inset 0 0 0 1.5px var(--line);
+}
+
+.slidev-layout li {
+	line-height: 1.45;
+}
+
+.text-ember {
+	color: var(--ember);
+}
+
+.text-glow {
+	color: var(--glow);
+}
+
+.text-cyan {
+	color: var(--cyan);
+}
+
+.text-ink-dim {
+	color: var(--ink-dim);
+}
+
+.text-rise {
+	color: var(--rise);
+}
+
+.text-fall {
+	color: var(--fall);
+}
+
+.frosted {
+	background: color-mix(in oklab, var(--deck) 88%, transparent);
+	box-shadow: inset 0 0 0 1.5px var(--line);
+}
+
+.deck-panel {
+	background: var(--deck);
+	border: 1px solid var(--line);
+	border-radius: var(--radius-card);
+	box-shadow: var(--lift);
+}
+
+.card {
+	padding: 1.25rem 1.5rem;
+	border-radius: var(--radius-field);
+}
+
+.tiny-mono {
+	font-family: var(--slidev-code-font-family);
+	font-size: 0.82em;
+	letter-spacing: -0.05em;
+}
+
+.chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.3rem 0.9rem;
+	border-radius: 999px;
+	font-size: 0.8125rem;
+	font-weight: 600;
+}
+
+.slidev-layout a.btn,
+.btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.6rem;
+	padding: 0.7rem 1.4rem;
+	border: 0;
+	border-radius: 999px;
+	background: var(--ember);
+	box-shadow: inset 0 0 0 2px var(--btn-ring);
+	color: var(--on-ember);
+	font-size: 1.1rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	text-decoration: none;
+	transition:
+		transform 160ms cubic-bezier(0.34, 1.4, 0.64, 1),
+		filter 160ms ease;
+}
+
+.btn:hover {
+	transform: translateY(-2px) scale(1.015);
+	filter: brightness(1.08);
+}
+
+.slidev-layout a.btn-ghost,
+.btn-ghost {
+	background: transparent;
+	color: var(--ink);
+	box-shadow: inset 0 0 0 2px var(--line);
+}
+
+.btn-ghost:hover {
+	box-shadow: inset 0 0 0 2px var(--ink-dim);
+	filter: none;
+}
+
+@keyframes drift {
+	from {
+		transform: translateX(calc(-16rem * var(--scale))) scale(var(--scale));
+	}
+
+	to {
+		transform: translateX(calc(100cqw + 3rem * var(--scale))) scale(var(--scale));
+	}
+}
+
+@keyframes twinkle {
+	0%,
+	100% {
+		opacity: calc(var(--b) * var(--star-alpha));
+	}
+
+	50% {
+		opacity: calc(var(--b) * var(--star-alpha) * 0.25);
+	}
+}
+
+@keyframes sway {
+	0%,
+	100% {
+		transform: translateY(0) rotate(-2.2deg);
+	}
+
+	50% {
+		transform: translateY(-14px) rotate(2.2deg);
+	}
+}
+
+@keyframes breathe {
+	0%,
+	100% {
+		transform: scale(1, 1);
+	}
+
+	50% {
+		transform: scale(1.025, 0.978);
+	}
+}
+
+@keyframes dangle {
+	0%,
+	100% {
+		transform: rotate(-4deg);
+	}
+
+	50% {
+		transform: rotate(4deg);
+	}
+}
+
+@keyframes blink {
+	0%,
+	45% {
+		opacity: 1;
+	}
+
+	46%,
+	100% {
+		opacity: 0.15;
+	}
+}
+
+.animate-drift {
+	animation: drift linear infinite;
+}
+
+.animate-twinkle {
+	animation: twinkle 7s ease-in-out infinite;
+}
+
+.animate-sway {
+	animation: sway 11s ease-in-out infinite;
+}
+
+.animate-breathe {
+	animation: breathe 6.5s ease-in-out infinite;
+}
+
+.animate-dangle {
+	animation: dangle 5.5s ease-in-out infinite;
+}
+
+.animate-blink {
+	animation: blink 2.4s steps(1, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.animate-drift {
+		animation: none;
+		transform: translateX(var(--x)) scale(var(--scale));
+	}
+
+	.animate-twinkle,
+	.animate-sway,
+	.animate-breathe,
+	.animate-dangle,
+	.animate-blink {
+		animation: none;
+	}
+}
+
+.lede {
+	margin: -0.5rem 0 1.5rem;
+	color: var(--ink-dim);
+	font-size: 1.15rem;
+}
+
+.stat-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1.25rem;
+	margin-top: 1.5rem;
+}
+
+.stat-grid.cols-3 {
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.stat-grid.cols-3 .stat {
+	font-size: 2.75rem;
+}
+
+.stat-grid .card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.stat {
+	font-size: 3.5rem;
+	font-weight: 800;
+	letter-spacing: -0.05em;
+	line-height: 1;
+}
+
+.stat-note {
+	font-size: 0.95rem;
+	line-height: 1.35;
+}
+
+.callout {
+	margin-top: 1.5rem;
+	padding: 1rem 1.25rem;
+	font-size: 1.05rem;
+	line-height: 1.45;
+	border: none;
+	border-left: 4px solid var(--ember);
+}
