@@ -141,7 +141,7 @@ const talks = defineCollection({
 		title: z.string(),
 		description: z.string(),
 		event: z.string(),
-		location: z.string(),
+		location: z.string().optional(),
 		year: z.number(),
 		recording: z.string().optional(),
 		date: z.coerce.date().optional(),

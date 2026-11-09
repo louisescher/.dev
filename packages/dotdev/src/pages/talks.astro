@@ -83,7 +83,7 @@ function sortKey(talk: { year: number; date?: Date }) {
 						</div>
 						<span>{talk.description}</span>
 						<span class="talk-meta">
-							Originally held at {talk.event} in {talk.location}
+							Originally held at {talk.event} {talk.location && (<>in {talk.location}</>)}
 						</span>
 						<div class="talk-links">
 							<a href={`/talks/${talk.id}/`}>View Slides</a>
