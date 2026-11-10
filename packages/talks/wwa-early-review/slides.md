@@ -1,6 +1,6 @@
 ---
 theme: default
-title: An Early Review of Where We're AT
+title: An Early Review of Where We're At
 favicon: /favicon.svg
 colorSchema: auto
 transition: fade
